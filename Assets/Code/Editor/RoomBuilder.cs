@@ -8,6 +8,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
+// Creates an editor window that allows building a
+// 16x16 room and saving it to a data file.
 public class RoomBuilder : EditorWindow
 {
 	[Serializable]
@@ -30,6 +32,8 @@ public class RoomBuilder : EditorWindow
 	public static void Open()
 		=> GetWindow(typeof(RoomBuilder), false, "Room Builder");
 
+	// Load textures for each tile type from the asset database
+	// so that they can be used in the editor.
 	private bool LoadTextures()
 	{
 		string[] names = Enum.GetNames(typeof(TileType));
@@ -71,6 +75,7 @@ public class RoomBuilder : EditorWindow
 
 	private void OnGUI()
 	{
+		// Ensures we don't get an ugly icon at the cursor while dragging a file to our window.
 		DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
 
 		scroll = EditorGUILayout.BeginScrollView(scroll);
@@ -109,6 +114,8 @@ public class RoomBuilder : EditorWindow
 		hRect.x += 130.0f;
 		hRect.width = 60.0f;
 
+		// Save the room using the given file name as a data file
+		// in the RoomData directory.
 		if (GUI.Button(hRect, "Save"))
 		{
 			if (!ValidFileName(fileName))
@@ -127,7 +134,8 @@ public class RoomBuilder : EditorWindow
 		}
 
 		hRect.x += 65.0f;
-
+		
+		// Clear tiles in the room.
 		if (GUI.Button(hRect, "Clear"))
 		{
 			Array.Clear(tiles, 0, tiles.Length);
@@ -142,6 +150,7 @@ public class RoomBuilder : EditorWindow
 				LoadRoomData(DragAndDrop.paths[0]);
 		}
 
+		// Support click and drag editing.
 		if (e == EventType.MouseDown || e == EventType.MouseDrag)
 		{
 			Vector2 mouseP = Event.current.mousePosition;
@@ -150,6 +159,7 @@ public class RoomBuilder : EditorWindow
 			int gridX = Mathf.FloorToInt(gridP.x);
 			int gridY = Mathf.FloorToInt(gridP.y);
 
+			// Ensure we're within the bounds of the editing area.
 			if (gridX >= 0 && gridX < Chunk.Size && gridY >= 0 && gridY < Chunk.Size)
 			{
 				int index = Chunk.TileIndex(gridX, gridY);
@@ -187,6 +197,7 @@ public class RoomBuilder : EditorWindow
 		EditorGUILayout.EndScrollView();
 	}
 
+	// Encode the room tile data using run-length encoding.
 	private RoomData EncodeRLE()
 	{
 		RoomData data = new RoomData();

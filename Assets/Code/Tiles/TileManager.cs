@@ -11,8 +11,13 @@ public enum TileType
 	Count
 }
 
+// Stores tile data as a lookup table. Tiles are represented 
+// by an index. Associated data can be found for a given tile
+// type by getting it from here.
 public static class TileManager
 {
+	// Note: this list must match the exact order of the TileType
+	// enumeration above.
 	private static TileData[] data =
 	{
 		new AirTile(),

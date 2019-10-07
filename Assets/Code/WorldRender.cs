@@ -43,11 +43,15 @@ public class WorldRender : MonoBehaviour
 		spritePool.Enqueue(rend);
 	}
 
+	// Gets all chunks that intersect the viewing area and adds them to a list.
 	private void GetVisibleChunks()
 	{
+		// Assume all chunks are out of view initially.
 		for (int i = 0; i < visibleChunks.Count; ++i)
 			visibleChunks[i].pendingClear = true;
 
+		// Get the world location at the min and max screen corner and convert those positions to
+		// chunk positions to get our range.
 		Vector2Int min = Utils.WorldToChunkP(cam.ScreenToWorldPoint(Vector3.zero));
 		Vector2Int max = Utils.WorldToChunkP(cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height)));
 
@@ -59,6 +63,9 @@ public class WorldRender : MonoBehaviour
 
 				if (chunk != null)
 				{
+					// If a chunk is still in view, it's no longer pending clear.
+					// Any chunks still pending clear after this function returns
+					// are actually out of view and can be cleared.
 					if (visibleChunks.Contains(chunk))
 						chunk.pendingClear = false;
 					else visibleChunks.Add(chunk);
@@ -71,6 +78,8 @@ public class WorldRender : MonoBehaviour
 	{
 		GetVisibleChunks();
 
+		// Remove all chunks that are in the visible list and pending clear.
+		// Those chunks are now out of view.
 		for (int i = visibleChunks.Count - 1; i >= 0; --i)
 		{
 			Chunk chunk = visibleChunks[i];

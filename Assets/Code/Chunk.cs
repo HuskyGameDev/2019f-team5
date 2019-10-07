@@ -22,17 +22,26 @@ public sealed class SpriteRect
 
 public sealed class Chunk
 {
+	// Size of the chunk in tiles.
 	public const int Size = 16;
-	public const int Shift = 4;
-	public const int Mask = Size - 1;
 	public const int Size2 = Size * Size;
 
+	// Shift and mask are used for working with coordinates 
+	// in an optimized manner.
+	public const int Shift = 4;
+	public const int Mask = Size - 1;
+
+	// Chunk and world position from the bottom-left corner.
 	public Vector2Int cPos { get; private set; }
 	public Vector2Int wPos { get; private set; }
 
+	// Stores sprites this chunk is using so they can be returned to
+	// the pool when this chunk is out of view.
 	private List<SpriteRenderer> sprites = new List<SpriteRenderer>();
 
 	private Tile[] tiles = new Tile[Size2];
+
+	// Lists the visible tiles for greedy sprite filling.
 	private BitArray mask = new BitArray(Size2);
 
 	// Sprite rectangle used for the greedy sprite algorithm.
@@ -49,6 +58,8 @@ public sealed class Chunk
 		wPos = Utils.ChunkToWorldP(cX, cY);
 	}
 
+	// Tile data is stored in a 1D array. This collapses a
+	// 2D coordinate into a 1D index into the array.
 	public static int TileIndex(int x, int y)
 		=> y * Size + x;
 
@@ -67,6 +78,8 @@ public sealed class Chunk
 	public void SetModified()
 		=> pendingUpdate = true;
 
+	// Fills an area of the chunk with a tile as determined by
+	// the given SpriteRect object.
 	private void SetSprite(WorldRender rend, SpriteRect rect)
 	{
 		Tile tile = rect.tile;
@@ -85,6 +98,7 @@ public sealed class Chunk
 		sprites.Add(spriteRend);
 	}
 
+	// Finds the next tile to begin a rectangle from.
 	private SpriteRect GetNextRectStart(int startX, int startY)
 	{
 		int y = startY, x = startX;
@@ -116,6 +130,9 @@ public sealed class Chunk
 		return null;
 	}
 
+	// Attempts to expand the current sprite rectangle
+	// to the right. It can expand as far as the same tile
+	// type repeats.
 	private void RectScanX(SpriteRect rect)
 	{
 		for (int x = rect.startX + 1; x < Size; ++x)
@@ -130,6 +147,10 @@ public sealed class Chunk
 		}
 	}
 
+	// Attempts to expand the current sprite rectangle
+	// upward. It can only expand as long as the same
+	// tile appears across the entire row at the higher
+	// y position.
 	private void RectScanY(SpriteRect rect)
 	{
 		for (int y = rect.startY + 1; y < Size; ++y)
@@ -150,6 +171,8 @@ public sealed class Chunk
 		}
 	}
 
+	// Adds sprites that fit the tile data for this chunk,
+	// making it able to be rendered.
 	private void FillSprites(WorldRender rend)
 	{
 		if (sprites.Count > 0)

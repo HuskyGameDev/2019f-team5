@@ -11,9 +11,6 @@ public struct Tile : IEquatable<Tile>
 	public Tile(TileType type)
 		=> this.type = type;
 
-	public static implicit operator Tile(TileType type)
-		=> new Tile(type);
-
 	public TileData data
 		=> TileManager.GetData(type);
 
@@ -31,4 +28,8 @@ public struct Tile : IEquatable<Tile>
 
 	public static bool operator !=(Tile a, Tile b)
 		=> a.type != b.type;
+
+	// Allows TileType to be used instead of Tile.
+	public static implicit operator Tile(TileType type)
+		=> new Tile(type);
 }
