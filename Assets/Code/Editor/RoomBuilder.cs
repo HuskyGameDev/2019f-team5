@@ -64,7 +64,7 @@ public class RoomBuilder : EditorWindow
 		{
 			data = JsonUtility.FromJson<RoomData>(json);
 		}
-		catch (Exception e)
+		catch (Exception)
 		{
 			Debug.LogWarning("Cannot open that file in the tile editor.");
 			return;
