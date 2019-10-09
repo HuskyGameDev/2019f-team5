@@ -33,17 +33,15 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 6d0f6cb89763a984da9073e3d693be92, type: 3}
     - {fileID: 2800000, guid: 87c7a2a0958387e4d81e781f1d0f6880, type: 3}
     - {fileID: 2800000, guid: 06207389a06ecd04b9b643e95e3af40a, type: 3}
-    totalSpriteSurfaceArea: 4096
+    totalSpriteSurfaceArea: 3072
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 87c7a2a0958387e4d81e781f1d0f6880, type: 3}
-  - {fileID: 21300000, guid: 20f18ca81f02cd7438f388706c4e2590, type: 3}
   - {fileID: 21300000, guid: 6d0f6cb89763a984da9073e3d693be92, type: 3}
   - {fileID: 21300000, guid: 06207389a06ecd04b9b643e95e3af40a, type: 3}
   m_PackedSpriteNamesToIndex:
   - Wall
-  - Air
   - Floor
   - Platform
   m_Tag: Sprites

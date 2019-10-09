@@ -13,7 +13,7 @@ public class GameAssets : MonoBehaviour
 	private static GameAssets instance;
 
 	public SpriteAtlas sprites;
-	public GameObject spritePrefab;
+	public GameObject tileRectPrefab;
 
 	public static GameAssets Instance
 	{

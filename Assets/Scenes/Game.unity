@@ -152,6 +152,8 @@ MonoBehaviour:
   sprites: {fileID: 4343727234628468602, guid: 5f33ab25087925249998ba0802fa3cf1, type: 2}
   spritePrefab: {fileID: 5878126596352649350, guid: e4aa0c4fb4051214b845469ca42276d7,
     type: 3}
+  colliderPrefab: {fileID: 6553865814818992858, guid: 03dd09ad20add2b469fe0a999da57395,
+    type: 3}
 --- !u!4 &605089499
 Transform:
   m_ObjectHideFlags: 0

@@ -190,7 +190,7 @@ public class RoomBuilder : EditorWindow
 				TileType tile = tiles[Chunk.TileIndex(x, y)];
 
 				Rect rect = new Rect(gridStart.x + (x * PPU), gridStart.y + (y * PPU), PPU, PPU);
-				EditorGUI.DrawPreviewTexture(rect, TileManager.GetData(tile).sprite.texture);
+				EditorGUI.DrawPreviewTexture(rect, textures[(int)tile]);
 			}
 		}
 

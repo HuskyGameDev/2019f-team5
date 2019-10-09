@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class WorldRender : MonoBehaviour
 {
 	private World world;
-	private Queue<SpriteRenderer> spritePool = new Queue<SpriteRenderer>();
+	private Queue<(SpriteRenderer, BoxCollider2D)> rectPool = new Queue<(SpriteRenderer, BoxCollider2D)>();
 
 	private Camera cam;
 	private List<Chunk> visibleChunks = new List<Chunk>();
@@ -19,28 +19,31 @@ public class WorldRender : MonoBehaviour
 		cam = Camera.main;
 	}
 
-	public SpriteRenderer GetSpriteRenderer()
+	public (SpriteRenderer, BoxCollider2D) GetTileRect()
 	{
-		SpriteRenderer rend;
+		(SpriteRenderer, BoxCollider2D) rect;
 
-		if (spritePool.Count > 0)
+		if (rectPool.Count > 0)
 		{
-			rend = spritePool.Dequeue();
-			rend.enabled = true;
+			rect = rectPool.Dequeue();
+			rect.Item1.enabled = true;
+			rect.Item2.enabled = true;
 		}
 		else
 		{
-			GameObject obj = GameAssets.Instance.spritePrefab;
-			rend = Instantiate(obj, world.transform).GetComponent<SpriteRenderer>();
+			GameObject prefab = GameAssets.Instance.tileRectPrefab;
+			GameObject obj = Instantiate(prefab, world.transform);
+			rect = (obj.GetComponent<SpriteRenderer>(), obj.GetComponent<BoxCollider2D>());
 		}
 
-		return rend;
+		return rect;
 	}
 
-	public void ReturnSpriteRenderer(SpriteRenderer rend)
+	public void ReturnTileRect((SpriteRenderer, BoxCollider2D) tileRect)
 	{
-		rend.enabled = false;
-		spritePool.Enqueue(rend);
+		tileRect.Item1.enabled = false;
+		tileRect.Item2.enabled = false;
+		rectPool.Enqueue(tileRect);
 	}
 
 	// Gets all chunks that intersect the viewing area and adds them to a list.

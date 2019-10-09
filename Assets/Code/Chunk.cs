@@ -37,7 +37,7 @@ public sealed class Chunk
 
 	// Stores sprites this chunk is using so they can be returned to
 	// the pool when this chunk is out of view.
-	private List<SpriteRenderer> sprites = new List<SpriteRenderer>();
+	private List<(SpriteRenderer, BoxCollider2D)> rects = new List<(SpriteRenderer, BoxCollider2D)>();
 
 	private Tile[] tiles = new Tile[Size2];
 
@@ -84,7 +84,8 @@ public sealed class Chunk
 	{
 		Tile tile = rect.tile;
 
-		SpriteRenderer spriteRend = rend.GetSpriteRenderer();
+		(SpriteRenderer, BoxCollider2D) tileRect = rend.GetTileRect();
+		SpriteRenderer spriteRend = tileRect.Item1;
 		spriteRend.sprite = tile.data.sprite;
 		spriteRend.sortingOrder = tile.data.sortingOrder;
 		spriteRend.color = new Color(1.0f, 1.0f, 1.0f, tile.data.alpha);
@@ -95,7 +96,11 @@ public sealed class Chunk
 		t.position = new Vector3(wPos.x + rect.startX, wPos.y + rect.startY);
 		t.localScale = Vector3.one;
 
-		sprites.Add(spriteRend);
+		BoxCollider2D col = tileRect.Item2;
+		col.size = new Vector2(rect.width, rect.height);
+		col.offset = col.size * 0.5f;
+
+		rects.Add(tileRect);
 	}
 
 	// Finds the next tile to begin a rectangle from.
@@ -175,7 +180,7 @@ public sealed class Chunk
 	// making it able to be rendered.
 	private void FillSprites(WorldRender rend)
 	{
-		if (sprites.Count > 0)
+		if (rects.Count > 0)
 			ClearSprites(rend);
 
 		for (int i = 0; i < Size2; ++i)
@@ -216,10 +221,10 @@ public sealed class Chunk
 
 	public void ClearSprites(WorldRender rend)
 	{
-		for (int i = 0; i < sprites.Count; ++i)
-			rend.ReturnSpriteRenderer(sprites[i]);
+		for (int i = 0; i < rects.Count; ++i)
+			rend.ReturnTileRect(rects[i]);
 
-		sprites.Clear();
+		rects.Clear();
 
 		state = ChunkState.Empty;
 	}
