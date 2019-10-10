@@ -10,7 +10,15 @@ public class CameraMove : MonoBehaviour
 
 	private void Update()
 	{
-		Vector2 move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+		float x = 0.0f;
+		float y = 0.0f;
+
+		if (Input.GetKey(KeyCode.A)) x -= 1.0f;
+		if (Input.GetKey(KeyCode.D)) x += 1.0f;
+		if (Input.GetKey(KeyCode.W)) y += 1.0f;
+		if (Input.GetKey(KeyCode.S)) y -= 1.0f;
+
+		Vector2 move = new Vector2(x, y);
 		move *= (speed * Time.deltaTime);
 
 		transform.Translate(move);

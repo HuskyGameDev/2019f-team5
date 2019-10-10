@@ -23,7 +23,6 @@
 using UnityEngine;
 using UnityEditor;
 using System;
-using UnityInputConverter;
 
 namespace LuminosityEditor.IO
 {

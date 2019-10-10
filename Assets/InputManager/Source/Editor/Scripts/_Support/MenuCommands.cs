@@ -22,7 +22,6 @@
 #endregion
 using UnityEngine;
 using UnityEditor;
-using UnityInputConverter;
 using Luminosity.IO;
 
 namespace LuminosityEditor.IO

@@ -30,17 +30,17 @@ public class ProcGen
             if (direction == 0 || direction == 1)
             {
                 //go left
-                goLeft(level, roomX, roomY);
+                goLeft(level, ref roomX, ref roomY);
 
             } else if (direction == 2 || direction == 3)
             {
                 //go right
-                goRight(level, roomX, roomY);
+                goRight(level, ref roomX, ref roomY);
 
             } else
             {
                 //go down
-                goDown(level, roomX, roomY);
+                goDown(level, ref roomX, ref roomY);
             }
         }
 

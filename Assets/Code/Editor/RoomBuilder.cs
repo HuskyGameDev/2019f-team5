@@ -66,6 +66,11 @@ public class RoomBuilder : EditorWindow
 		DecodeRLE(data);
 	}
 
+	// The GUI for building rooms is flipped by default from how data is represented in
+	// the world. This ensures the data will be consistent.
+	private int MirroredTileIndex(int x, int y)
+		=> ((Chunk.Size - 1) - y) * Chunk.Size + x;
+
 	private void OnGUI()
 	{
 		// Ensures we don't get an ugly icon at the cursor while dragging a file to our window.
@@ -155,7 +160,7 @@ public class RoomBuilder : EditorWindow
 			// Ensure we're within the bounds of the editing area.
 			if (gridX >= 0 && gridX < Chunk.Size && gridY >= 0 && gridY < Chunk.Size)
 			{
-				int index = Chunk.TileIndex(gridX, gridY);
+				int index = MirroredTileIndex(gridX, gridY);
 
 				if (Event.current.button == 0)
 				{
@@ -180,7 +185,7 @@ public class RoomBuilder : EditorWindow
 		{
 			for (int x = 0; x < Chunk.Size; ++x)
 			{
-				TileType tile = tiles[Chunk.TileIndex(x, y)];
+				TileType tile = tiles[MirroredTileIndex(x, y)];
 
 				Rect rect = new Rect(gridStart.x + (x * PPU), gridStart.y + (y * PPU), PPU, PPU);
 				EditorGUI.DrawPreviewTexture(rect, textures[(int)tile]);
