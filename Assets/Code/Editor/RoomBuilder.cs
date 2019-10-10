@@ -6,18 +6,11 @@ using UnityEditor;
 using UnityEngine;
 using System;
 using System.IO;
-using System.Collections.Generic;
 
 // Creates an editor window that allows building a
 // 16x16 room and saving it to a data file.
 public class RoomBuilder : EditorWindow
 {
-	[Serializable]
-	private class RoomData
-	{
-		public List<int> tiles = new List<int>();
-	}
-
 	private const float PPU = 32.0f;
 
 	private TileType[] tiles = new TileType[Chunk.Size2];
@@ -58,11 +51,11 @@ public class RoomBuilder : EditorWindow
 	private void LoadRoomData(string path)
 	{
 		string json = File.ReadAllText(path);
-		RoomData data;
+		ChunkData data;
 
 		try
 		{
-			data = JsonUtility.FromJson<RoomData>(json);
+			data = JsonUtility.FromJson<ChunkData>(json);
 		}
 		catch (Exception)
 		{
@@ -122,13 +115,13 @@ public class RoomBuilder : EditorWindow
 				Debug.LogError("Invalid file name.");
 			else
 			{
-				RoomData data = EncodeRLE();
+				ChunkData data = EncodeRLE();
 				string json = JsonUtility.ToJson(data);
 
-				if (!AssetDatabase.IsValidFolder("Assets/RoomData"))
-					AssetDatabase.CreateFolder("Assets", "RoomData");
+				if (!AssetDatabase.IsValidFolder("Assets/Resources/RoomData"))
+					AssetDatabase.CreateFolder("Assets", "Resources/RoomData");
 
-				File.WriteAllText(Application.dataPath + "/RoomData/" + fileName + ".dat", json);
+				File.WriteAllText(Application.dataPath + "/Resources/RoomData/" + fileName + ".txt", json);
 				AssetDatabase.Refresh();
 			}
 		}
@@ -198,9 +191,9 @@ public class RoomBuilder : EditorWindow
 	}
 
 	// Encode the room tile data using run-length encoding.
-	private RoomData EncodeRLE()
+	private ChunkData EncodeRLE()
 	{
-		RoomData data = new RoomData();
+		ChunkData data = new ChunkData();
 
 		int current = (int)tiles[0];
 		int count = 1;
@@ -228,7 +221,7 @@ public class RoomBuilder : EditorWindow
 		return data;
 	}
 
-	private void DecodeRLE(RoomData data)
+	private void DecodeRLE(ChunkData data)
 	{
 		int i = 0;
 		int loc = 0;

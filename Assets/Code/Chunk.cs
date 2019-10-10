@@ -26,11 +26,6 @@ public sealed class Chunk
 	public const int Size = 16;
 	public const int Size2 = Size * Size;
 
-	// Shift and mask are used for working with coordinates 
-	// in an optimized manner.
-	public const int Shift = 4;
-	public const int Mask = Size - 1;
-
 	// Chunk and world position from the bottom-left corner.
 	public Vector2Int cPos { get; private set; }
 	public Vector2Int wPos { get; private set; }
@@ -58,6 +53,9 @@ public sealed class Chunk
 		wPos = Utils.ChunkToWorldP(cX, cY);
 	}
 
+	public Chunk(int cX, int cY, string dataText) : this(cX, cY)
+		=> DecodeData(dataText);
+
 	// Tile data is stored in a 1D array. This collapses a
 	// 2D coordinate into a 1D index into the array.
 	public static int TileIndex(int x, int y)
@@ -77,6 +75,23 @@ public sealed class Chunk
 
 	public void SetModified()
 		=> pendingUpdate = true;
+
+	private void DecodeData(string data)
+	{
+		ChunkData chunkData = JsonUtility.FromJson<ChunkData>(data);
+
+		int i = 0;
+		int loc = 0;
+
+		while (i < Size2)
+		{
+			int count = chunkData.tiles[loc++];
+			TileType tile = (TileType)chunkData.tiles[loc++];
+
+			for (int j = 0; j < count; ++j)
+				tiles[i++] = tile;
+		}
+	}
 
 	// Fills an area of the chunk with a tile as determined by
 	// the given SpriteRect object.

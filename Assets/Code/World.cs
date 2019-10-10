@@ -8,13 +8,13 @@ using System.Collections.Generic;
 public class World : MonoBehaviour
 {
 	// Chunks are stored in a hash map for maximum flexibility. This doesn't force 
-	// any constraints as to how the world should be except that it must be. 
+	// any constraints as to how the world should be.
 	// Accessing chunks is slightly slower, but the difference is negligible.
 	private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
 	private void Start()
 	{
-		SampleGenerator generator = new SampleGenerator();
+		SampleRoomLoader generator = new SampleRoomLoader();
 		generator.Generate(this);
 	}
 
@@ -30,6 +30,9 @@ public class World : MonoBehaviour
 
 	public Chunk GetChunk(Vector2Int cP)
 		=> GetChunk(cP.x, cP.y);
+
+	public void SetChunk(int cX, int cY, Chunk chunk)
+		=> chunks.Add(new Vector2Int(cX, cY), chunk);
 
 	// Returns the tile at the given world location.
 	public Tile GetTile(int wX, int wY)
