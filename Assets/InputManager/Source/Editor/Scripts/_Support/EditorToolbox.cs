@@ -24,6 +24,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using Luminosity.IO;
+using UnityInputConverter;
 
 namespace LuminosityEditor.IO
 {

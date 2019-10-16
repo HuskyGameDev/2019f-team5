@@ -8,9 +8,12 @@ public class SampleRoomLoader
 {
 	public void Generate(World world)
 	{
-		const int RoomCount = 10;
+		const int RoomCount = 20;
 
 		TextAsset[] rooms = Resources.LoadAll<TextAsset>("RoomData");
+
+		if (rooms.Length == 0)
+			return;
 
 		for (int i = 0; i < RoomCount; ++i)
 		{

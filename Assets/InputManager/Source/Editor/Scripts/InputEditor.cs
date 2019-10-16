@@ -26,6 +26,7 @@ using UnityEditor.IMGUI.Controls;
 using System.Linq;
 using System.Collections.Generic;
 using Luminosity.IO;
+using UnityInputConverter;
 using UnityObject = UnityEngine.Object;
 
 namespace LuminosityEditor.IO
