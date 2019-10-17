@@ -3,6 +3,7 @@
 //
 
 using UnityEngine;
+using Luminosity.IO;
 
 public class CameraMove : MonoBehaviour
 {
@@ -13,10 +14,10 @@ public class CameraMove : MonoBehaviour
 		float x = 0.0f;
 		float y = 0.0f;
 
-		if (Input.GetKey(KeyCode.A)) x -= 1.0f;
-		if (Input.GetKey(KeyCode.D)) x += 1.0f;
-		if (Input.GetKey(KeyCode.W)) y += 1.0f;
-		if (Input.GetKey(KeyCode.S)) y -= 1.0f;
+		if (InputManager.GetKey(KeyCode.A)) x -= 1.0f;
+		if (InputManager.GetKey(KeyCode.D)) x += 1.0f;
+		if (InputManager.GetKey(KeyCode.W)) y += 1.0f;
+		if (InputManager.GetKey(KeyCode.S)) y -= 1.0f;
 
 		Vector2 move = new Vector2(x, y);
 		move *= (speed * Time.deltaTime);
