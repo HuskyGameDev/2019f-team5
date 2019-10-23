@@ -8,6 +8,7 @@ public enum TileType
 	Floor,
 	Wall,
 	Platform,
+	CaveWall,
 	Count
 }
 
