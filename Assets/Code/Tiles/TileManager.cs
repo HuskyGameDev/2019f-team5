@@ -24,7 +24,8 @@ public static class TileManager
 		new AirTile(),
 		new FloorTile(),
 		new WallTile(),
-		new PlatformTile()
+		new PlatformTile(),
+		new CaveWall()
 	};
 
 	public static TileData GetData(TileType type)
