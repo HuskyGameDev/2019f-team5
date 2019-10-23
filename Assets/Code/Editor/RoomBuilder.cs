@@ -13,9 +13,6 @@ public class RoomBuilder : EditorWindow
 {
 	private const float PPU = 32.0f;
 
-	private enum EditMode { Tile, Fill }
-	private EditMode mode = EditMode.Tile;
-
 	private TileType[] tiles = new TileType[Chunk.Size2];
 	private Texture[] textures = new Texture[(int)TileType.Count];
 
@@ -57,7 +54,6 @@ public class RoomBuilder : EditorWindow
 			tiles[i] = tileToSet;
 
 		Repaint();
-		mode = EditMode.Tile;
 	}
 
 	private void LoadRoomData(string path)
@@ -152,10 +148,10 @@ public class RoomBuilder : EditorWindow
 			Repaint();
 		}
 
-		hRect.x += 65.0f; 
+		hRect.x += 65.0f;
 
 		if (GUI.Button(hRect, "Fill"))
-			mode = EditMode.Fill;
+			Fill();
 
 		EventType e = Event.current.type;
 
@@ -168,39 +164,34 @@ public class RoomBuilder : EditorWindow
 		// Support click and drag editing.
 		if (e == EventType.MouseDown || e == EventType.MouseDrag)
 		{
-			if (mode == EditMode.Tile)
+			Vector2 mouseP = Event.current.mousePosition;
+			Vector2 gridP = (mouseP - gridStart) / PPU;
+
+			int gridX = Mathf.FloorToInt(gridP.x);
+			int gridY = Mathf.FloorToInt(gridP.y);
+
+			// Ensure we're within the bounds of the editing area.
+			if (gridX >= 0 && gridX < Chunk.Size && gridY >= 0 && gridY < Chunk.Size)
 			{
-				Vector2 mouseP = Event.current.mousePosition;
-				Vector2 gridP = (mouseP - gridStart) / PPU;
+				int index = MirroredTileIndex(gridX, gridY);
 
-				int gridX = Mathf.FloorToInt(gridP.x);
-				int gridY = Mathf.FloorToInt(gridP.y);
-
-				// Ensure we're within the bounds of the editing area.
-				if (gridX >= 0 && gridX < Chunk.Size && gridY >= 0 && gridY < Chunk.Size)
+				if (Event.current.button == 0)
 				{
-					int index = MirroredTileIndex(gridX, gridY);
-
-					if (Event.current.button == 0)
+					if (tiles[index] != tileToSet)
 					{
-						if (tiles[index] != tileToSet)
-						{
-							tiles[index] = tileToSet;
-							Repaint();
-						}
+						tiles[index] = tileToSet;
+						Repaint();
 					}
-					else if (Event.current.button == 1)
+				}
+				else if (Event.current.button == 1)
+				{
+					if (tiles[index] != TileType.Air)
 					{
-						if (tiles[index] != TileType.Air)
-						{
-							tiles[index] = TileType.Air;
-							Repaint();
-						}
+						tiles[index] = TileType.Air;
+						Repaint();
 					}
 				}
 			}
-			else if (mode == EditMode.Fill)
-				Fill();
 		}
 
 		for (int y = 0; y < Chunk.Size; ++y)
