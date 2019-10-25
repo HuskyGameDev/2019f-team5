@@ -30,4 +30,7 @@ public static class TileManager
 
 	public static TileData GetData(TileType type)
 		=> data[(int)type];
+
+	public static TileData GetData(Tile tile)
+		=> GetData(tile.type);
 }

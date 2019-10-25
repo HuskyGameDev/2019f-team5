@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class WorldRender : MonoBehaviour
 {
 	private World world;
-	private Queue<(SpriteRenderer, BoxCollider2D)> rectPool = new Queue<(SpriteRenderer, BoxCollider2D)>();
+	private Queue<SpriteRenderer> rectPool = new Queue<SpriteRenderer>();
 
 	private Camera cam;
 	private List<Chunk> visibleChunks = new List<Chunk>();
@@ -19,30 +19,28 @@ public class WorldRender : MonoBehaviour
 		cam = Camera.main;
 	}
 
-	public (SpriteRenderer, BoxCollider2D) GetTileRect()
+	public SpriteRenderer GetTileRect()
 	{
-		(SpriteRenderer, BoxCollider2D) rect;
+		SpriteRenderer rect;
 
 		if (rectPool.Count > 0)
 		{
 			rect = rectPool.Dequeue();
-			rect.Item1.enabled = true;
-			rect.Item2.enabled = true;
+			rect.enabled = true;
 		}
 		else
 		{
 			GameObject prefab = GameAssets.Instance.tileRectPrefab;
 			GameObject obj = Instantiate(prefab, world.transform);
-			rect = (obj.GetComponent<SpriteRenderer>(), obj.GetComponent<BoxCollider2D>());
+			rect = obj.GetComponent<SpriteRenderer>();
 		}
 
 		return rect;
 	}
 
-	public void ReturnTileRect((SpriteRenderer, BoxCollider2D) tileRect)
+	public void ReturnTileRect(SpriteRenderer tileRect)
 	{
-		tileRect.Item1.enabled = false;
-		tileRect.Item2.enabled = false;
+		tileRect.enabled = false;
 		rectPool.Enqueue(tileRect);
 	}
 

@@ -6,7 +6,7 @@ InputManager:
   serializedVersion: 2
   m_Axes:
   - serializedVersion: 3
-    m_Name: CamVert
+    m_Name: Vert
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: s
@@ -22,7 +22,7 @@ InputManager:
     axis: 1
     joyNum: 0
   - serializedVersion: 3
-    m_Name: CamHoriz
+    m_Name: Horiz
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: a

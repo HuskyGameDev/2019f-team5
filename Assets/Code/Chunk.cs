@@ -32,7 +32,7 @@ public sealed class Chunk
 
 	// Stores sprites this chunk is using so they can be returned to
 	// the pool when this chunk is out of view.
-	private List<(SpriteRenderer, BoxCollider2D)> rects = new List<(SpriteRenderer, BoxCollider2D)>();
+	private List<SpriteRenderer> rects = new List<SpriteRenderer>();
 
 	private Tile[] tiles = new Tile[Size2];
 
@@ -99,21 +99,16 @@ public sealed class Chunk
 	{
 		Tile tile = rect.tile;
 
-		(SpriteRenderer, BoxCollider2D) tileRect = rend.GetTileRect();
-		SpriteRenderer spriteRend = tileRect.Item1;
-		spriteRend.sprite = tile.data.sprite;
-		spriteRend.sortingOrder = tile.data.sortingOrder;
-		spriteRend.color = new Color(1.0f, 1.0f, 1.0f, tile.data.alpha);
-		spriteRend.drawMode = rect.width > 1 || rect.height > 1 ? SpriteDrawMode.Tiled : SpriteDrawMode.Simple;
-		spriteRend.size = new Vector2(rect.width, rect.height);
+		SpriteRenderer tileRect = rend.GetTileRect();
+		tileRect.sprite = tile.data.sprite;
+		tileRect.sortingOrder = tile.data.sortingOrder;
+		tileRect.color = new Color(1.0f, 1.0f, 1.0f, tile.data.alpha);
+		tileRect.drawMode = rect.width > 1 || rect.height > 1 ? SpriteDrawMode.Tiled : SpriteDrawMode.Simple;
+		tileRect.size = new Vector2(rect.width, rect.height);
 
-		Transform t = spriteRend.transform;
+		Transform t = tileRect.transform;
 		t.position = new Vector3(wPos.x + rect.startX, wPos.y + rect.startY);
 		t.localScale = Vector3.one;
-
-		BoxCollider2D col = tileRect.Item2;
-		col.size = new Vector2(rect.width, rect.height);
-		col.offset = col.size * 0.5f;
 
 		rects.Add(tileRect);
 	}
