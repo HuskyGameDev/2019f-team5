@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6212624466351573872}
   - component: {fileID: 6212624466351573873}
   - component: {fileID: 6212624466351573874}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bat2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,8 +93,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6cbb2bff99d3e409c1e0b5dae16c4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
+  speed: 80
   size: {x: 1, y: 1}
-  world: {fileID: 0}
-  jumpVelocity: 4
+  jumpVelocity: 0
   gravity: 0
+  aggro: 0
+  player: {fileID: 0}
