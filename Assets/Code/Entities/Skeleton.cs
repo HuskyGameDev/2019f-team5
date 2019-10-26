@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Skeleton : Entity
 {
-    [SerializeField]
-    GameObject Arrow;
+    public GameObject Arrow;
     float fireRate;
     float nextFire;
     // Start is called before the first frame update

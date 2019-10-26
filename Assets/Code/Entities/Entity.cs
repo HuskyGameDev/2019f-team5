@@ -27,6 +27,8 @@ public class Entity : MonoBehaviour
 
 	private Comparison<(AABB, Tile)> collideCompare;
 
+	protected static World world;
+
 	public Vector2 Position
 	{
 		get { return t.position; }
@@ -35,6 +37,9 @@ public class Entity : MonoBehaviour
 
 	private void Awake()
 	{
+		if (world == null)
+			world = GameObject.FindWithTag("Manager").GetComponent<World>();
+
 		t = GetComponent<Transform>();
 		rend = GetComponent<SpriteRenderer>();
 

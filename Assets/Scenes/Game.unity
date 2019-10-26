@@ -216,7 +216,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 100
   size: {x: 0.92, y: 0.95}
-  world: {fileID: 1115185759}
   jumpVelocity: 8.5
   gravity: -30
   jumps: 0
@@ -279,7 +278,7 @@ GameObject:
   - component: {fileID: 1115185758}
   m_Layer: 0
   m_Name: Manager
-  m_TagString: Untagged
+  m_TagString: Manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

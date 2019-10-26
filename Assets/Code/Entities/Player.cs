@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class Player : Entity
 {
-	public World world;
-
 	public float jumpVelocity;
 	public float gravity;
 
