@@ -95,6 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 120
   size: {x: 0, y: 0}
-  world: {fileID: 0}
   jumpVelocity: 0
   gravity: -30
+  aggro: 0
+  player: {fileID: 0}
