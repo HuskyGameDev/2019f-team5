@@ -4,32 +4,20 @@
 
 using UnityEngine;
 
-public class Player : Entity
+public class Rat : Entity
 {
+
 	public float jumpVelocity;
 	public float gravity;
 
-	[SerializeField]
-	public int jumps;
-
-	private void Start() 
-	{
-		jumps = 0;
-	}
-	private void Update()
+    private void Update()
 	{
 		Vector2 accel = new Vector2(Input.GetAxisRaw("Horiz"), 0.0f);
 
-		if (jumps < 1) {
-			if (Input.GetButtonDown("jump")) {
-				velocity.y = jumpVelocity;
-				jumps++;
-			}	
-		}
-
 		if ((colFlags & CollisionFlags.Below) != 0)
 		{
-			jumps=0;
+			if (Input.GetKey(KeyCode.Space))
+				velocity.y = jumpVelocity;
 		}
 
 		Move(world, accel, gravity);
