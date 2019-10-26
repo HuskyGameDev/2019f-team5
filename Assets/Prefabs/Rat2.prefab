@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8972272328664690412}
   - component: {fileID: 4990185676779627178}
   - component: {fileID: 8106532361971447689}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rat2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 120
-  size: {x: 0, y: 0}
+  size: {x: 0.92, y: 0.5}
   jumpVelocity: 0
   gravity: -30
   aggro: 0
