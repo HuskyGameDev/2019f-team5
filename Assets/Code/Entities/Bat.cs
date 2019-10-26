@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Bat : Entity
 {
-	public World world;
 
 	public float jumpVelocity;
 	public float gravity = 0;

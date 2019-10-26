@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Slime : Entity
 {
-	public World world;
 
 	public float jumpVelocity;
 	public float gravity = 0;
