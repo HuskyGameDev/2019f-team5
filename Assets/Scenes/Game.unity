@@ -215,10 +215,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 100
-  size: {x: 1, y: 1}
+  size: {x: 0.92, y: 0.95}
   world: {fileID: 1115185759}
   jumpVelocity: 8.5
   gravity: -30
+  jumps: 0
 --- !u!1 &605089497
 GameObject:
   m_ObjectHideFlags: 0
