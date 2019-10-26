@@ -3,6 +3,7 @@
 //
 
 using UnityEngine;
+using UnityEngine.Assertions;
 using System;
 using System.Collections.Generic;
 using System.Collections;
@@ -45,6 +46,8 @@ public sealed class Chunk
 	private bool pendingUpdate;
 	public bool pendingClear;
 
+	public List<Entity> entities { get; private set; } = new List<Entity>();
+
 	private ChunkState state;
 
 	public Chunk(int cX, int cY)
@@ -62,7 +65,11 @@ public sealed class Chunk
 		=> y * Size + x;
 
 	public void SetTile(int rX, int rY, Tile tile)
-		=> tiles[TileIndex(rX, rY)] = tile;
+	{
+		int index = TileIndex(rX, rY);
+		tiles[index] = tile;
+		TileManager.GetData(tiles[index]).OnSet(this, rX, rY);
+	}
 
 	public Tile GetTile(int rX, int rY)
 		=> tiles[TileIndex(rX, rY)];
@@ -91,6 +98,25 @@ public sealed class Chunk
 			for (int j = 0; j < count; ++j)
 				tiles[i++] = tile;
 		}
+
+		for (int y = 0; y < Size; ++y)
+		{
+			for (int x = 0; x < Size; ++x)
+				TileManager.GetData(tiles[TileIndex(x, y)]).OnSet(this, x, y);
+		}
+	}
+
+	public void SetEntity(Entity entity)
+	{
+		Assert.IsTrue(entity.chunk == null);
+		entities.Add(entity);
+		entity.chunk = this;
+	}
+
+	public void RemoveEntity(Entity entity)
+	{
+		entities.Remove(entity);
+		entity.chunk = null;
 	}
 
 	// Fills an area of the chunk with a tile as determined by

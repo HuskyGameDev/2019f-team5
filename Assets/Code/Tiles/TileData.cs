@@ -12,4 +12,6 @@ public class TileData
 	public float alpha { get; protected set; } = 1.0f;
 	public bool passable { get; protected set; }
 	public string name { get; protected set; }
+
+	public virtual void OnSet(Chunk chunk, int x, int y) { }
 }
