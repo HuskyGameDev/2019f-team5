@@ -95,7 +95,7 @@ public class ProcGen
         int[,] level = new int[4,4];
         makeSolutionPath(level);
 
-        TextAsset[,] rooms = new TextAsset[6,1];
+        TextAsset[,] rooms = new TextAsset[5,1];
 
         for (int i = 0; i < rooms.GetLength(0); i++) {
             TextAsset[] temp = Resources.LoadAll<TextAsset>("RoomData/type" + i);
