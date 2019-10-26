@@ -18,6 +18,7 @@ public class Entity : MonoBehaviour
 
 	protected CollisionFlags colFlags;
 
+	private SpriteRenderer rend;
 	private Transform t;
 
 	// Possible collisions and overlaps can be shared between all entities since only one entity will 
@@ -35,6 +36,7 @@ public class Entity : MonoBehaviour
 	private void Awake()
 	{
 		t = GetComponent<Transform>();
+		rend = GetComponent<SpriteRenderer>();
 
 		collideCompare = ((AABB, Tile) a, (AABB, Tile) b) =>
 		{
@@ -42,6 +44,14 @@ public class Entity : MonoBehaviour
 			float distB = Vector2.SqrMagnitude(Position - b.Item1.center);
 			return distA < distB ? -1 : 1;
 		};
+	}
+
+	private void SetFacingDirection()
+	{
+		if (velocity.x < -Mathf.Epsilon)
+			rend.flipX = true;
+		else if (velocity.x > Mathf.Epsilon)
+			rend.flipX = false;
 	}
 
 	public void MoveTo(float x, float y)
@@ -167,6 +177,7 @@ public class Entity : MonoBehaviour
 		}
 
 		possibleCollides.Clear();
+		SetFacingDirection();
 	}
 
 	private bool TestTileCollision(World world, AABB a, AABB b, Vector2 delta, ref float tMin, ref Vector2 normal)
