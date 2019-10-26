@@ -19,7 +19,6 @@ public class SampleRoomLoader
 		{
 			int room = Random.Range(0, rooms.Length);
 			Chunk chunk = new Chunk(i, 0, rooms[room].text);
-
 			world.SetChunk(i, 0, chunk);
 		}
 	}

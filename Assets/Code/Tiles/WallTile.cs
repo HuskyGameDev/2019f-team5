@@ -2,6 +2,8 @@
 // When We Fell
 //
 
+using UnityEngine;
+
 public class WallTile : TileData
 {
 	public WallTile()

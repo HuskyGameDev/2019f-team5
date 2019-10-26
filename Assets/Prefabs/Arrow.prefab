@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5547222984940325997}
   - component: {fileID: 5547222984940325994}
   - component: {fileID: 5547222984940325995}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c60e66cd37cc80940a8357535b7bbbee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
+  speed: 10
   size: {x: 0, y: 0}
-  world: {fileID: 0}
   gravity: 0

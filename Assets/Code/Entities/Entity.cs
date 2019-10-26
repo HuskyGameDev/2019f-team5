@@ -5,6 +5,28 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Object = UnityEngine.Object;
+
+public struct CollideResult
+{
+	public AABB bb;
+	public Entity entity;
+	public Tile tile;
+
+	public CollideResult(AABB bb, Entity entity)
+	{
+		this.bb = bb;
+		this.entity = entity;
+		tile = default;
+	}
+
+	public CollideResult(AABB bb, Tile tile)
+	{
+		this.bb = bb;
+		this.tile = tile;
+		entity = null;
+	}
+}
 
 public class Entity : MonoBehaviour
 {
@@ -23,9 +45,11 @@ public class Entity : MonoBehaviour
 
 	// Possible collisions and overlaps can be shared between all entities since only one entity will 
 	// be using them at a time - this saves memory.
-	private static List<(AABB, Tile)> possibleCollides = new List<(AABB, Tile)>();
+	private static List<CollideResult> possibleCollides = new List<CollideResult>();
 
-	private Comparison<(AABB, Tile)> collideCompare;
+	private Comparison<CollideResult> collideCompare;
+
+	public Chunk chunk;
 
 	protected static World world;
 
@@ -43,10 +67,10 @@ public class Entity : MonoBehaviour
 		t = GetComponent<Transform>();
 		rend = GetComponent<SpriteRenderer>();
 
-		collideCompare = ((AABB, Tile) a, (AABB, Tile) b) =>
+		collideCompare = (CollideResult a, CollideResult b) =>
 		{
-			float distA = Vector2.SqrMagnitude(Position - a.Item1.center);
-			float distB = Vector2.SqrMagnitude(Position - b.Item1.center);
+			float distA = Vector2.SqrMagnitude(Position - a.bb.center);
+			float distB = Vector2.SqrMagnitude(Position - b.bb.center);
 			return distA < distB ? -1 : 1;
 		};
 	}
@@ -86,6 +110,8 @@ public class Entity : MonoBehaviour
 	public AABB GetBoundingBox()
 		=> AABB.FromBottomCenter(Position, size);
 
+	protected virtual void OnCollide(CollideResult result) { }
+
 	private void GetPossibleCollidingTiles(World world, AABB entityBB, Vector2Int min, Vector2Int max)
 	{
 		for (int y = min.y; y <= max.y; ++y)
@@ -98,9 +124,62 @@ public class Entity : MonoBehaviour
 				if (!tileData.passable)
 				{
 					AABB bb = AABB.FromCorner(new Vector2(x, y), Vector2.one);
-					possibleCollides.Add((bb, tile));
+					possibleCollides.Add(new CollideResult(bb, tile));
 				}
 			}
+		}
+	}
+
+	private void GetPossibleCollidingEntities(World world, AABB entityBB, Vector2Int min, Vector2Int max)
+	{
+		AABB bounds = AABB.FromMinMax(min, max);
+
+		Vector2Int minChunk = Utils.WorldToChunkP(min.x, min.y);
+		Vector2Int maxChunk = Utils.WorldToChunkP(max.x, max.y);
+
+		for (int y = minChunk.y; y <= maxChunk.y; ++y)
+		{
+			for (int x = minChunk.x; x <= maxChunk.x; ++x)
+			{
+				Chunk chunk = world.GetChunk(x, y);
+
+				if (chunk == null)
+					continue;
+
+				List<Entity> list = chunk.entities;
+
+				for (int i = 0; i < list.Count; i++)
+				{
+					Entity targetEntity = list[i];
+
+					if (!Physics2D.GetIgnoreLayerCollision(gameObject.layer, targetEntity.gameObject.layer))
+					{
+						if (AABB.TestOverlap(bounds, entityBB))
+						{
+							CollideResult info = new CollideResult(targetEntity.GetBoundingBox(), targetEntity);
+							possibleCollides.Add(info);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void Rebase(World world)
+	{
+		Vector2Int cP = Utils.WorldToChunkP(Position);
+
+		if (chunk == null)
+		{
+			Chunk newChunk = world.GetChunk(cP.x, cP.y);
+
+			if (newChunk != null)
+				world.GetChunk(cP.x, cP.y).SetEntity(this);
+		}
+		else if (cP != chunk.cPos)
+		{
+			chunk.RemoveEntity(this);
+			world.GetChunk(cP.x, cP.y).SetEntity(this);
 		}
 	}
 
@@ -146,6 +225,9 @@ public class Entity : MonoBehaviour
 		// Tile collision checking.
 		GetPossibleCollidingTiles(world, entityBB, min, max);
 
+		// Entity collision checking.
+		GetPossibleCollidingEntities(world, entityBB, min, max);
+
 		possibleCollides.Sort(collideCompare);
 
 		float tRemaining = 1.0f;
@@ -155,20 +237,27 @@ public class Entity : MonoBehaviour
 			float tMin = 1.0f;
 			Vector2 normal = Vector2.zero;
 
-			(AABB, Tile) hitResult = default;
+			CollideResult hitResult = default;
+			bool hit = false;
 
 			for (int i = 0; i < possibleCollides.Count; ++i)
 			{
-				(AABB, Tile) info = possibleCollides[i];
-				bool result = TestTileCollision(world, entityBB, info.Item1, delta, ref tMin, ref normal);
+				CollideResult info = possibleCollides[i];
+				bool result = TestTileCollision(world, entityBB, info.bb, delta, ref tMin, ref normal);
 
-				if (result) hitResult = info;
+				if (result)
+				{
+					hitResult = info;
+					hit = true;
+				}
 			}
 
 			MoveBy(delta * tMin);
 
 			if (normal != Vector2.zero)
 				MoveBy((normal * Epsilon));
+
+			if (hit) OnCollide(hitResult);
 
 			entityBB = GetBoundingBox();
 
@@ -183,6 +272,8 @@ public class Entity : MonoBehaviour
 
 		possibleCollides.Clear();
 		SetFacingDirection();
+
+		Rebase(world);
 	}
 
 	private bool TestTileCollision(World world, AABB a, AABB b, Vector2 delta, ref float tMin, ref Vector2 normal)
@@ -259,4 +350,17 @@ public class Entity : MonoBehaviour
 
 		return false;
 	}
+
+	public new void Destroy(Object obj, float time)
+	{
+		if (chunk != null)
+		{
+			chunk.RemoveEntity(this);
+			chunk = null;
+			Object.Destroy(gameObject, time);
+		}
+	}
+
+	public new void Destroy(Object obj)
+		=> Destroy(obj, 0.0f);
 }
