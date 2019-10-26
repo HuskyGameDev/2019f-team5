@@ -10,8 +10,12 @@ public class Player : Entity
 	public float gravity;
 
 	[SerializeField]
-	public int jumps = 0;
+	public int jumps;
 
+	private void Start() 
+	{
+		jumps = 0;
+	}
 	private void Update()
 	{
 		Vector2 accel = new Vector2(Input.GetAxisRaw("Horiz"), 0.0f);
