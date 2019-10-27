@@ -5,21 +5,25 @@ using UnityEngine;
 public class Arrow : Entity
 {
     public float gravity;
-    Player target;
+    static Player target;
     Vector2 moveDirection;
-    void Start(){
-        target = GameObject.FindObjectOfType<Player>();
+
+    void Start()
+	{
+		if (target == null)
+			target = GameObject.FindWithTag("Player").GetComponent<Player>();
+
         moveDirection = (target.transform.position - transform.position).normalized * speed;
-        Move(world, moveDirection, gravity);
-      
     }
 
-    void Update(){
+    void Update()
+	{
         Move(world, moveDirection, gravity);
     }
 
-    protected override void OnCollide(CollideResult col){
-            Destroy(gameObject);
+    protected override void OnCollide(CollideResult col)
+	{
+		Destroy(gameObject);
     }
     
 }

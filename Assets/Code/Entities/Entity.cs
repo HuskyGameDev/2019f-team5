@@ -5,6 +5,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 using Object = UnityEngine.Object;
 
 public struct CollideResult
@@ -51,6 +52,7 @@ public class Entity : MonoBehaviour
 
 	public Chunk chunk;
 
+	private static WaitForEndOfFrame destroyWait = new WaitForEndOfFrame();
 	protected static World world;
 
 	public Vector2 Position
@@ -174,12 +176,16 @@ public class Entity : MonoBehaviour
 			Chunk newChunk = world.GetChunk(cP.x, cP.y);
 
 			if (newChunk != null)
-				world.GetChunk(cP.x, cP.y).SetEntity(this);
+				newChunk.SetEntity(this);
 		}
 		else if (cP != chunk.cPos)
 		{
 			chunk.RemoveEntity(this);
-			world.GetChunk(cP.x, cP.y).SetEntity(this);
+
+			Chunk newChunk = world.GetChunk(cP.x, cP.y);
+
+			if (newChunk != null)
+				newChunk.SetEntity(this);
 		}
 	}
 
@@ -354,13 +360,16 @@ public class Entity : MonoBehaviour
 	public new void Destroy(Object obj, float time)
 	{
 		if (chunk != null)
-		{
-			chunk.RemoveEntity(this);
-			chunk = null;
-			Object.Destroy(gameObject, time);
-		}
+			StartCoroutine(DestroyAtFrameEnd(obj, time));
 	}
 
 	public new void Destroy(Object obj)
 		=> Destroy(obj, 0.0f);
+
+	private IEnumerator DestroyAtFrameEnd(Object obj, float time)
+	{
+		yield return destroyWait;
+		chunk.RemoveEntity(this);
+		Object.Destroy(obj, time);
+	}
 }

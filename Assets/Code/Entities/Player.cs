@@ -38,7 +38,6 @@ public class Player : Entity
 
 	protected override void OnCollide(CollideResult result)
 	{
-		if (result.entity != null)
-			Debug.Log("Collided with entity");
+
 	}
 }
