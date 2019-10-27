@@ -9,6 +9,7 @@ public enum TileType
 	Wall,
 	Platform,
 	CaveWall,
+	Probability,
 	Count
 }
 
@@ -25,7 +26,8 @@ public static class TileManager
 		new FloorTile(),
 		new WallTile(),
 		new PlatformTile(),
-		new CaveWall()
+		new CaveWall(),
+		new ProbabilityTile()
 	};
 
 	public static TileData GetData(TileType type)

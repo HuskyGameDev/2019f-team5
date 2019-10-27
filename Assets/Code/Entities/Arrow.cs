@@ -11,18 +11,15 @@ public class Arrow : Entity
         target = GameObject.FindObjectOfType<Player>();
         moveDirection = (target.transform.position - transform.position).normalized * speed;
         Move(world, moveDirection, gravity);
-        Destroy (gameObject, 3f);
+      
     }
 
     void Update(){
         Move(world, moveDirection, gravity);
     }
 
-    void OnTriggerEnter2D(Collider2D hitInfo){
-       
+    protected override void OnCollide(CollideResult col){
             Destroy(gameObject);
-        
-        
     }
     
 }
