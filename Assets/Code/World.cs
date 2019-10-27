@@ -14,7 +14,8 @@ public class World : MonoBehaviour
 
 	private void Start()
 	{
-		SampleRoomLoader generator = new SampleRoomLoader();
+		//SampleRoomLoader generator = new SampleRoomLoader();
+		ProcGen generator = new ProcGen();
 		generator.Generate(this);
 	}
 

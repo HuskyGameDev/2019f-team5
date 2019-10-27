@@ -12,7 +12,7 @@ public class ProcGen
             return;
         }
 
-        if (prev == 2) {
+        if (prev == 2 || prev == 4) {
             level[roomX, roomY] = 4;
             prev = 4;
         } else {
@@ -29,7 +29,7 @@ public class ProcGen
             return;
         }
 
-        if (prev == 2) {
+        if (prev == 2 || prev == 4) {
             level[roomX, roomY] = 3;
             prev = 3;
         } else {
@@ -46,7 +46,7 @@ public class ProcGen
             return;
         }
 
-        if (prev == 2) {
+        if (prev == 2 || prev == 4) {
             level[roomX, roomY] = 3;
             prev = 3;
         } else {
@@ -94,6 +94,14 @@ public class ProcGen
         //second two dimensions are coords within each metatile/room
         int[,] level = new int[4,4];
         makeSolutionPath(level);
+
+        for (int i = 0; i < level.GetLength(0); i++) {
+            string output = "";
+            for (int j = 0; j < level.GetLength(1); j++) {
+                output += level[i, j];
+            }
+            Debug.Log(output);
+        }
 
         TextAsset[,] rooms = new TextAsset[5,1];
 
