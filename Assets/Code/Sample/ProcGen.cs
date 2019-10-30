@@ -122,7 +122,7 @@ public class ProcGen
             Debug.Log(output);
         }
 
-        TextAsset[,] rooms = new TextAsset[5,1];
+        TextAsset[,] rooms = new TextAsset[5,3];
 
         for (int i = 0; i < rooms.GetLength(0); i++) {
             TextAsset[] temp = Resources.LoadAll<TextAsset>("RoomData/type" + i);
