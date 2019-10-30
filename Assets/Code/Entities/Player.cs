@@ -9,7 +9,7 @@ public class Player : Entity
 	public float jumpVelocity;
 	public float gravity;
 
-	[SerializeField]
+	public bool flying;
 	public int jumps;
 
 	private void Start() 
@@ -19,21 +19,41 @@ public class Player : Entity
 
 	private void Update()
 	{
-		Vector2 accel = new Vector2(Input.GetAxisRaw("Horiz"), 0.0f);
+		Vector2 accel;
+		float currentGravity = gravity;
 
-		if (jumps < 1) {
-			if (Input.GetButtonDown("jump")) {
-				velocity.y = jumpVelocity;
-				jumps++;
-			}	
-		}
+		if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.Tab))
+			flying = !flying;
 
-		if ((colFlags & CollisionFlags.Below) != 0)
+		if (flying)
 		{
-			jumps=0;
+			accel = new Vector2(Input.GetAxisRaw("Horiz"), Input.GetAxisRaw("Vert"));
+
+			if (accel != Vector2.zero)
+				accel = accel.normalized;
+
+			currentGravity = 0.0f;
+		}
+		else
+		{
+			accel = new Vector2(Input.GetAxisRaw("Horiz"), 0.0f);
+
+			if (jumps < 1)
+			{
+				if (Input.GetButtonDown("jump"))
+				{
+					velocity.y = jumpVelocity;
+					jumps++;
+				}
+			}
+
+			if ((colFlags & CollisionFlags.Below) != 0)
+			{
+				jumps = 0;
+			}
 		}
 
-		Move(world, accel, gravity);
+		Move(world, accel, currentGravity);
 	}
 
 	protected override void OnCollide(CollideResult result)
