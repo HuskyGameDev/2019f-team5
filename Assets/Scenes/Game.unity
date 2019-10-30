@@ -338,6 +338,11 @@ PrefabInstance:
       propertyPath: jumpVelocity
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 2604508277722332105, guid: ad5c5321bfdbe224d80c00aaa0e2ce27,
+        type: 3}
+      propertyPath: size.y
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad5c5321bfdbe224d80c00aaa0e2ce27, type: 3}
 --- !u!1 &1115185756

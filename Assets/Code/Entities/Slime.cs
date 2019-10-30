@@ -13,10 +13,15 @@ public class Slime : Entity
 	public float jumpTime = 1.5f;
 	[SerializeField]
 	public GameObject player;
+
+	Vector2 accel;
+
+	public bool isJumping;
 	
 	private void Start()
 	{
 		player = GameObject.Find("Player");
+		accel = Vector2.zero;
 	}
     private void Update()
 	{	
@@ -35,21 +40,27 @@ public class Slime : Entity
 			aggro = false;
 		}
 
-		Vector2 accel = Vector2.zero;
-
-		if(PlayerX < transform.position.x && aggro && (colFlags & CollisionFlags.Below) == 0)
-		{
-			accel += Vector2.left;
-		} else if (PlayerX > transform.position.x && aggro && (colFlags & CollisionFlags.Below) == 0)
-		{	
-			accel += Vector2.right;
-		}
+		
 		
 		if(aggro && (colFlags & CollisionFlags.Below) != 0)
 		{
+			if(isJumping) {
+				isJumping = false;
+				accel = Vector2.zero;
+			}
 			if(jumpTime <= 0) {
 				velocity.y = jumpVelocity;
 				jumpTime = 1.5f;
+				
+			}
+		} else if (aggro && !isJumping) {
+			isJumping = true;
+			if(PlayerX < transform.position.x && aggro && ((colFlags & CollisionFlags.Below) == 0))
+			{
+				accel = Vector2.left;
+			} else if (PlayerX > transform.position.x && aggro && ((colFlags & CollisionFlags.Below) == 0))
+			{	
+				accel = Vector2.right;
 			}
 		}
 
