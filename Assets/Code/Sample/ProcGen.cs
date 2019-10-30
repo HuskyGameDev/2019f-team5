@@ -5,6 +5,13 @@ using System.IO;
 
 public class ProcGen
 {
+    public GameObject player;
+
+    private void Start()
+    {
+        player = GameObject.Find("Player");
+    }
+
     private void goDown(int[,] level, ref int roomX, ref int roomY, ref int prev)
     {
         //if trying to go down out of the level, the path is complete
@@ -74,6 +81,10 @@ public class ProcGen
         int roomX = Random.Range(0, 4);
         int roomY = 0;
 
+        // Spawn the player in the bottom-left corner of the starting room
+        player = GameObject.Find("Player");
+        player.transform.position = new Vector2(16 * roomX + (float)1.5, 49);
+
         int direction = 0;
         int prevRoom = 0;
         level[roomX, roomY] = 1;
@@ -99,6 +110,9 @@ public class ProcGen
                 goDown(level, ref roomX, ref roomY, ref prevRoom);
             }
         }
+
+
+
     }
 
     public void Generate(World world)
