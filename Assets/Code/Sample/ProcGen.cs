@@ -12,66 +12,60 @@ public class ProcGen
         player = GameObject.Find("Player");
     }
 
-    private void goDown(int[,] level, ref int roomX, ref int roomY, ref int prev)
+    private void goDown(int[,] level, ref int roomX, ref int roomY)
     {
         //if trying to go down out of the level, the path is complete
         if (roomY == level.GetLength(1) - 1) {
-            //if the previous movement was down, make the current room type 3.
-            if (prev == 2 || prev == 4) {
+            //if the level[roomX, roomY-1]ious movement was down, make the current room type 3.
+            if (level[roomX, roomY-1] == 2 || level[roomX, roomY-1] == 4) {
                 level[roomX, roomY] = 3;
             }
             roomY++;
             return;
         }
 
-        if (prev == 2 || prev == 4) {
+        if (roomY > 0 && (level[roomX, roomY-1] == 2 || level[roomX, roomY-1] == 4)) {
             level[roomX, roomY] = 4;
-            prev = 4;
         } else {
             level[roomX, roomY] = 2;
-            prev = 2;
         }
         roomY++;
     }
 
-    private void goLeft(int[,] level, ref int roomX, ref int roomY, ref int prev)
+    private void goLeft(int[,] level, ref int roomX, ref int roomY)
     {
         if (roomX == 0) {
             level[roomX, roomY] = 1;
-            goDown(level, ref roomX, ref roomY, ref prev);
+            goDown(level, ref roomX, ref roomY);
             return;
         }
 
-        if (prev == 2 || prev == 4) {
+        if (roomY > 0 && (level[roomX, roomY-1] == 2 || level[roomX, roomY-1] == 4)) {
             level[roomX, roomY] = 3;
-            prev = 3;
         } else if (level[roomX, roomY] == 3) {
             //3 type rooms already have side exits
             //do nothing so the top exit gets preserved    
         } else {
             level[roomX, roomY] = 1;
-            prev = 1;
         }
         roomX--;
     }
 
-    private void goRight(int[,] level, ref int roomX, ref int roomY, ref int prev)
+    private void goRight(int[,] level, ref int roomX, ref int roomY)
     {
         if (roomX == level.GetLength(0) - 1) {
             level[roomX, roomY] = 1;
-            goDown(level, ref roomX, ref roomY, ref prev);
+            goDown(level, ref roomX, ref roomY);
             return;
         }
 
-        if (prev == 2 || prev == 4) {
+        if (roomY > 0 && (level[roomX, roomY-1] == 2 || level[roomX, roomY-1] == 4)) {
             level[roomX, roomY] = 3;
-            prev = 3;
         } else if (level[roomX, roomY] == 3) {
             //3 type rooms already have side exits
             //do nothing so the top exit gets preserved    
         } else {
             level[roomX, roomY] = 1;
-            prev = 1;
         }
         roomX++;
     }
@@ -86,7 +80,6 @@ public class ProcGen
         player.transform.position = new Vector2(16 * roomX + (float)1.5, 49);
 
         int direction = 0;
-        int prevRoom = 0;
         level[roomX, roomY] = 1;
 
         while (roomY < level.GetLength(1))
@@ -97,17 +90,17 @@ public class ProcGen
             if (direction == 0 || direction == 1)
             {
                 //go left
-                goLeft(level, ref roomX, ref roomY, ref prevRoom);
+                goLeft(level, ref roomX, ref roomY);
 
             } else if (direction == 2 || direction == 3)
             {
                 //go right
-                goRight(level, ref roomX, ref roomY, ref prevRoom);
+                goRight(level, ref roomX, ref roomY);
 
             } else
             {
                 //go down
-                goDown(level, ref roomX, ref roomY, ref prevRoom);
+                goDown(level, ref roomX, ref roomY);
             }
         }
 
