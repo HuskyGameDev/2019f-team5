@@ -64,4 +64,35 @@ public class World : MonoBehaviour
 		Vector2Int rel = Utils.WorldToRelP(wX, wY);
 		chunk.SetTile(rel.x, rel.y, tile);
 	}
+
+	public List<Entity> GetOverlappingEntities(AABB bb)
+	{
+		List<Entity> result = new List<Entity>();
+
+		Vector2Int minChunk = Utils.WorldToChunkP(bb.center - bb.radius);
+		Vector2Int maxChunk = Utils.WorldToChunkP(bb.center + bb.radius);
+
+		for (int y = minChunk.y; y <= maxChunk.y; ++y)
+		{
+			for (int x = minChunk.x; x <= maxChunk.x; ++x)
+			{
+				Chunk chunk = GetChunk(x, y);
+
+				if (chunk == null)
+					continue;
+
+				List<Entity> list = chunk.entities;
+
+				for (int i = 0; i < list.Count; i++)
+				{
+					Entity targetEntity = list[i];
+
+					if (AABB.TestOverlap(bb, targetEntity.GetBoundingBox()))
+						result.Add(targetEntity);
+				}
+			}
+		}
+
+		return result;
+	}
 }
