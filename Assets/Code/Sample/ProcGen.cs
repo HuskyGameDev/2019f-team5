@@ -7,7 +7,12 @@ public class ProcGen
 {
     private void goDown(int[,] level, ref int roomX, ref int roomY, ref int prev)
     {
+        //if trying to go down out of the level, the path is complete
         if (roomY == level.GetLength(1) - 1) {
+            //if the previous movement was down, make the current room type 3.
+            if (prev == 2 || prev == 4) {
+                level[roomX, roomY] = 3;
+            }
             roomY++;
             return;
         }
@@ -25,6 +30,7 @@ public class ProcGen
     private void goLeft(int[,] level, ref int roomX, ref int roomY, ref int prev)
     {
         if (roomX == 0) {
+            level[roomX, roomY] = 1;
             goDown(level, ref roomX, ref roomY, ref prev);
             return;
         }
@@ -32,6 +38,9 @@ public class ProcGen
         if (prev == 2 || prev == 4) {
             level[roomX, roomY] = 3;
             prev = 3;
+        } else if (level[roomX, roomY] == 3) {
+            //3 type rooms already have side exits
+            //do nothing so the top exit gets preserved    
         } else {
             level[roomX, roomY] = 1;
             prev = 1;
@@ -42,6 +51,7 @@ public class ProcGen
     private void goRight(int[,] level, ref int roomX, ref int roomY, ref int prev)
     {
         if (roomX == level.GetLength(0) - 1) {
+            level[roomX, roomY] = 1;
             goDown(level, ref roomX, ref roomY, ref prev);
             return;
         }
@@ -49,6 +59,9 @@ public class ProcGen
         if (prev == 2 || prev == 4) {
             level[roomX, roomY] = 3;
             prev = 3;
+        } else if (level[roomX, roomY] == 3) {
+            //3 type rooms already have side exits
+            //do nothing so the top exit gets preserved    
         } else {
             level[roomX, roomY] = 1;
             prev = 1;
@@ -68,6 +81,7 @@ public class ProcGen
         while (roomY < level.GetLength(1))
         {
             direction = Random.Range(0,5);
+            Debug.Log(direction);
 
             if (direction == 0 || direction == 1)
             {
@@ -89,16 +103,14 @@ public class ProcGen
 
     public void Generate(World world)
     {
-        //2d array of 2d arrays
-        //first two dimensions are coords of metatiles/rooms
-        //second two dimensions are coords within each metatile/room
+        //2d array of rooms
         int[,] level = new int[4,4];
         makeSolutionPath(level);
 
-        for (int i = 0; i < level.GetLength(0); i++) {
+        for (int y = 0; y < level.GetLength(1); y++) {
             string output = "";
-            for (int j = 0; j < level.GetLength(1); j++) {
-                output += level[i, j];
+            for (int x = 0; x < level.GetLength(0); x++) {
+                output += level[x, y];
             }
             Debug.Log(output);
         }
@@ -114,15 +126,17 @@ public class ProcGen
 
         int type;
         int room;
+        int row = 3;
         Chunk chunk;
-        for (int i = 0; i < level.GetLength(0); i++) {
-            for (int j = 0; j < level.GetLength(1); j++) {
-                type = level[i, j];
+        for (int y = 0; y < level.GetLength(0); y++) {
+            for (int x = 0; x < level.GetLength(1); x++) {
+                type = level[x, y];
                 room = Random.Range(0, rooms.GetLength(1));
 
-                chunk = new Chunk(i, j, rooms[type, room].text);
-                world.SetChunk(i, j, chunk);
+                chunk = new Chunk(x, row, rooms[type, room].text);
+                world.SetChunk(x, row, chunk);
             }
+            row--;
         }
         
     }
