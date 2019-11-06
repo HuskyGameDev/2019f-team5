@@ -93,6 +93,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e140a4ff00292e4b902b392281b95ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
+  health: 15
+  speed: 20
   size: {x: 1, y: 1}
   Arrow: {fileID: 5547222984940325992, guid: c70621be114be6c42a2e4d8a2aea7a18, type: 3}
+  jumpVelocity: 5
+  gravity: -30
+  aggro: 0
+  player: {fileID: 0}
