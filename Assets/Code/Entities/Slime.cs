@@ -22,6 +22,7 @@ public class Slime : Entity
 	{
 		player = GameObject.Find("Player");
 		accel = Vector2.zero;
+		health = 15;
 	}
     private void Update()
 	{	
@@ -35,7 +36,7 @@ public class Slime : Entity
 			aggro = true;
 		}
 
-		if(Math.Abs(PlayerX - transform.position.x) >= 15 && Math.Abs(PlayerY - transform.position.y) >= 15)
+		if(Math.Abs(PlayerX - transform.position.x) >= 15 || Math.Abs(PlayerY - transform.position.y) >= 15)
 		{
 			aggro = false;
 		}

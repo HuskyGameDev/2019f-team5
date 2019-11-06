@@ -17,6 +17,7 @@ public class Bat : Entity
 	private void Start()
 	{
 		player = GameObject.Find("Player");
+		health = 6;
 	}
     private void Update()
 	{
@@ -28,7 +29,7 @@ public class Bat : Entity
 			aggro = true;
 		}
 
-		if(Math.Abs(PlayerX - transform.position.x) >= 10 && Math.Abs(PlayerY - transform.position.y) >= 10)
+		if(Math.Abs(PlayerX - transform.position.x) >= 10 || Math.Abs(PlayerY - transform.position.y) >= 10)
 		{
 			aggro = false;
 		}

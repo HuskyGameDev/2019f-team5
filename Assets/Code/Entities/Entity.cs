@@ -33,6 +33,7 @@ public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
 
+	public int health;
 	public float speed;
 	public Vector2 size;
 
