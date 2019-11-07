@@ -27,6 +27,9 @@ public sealed class Chunk
 	public const int Size = 16;
 	public const int Size2 = Size * Size;
 
+	public const int ObstacleBlockWidth = 8;
+	public const int ObstacleBlockHeight = 6;
+
 	// Chunk and world position from the bottom-left corner.
 	public Vector2Int cPos { get; private set; }
 	public Vector2Int wPos { get; private set; }
@@ -103,6 +106,36 @@ public sealed class Chunk
 		{
 			for (int x = 0; x < Size; ++x)
 				TileManager.GetData(tiles[TileIndex(x, y)]).OnSet(this, x, y);
+		}
+	}
+
+	public void SetObstacleBlock(int x, int y, string dataText)
+	{
+		ChunkData data = JsonUtility.FromJson<ChunkData>(dataText);
+
+		TileType[] blockTiles = new TileType[ObstacleBlockWidth * ObstacleBlockHeight];
+
+		int i = 0;
+		int loc = 0;
+
+		while (i < ObstacleBlockWidth * ObstacleBlockHeight)
+		{
+			int count = data.tiles[loc++];
+			TileType tile = (TileType)data.tiles[loc++];
+
+			for (int j = 0; j < count; ++j)
+				blockTiles[i++] = tile;
+		}
+
+		int index = 0;
+
+		for (int bY = y; bY < y + ObstacleBlockHeight; ++bY)
+		{
+			for (int bX = x; bX < x + ObstacleBlockWidth; ++bX)
+			{
+				if (bX >= 0 && bX < Size && bY >= 0 && bY < Size)
+					SetTile(bX, bY, blockTiles[index++]);
+			}
 		}
 	}
 

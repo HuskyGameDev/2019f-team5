@@ -11,10 +11,20 @@ using System.IO;
 // 16x16 room and saving it to a data file.
 public class RoomBuilder : EditorWindow
 {
+	private enum EditMode
+	{
+		Room,
+		ObstacleBlock
+	}
+
 	private const float PPU = 32.0f;
 
-	private TileType[] tiles = new TileType[Chunk.Size2];
+	private TileType[] roomTiles = new TileType[Chunk.Size2];
 	private Texture[] textures = new Texture[(int)TileType.Count];
+
+	private TileType[] blockTiles = new TileType[Chunk.ObstacleBlockWidth * Chunk.ObstacleBlockHeight];
+
+	private EditMode mode = EditMode.Room;
 
 	private TileType tileToSet = TileType.Platform;
 	private Vector2 scroll;
@@ -50,13 +60,15 @@ public class RoomBuilder : EditorWindow
 
 	private void Fill()
 	{
+		TileType[] tiles = mode == EditMode.Room ? roomTiles : blockTiles;
+
 		for (int i = 0; i < tiles.Length; ++i)
 			tiles[i] = tileToSet;
 
 		Repaint();
 	}
 
-	private void LoadRoomData(string path)
+	private void LoadData(string path, bool room)
 	{
 		string json = File.ReadAllText(path);
 		ChunkData data;
@@ -71,13 +83,29 @@ public class RoomBuilder : EditorWindow
 			return;
 		}
 
-		DecodeRLE(data);
+		if (room) DecodeRoomRLE(data);
+		else DecodeBlockRLE(data);
 	}
 
 	// The GUI for building rooms is flipped by default from how data is represented in
 	// the world. This ensures the data will be consistent.
-	private int MirroredTileIndex(int x, int y)
+	private int RoomTileIndex(int x, int y)
 		=> ((Chunk.Size - 1) - y) * Chunk.Size + x;
+
+	private int BlockTileIndex(int x, int y)
+		=> ((Chunk.ObstacleBlockHeight - 1) - y) * Chunk.ObstacleBlockWidth + x;
+
+	private void CreateRoomDataFolder()
+	{
+		if (!AssetDatabase.IsValidFolder("Assets/Resources/RoomData"))
+			AssetDatabase.CreateFolder("Assets/Resources", "RoomData");
+	}
+
+	private void CreateObstacleFolder()
+	{
+		if (!AssetDatabase.IsValidFolder("Assets/Resources/RoomData/Obstacles"))
+			AssetDatabase.CreateFolder("Assets/Resources/RoomData", "Obstacles");
+	}
 
 	private void OnGUI()
 	{
@@ -105,10 +133,13 @@ public class RoomBuilder : EditorWindow
 
 		string selectedName = textures[(int)tileToSet].name;
 
-		Rect hRect = new Rect(gridStart.x, 15.0f, 150.0f, 25.0f);
-		EditorGUI.LabelField(hRect, "Selected: " + selectedName);
+		Rect hRect = new Rect(gridStart.x, 15.0f, 115.0f, 20.0f);
 
-		hRect.x += 140.0f;
+		if (GUI.Button(hRect, "Mode: " + (mode == EditMode.Room ? "Room" : "Obstacle")))
+			mode = mode == EditMode.Room ? EditMode.ObstacleBlock : EditMode.Room;
+
+		hRect.x += 125.0f;
+		hRect.width = 150.0f;
 		hRect.height = 25.0f;
 		EditorGUI.LabelField(hRect, "Filename");
 
@@ -128,13 +159,26 @@ public class RoomBuilder : EditorWindow
 				Debug.LogError("Invalid file name.");
 			else
 			{
-				ChunkData data = EncodeRLE();
-				string json = JsonUtility.ToJson(data);
+				if (mode == EditMode.Room)
+				{
+					ChunkData data = EncodeRLE(roomTiles);
+					string json = JsonUtility.ToJson(data);
 
-				if (!AssetDatabase.IsValidFolder("Assets/Resources/RoomData"))
-					AssetDatabase.CreateFolder("Assets", "Resources/RoomData");
+					CreateRoomDataFolder();
 
-				File.WriteAllText(Application.dataPath + "/Resources/RoomData/" + fileName + ".txt", json);
+					File.WriteAllText(Application.dataPath + "/Resources/RoomData/" + fileName + ".txt", json);
+				}
+				else
+				{
+					ChunkData data = EncodeRLE(blockTiles);
+					string json = JsonUtility.ToJson(data);
+
+					CreateRoomDataFolder();
+					CreateObstacleFolder();
+
+					File.WriteAllText(Application.dataPath + "/Resources/RoomData/Obstacles/" + fileName + ".txt", json);
+				}
+				
 				AssetDatabase.Refresh();
 			}
 		}
@@ -144,7 +188,11 @@ public class RoomBuilder : EditorWindow
 		// Clear tiles in the room.
 		if (GUI.Button(hRect, "Clear"))
 		{
-			Array.Clear(tiles, 0, tiles.Length);
+			if (mode == EditMode.Room)
+				Array.Clear(roomTiles, 0, roomTiles.Length);
+			else if (mode == EditMode.ObstacleBlock)
+				Array.Clear(blockTiles, 0, blockTiles.Length);
+
 			Repaint();
 		}
 
@@ -153,44 +201,76 @@ public class RoomBuilder : EditorWindow
 		if (GUI.Button(hRect, "Fill"))
 			Fill();
 
+		hRect.x += 65.0f;
+		hRect.width = 120.0f;
+
+		EditorGUI.LabelField(hRect, "Selected: " + selectedName);
+
+		switch (mode)
+		{
+			case EditMode.Room:
+				RoomEditMode(gridStart);
+				break;
+
+			case EditMode.ObstacleBlock:
+				ObstacleBlockEditMode(gridStart);
+				break;
+		}
+
+		EditorGUILayout.EndScrollView();
+	}
+
+	private Vector2Int GetMouseGrid(Vector2 gridStart)
+	{
+		Vector2 mouseP = Event.current.mousePosition;
+		Vector2 gridP = (mouseP - gridStart) / PPU;
+
+		int gridX = Mathf.FloorToInt(gridP.x);
+		int gridY = Mathf.FloorToInt(gridP.y);
+
+		return new Vector2Int(gridX, gridY);
+	}
+
+	private void ProcessClick(TileType[] tiles, int index)
+	{
+		if (Event.current.button == 0)
+		{
+			if (tiles[index] != tileToSet)
+			{
+				tiles[index] = tileToSet;
+				Repaint();
+			}
+		}
+		else if (Event.current.button == 1)
+		{
+			if (tiles[index] != TileType.Air)
+			{
+				tiles[index] = TileType.Air;
+				Repaint();
+			}
+		}
+	}
+
+	private void RoomEditMode(Vector2 gridStart)
+	{
 		EventType e = Event.current.type;
 
 		if (e == EventType.DragExited)
 		{
 			if (DragAndDrop.paths.Length == 1)
-				LoadRoomData(DragAndDrop.paths[0]);
+				LoadData(DragAndDrop.paths[0], true);
 		}
 
 		// Support click and drag editing.
 		if (e == EventType.MouseDown || e == EventType.MouseDrag)
 		{
-			Vector2 mouseP = Event.current.mousePosition;
-			Vector2 gridP = (mouseP - gridStart) / PPU;
-
-			int gridX = Mathf.FloorToInt(gridP.x);
-			int gridY = Mathf.FloorToInt(gridP.y);
+			Vector2Int gridP = GetMouseGrid(gridStart);
 
 			// Ensure we're within the bounds of the editing area.
-			if (gridX >= 0 && gridX < Chunk.Size && gridY >= 0 && gridY < Chunk.Size)
+			if (gridP.x >= 0 && gridP.x < Chunk.Size && gridP.y >= 0 && gridP.y < Chunk.Size)
 			{
-				int index = MirroredTileIndex(gridX, gridY);
-
-				if (Event.current.button == 0)
-				{
-					if (tiles[index] != tileToSet)
-					{
-						tiles[index] = tileToSet;
-						Repaint();
-					}
-				}
-				else if (Event.current.button == 1)
-				{
-					if (tiles[index] != TileType.Air)
-					{
-						tiles[index] = TileType.Air;
-						Repaint();
-					}
-				}
+				int index = RoomTileIndex(gridP.x, gridP.y);
+				ProcessClick(roomTiles, index);
 			}
 		}
 
@@ -198,18 +278,51 @@ public class RoomBuilder : EditorWindow
 		{
 			for (int x = 0; x < Chunk.Size; ++x)
 			{
-				TileType tile = tiles[MirroredTileIndex(x, y)];
+				TileType tile = roomTiles[RoomTileIndex(x, y)];
 
 				Rect rect = new Rect(gridStart.x + (x * PPU), gridStart.y + (y * PPU), PPU, PPU);
 				EditorGUI.DrawPreviewTexture(rect, textures[(int)tile]);
 			}
 		}
+	}
 
-		EditorGUILayout.EndScrollView();
+	private void ObstacleBlockEditMode(Vector2 gridStart)
+	{
+		EventType e = Event.current.type;
+
+		if (e == EventType.DragExited)
+		{
+			if (DragAndDrop.paths.Length == 1)
+				LoadData(DragAndDrop.paths[0], false);
+		}
+
+		// Support click and drag editing.
+		if (e == EventType.MouseDown || e == EventType.MouseDrag)
+		{
+			Vector2Int gridP = GetMouseGrid(gridStart);
+
+			// Ensure we're within the bounds of the editing area.
+			if (gridP.x >= 0 && gridP.x < Chunk.ObstacleBlockWidth && gridP.y >= 0 && gridP.y < Chunk.ObstacleBlockHeight)
+			{
+				int index = BlockTileIndex(gridP.x, gridP.y);
+				ProcessClick(blockTiles, index);
+			}
+		}
+
+		for (int y = 0; y < Chunk.ObstacleBlockHeight; ++y)
+		{
+			for (int x = 0; x < Chunk.ObstacleBlockWidth; ++x)
+			{
+				TileType tile = blockTiles[BlockTileIndex(x, y)];
+
+				Rect rect = new Rect(gridStart.x + (x * PPU), gridStart.y + (y * PPU), PPU, PPU);
+				EditorGUI.DrawPreviewTexture(rect, textures[(int)tile]);
+			}
+		}
 	}
 
 	// Encode the room tile data using run-length encoding.
-	private ChunkData EncodeRLE()
+	private ChunkData EncodeRLE(TileType[] tiles)
 	{
 		ChunkData data = new ChunkData();
 
@@ -239,7 +352,7 @@ public class RoomBuilder : EditorWindow
 		return data;
 	}
 
-	private void DecodeRLE(ChunkData data)
+	private void DecodeRoomRLE(ChunkData data)
 	{
 		int i = 0;
 		int loc = 0;
@@ -250,7 +363,22 @@ public class RoomBuilder : EditorWindow
 			TileType tile = (TileType)data.tiles[loc++];
 
 			for (int j = 0; j < count; ++j)
-				tiles[i++] = tile;
+				roomTiles[i++] = tile;
+		}
+	}
+
+	private void DecodeBlockRLE(ChunkData data)
+	{
+		int i = 0;
+		int loc = 0;
+
+		while (i < Chunk.ObstacleBlockWidth * Chunk.ObstacleBlockHeight)
+		{
+			int count = data.tiles[loc++];
+			TileType tile = (TileType)data.tiles[loc++];
+
+			for (int j = 0; j < count; ++j)
+				blockTiles[i++] = tile;
 		}
 	}
 }
