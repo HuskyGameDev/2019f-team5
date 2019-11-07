@@ -17,6 +17,7 @@ public class Skeleton : Entity
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.Find("Player");
         fireRate = 3f;
         nextFire = Time.time;
         health = 15;
