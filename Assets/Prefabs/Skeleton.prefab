@@ -70,7 +70,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 7741498a6e82c3b42aa89e4682ba8f67, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6dd0661b10fed354bafbf646ec42e5ba, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 15
   speed: 20
-  size: {x: 1, y: 1}
+  size: {x: 0.92, y: 0.95}
   Arrow: {fileID: 5547222984940325992, guid: c70621be114be6c42a2e4d8a2aea7a18, type: 3}
   jumpVelocity: 5
   gravity: -30
