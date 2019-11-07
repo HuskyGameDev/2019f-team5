@@ -94,6 +94,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  speed: 10
-  size: {x: 0, y: 0}
+  speed: 15
+  size: {x: 0.7, y: 0.2}
   gravity: 0
