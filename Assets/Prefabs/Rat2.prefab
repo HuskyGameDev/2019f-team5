@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8972272328664690412}
   - component: {fileID: 4990185676779627178}
   - component: {fileID: 8106532361971447689}
+  - component: {fileID: 5912052113585515295}
   m_Layer: 10
   m_Name: Rat2
   m_TagString: Untagged
@@ -93,9 +94,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9254e7d23b28f974692198c9f0081d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
   speed: 120
   size: {x: 0.92, y: 0.5}
   jumpVelocity: 0
   gravity: -30
   aggro: 0
   player: {fileID: 0}
+--- !u!95 &5912052113585515295
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374459194844231363}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7fd2c75d1c62ab8439be5c187a0e2dc9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
