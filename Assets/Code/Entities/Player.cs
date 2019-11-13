@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Player : Entity
 {
-	Animator A;
 	public float jumpVelocity;
 	public float gravity;
 
@@ -16,9 +15,7 @@ public class Player : Entity
 	private void Start() 
 	{
 		jumps = 0;
-		A = GetComponent<Animator>();
 	}
-
 
 	private void Update()
 	{
@@ -57,10 +54,11 @@ public class Player : Entity
 		}
 
 		Move(world, accel, currentGravity);
+
 		if(accel != Vector2.zero) {
-			A.Play("Walking animation");
+			PlayAnimation("Walking animation");
 		} else {
-			A.Play("Static animation");
+			PlayAnimation("Static animation");
 		}
 	}
 
