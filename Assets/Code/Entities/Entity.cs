@@ -42,6 +42,7 @@ public class Entity : MonoBehaviour
 
 	protected CollisionFlags colFlags;
 
+	private Animator anim;
 	private SpriteRenderer rend;
 	private Transform t;
 
@@ -69,6 +70,7 @@ public class Entity : MonoBehaviour
 
 		t = GetComponent<Transform>();
 		rend = GetComponent<SpriteRenderer>();
+		anim = GetComponent<Animator>();
 
 		collideCompare = (CollideResult a, CollideResult b) =>
 		{
@@ -76,6 +78,14 @@ public class Entity : MonoBehaviour
 			float distB = Vector2.SqrMagnitude(Position - b.bb.center);
 			return distA < distB ? -1 : 1;
 		};
+	}
+
+	public void PlayAnimation(string name)
+	{
+		AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+
+		if (info.loop)
+			anim.Play(name);
 	}
 
 	private void SetFacingDirection()

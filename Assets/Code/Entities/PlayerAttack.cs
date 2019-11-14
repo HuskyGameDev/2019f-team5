@@ -5,8 +5,10 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
    World world;
+   Entity ent;
     void Start(){
         world = GameObject.FindWithTag("Manager").GetComponent<World>();
+        ent = GetComponent<Entity>();
     }
 
     // Update is called once per frame
@@ -14,7 +16,9 @@ public class PlayerAttack : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0)){
             Swing();
+            ent.PlayAnimation("Attack Animation");
         }
+        
     }
 
     private void Swing(){
@@ -28,7 +32,7 @@ public class PlayerAttack : MonoBehaviour
         if (entities.Count > 0)
         {
             for(int i = 0; i < entities.Count; i++){
-                if(!entities[i].name.Equals("Arrow")){
+                if(!entities[i].name.Equals("Arrow") || !entities[i].name.Equals("Player")){
                     Debug.Log("Hit");
                 }
             }
