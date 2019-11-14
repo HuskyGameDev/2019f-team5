@@ -35,6 +35,8 @@ public class Entity : MonoBehaviour
 
 	public int health;
 	public float speed;
+
+	protected MoveState moveState;
 	public Vector2 size;
 
 	protected Vector2 velocity;
@@ -49,6 +51,7 @@ public class Entity : MonoBehaviour
 	// Possible collisions and overlaps can be shared between all entities since only one entity will 
 	// be using them at a time - this saves memory.
 	private static List<CollideResult> possibleCollides = new List<CollideResult>();
+	private static List<CollideResult> overlaps = new List<CollideResult>();
 
 	private Comparison<CollideResult> collideCompare;
 
@@ -124,6 +127,7 @@ public class Entity : MonoBehaviour
 		=> AABB.FromBottomCenter(Position, size);
 
 	protected virtual void OnCollide(CollideResult result) { }
+	protected virtual void HandleOverlaps(List<CollideResult> overlaps) { }
 
 	private void GetPossibleCollidingTiles(World world, AABB entityBB, Vector2Int min, Vector2Int max)
 	{
@@ -134,10 +138,20 @@ public class Entity : MonoBehaviour
 				Tile tile = world.GetTile(x, y);
 				TileData tileData = TileManager.GetData(tile);
 
+				AABB bb = AABB.FromCorner(new Vector2(x, y), Vector2.one);
+
 				if (!tileData.passable)
-				{
-					AABB bb = AABB.FromCorner(new Vector2(x, y), Vector2.one);
 					possibleCollides.Add(new CollideResult(bb, tile));
+				else
+				{
+					if (tileData.overlapType != TileOverlapType.None)
+					{
+						if (AABB.TestOverlap(bb, entityBB))
+						{
+							CollideResult result = new CollideResult(bb, tile);
+							overlaps.Add(result);
+						}
+					}
 				}
 			}
 		}
@@ -202,6 +216,8 @@ public class Entity : MonoBehaviour
 
 	public void Move(World world, Vector2 accel, float gravity)
 	{
+		moveState = MoveState.Normal;
+
 		accel *= speed;
 		accel += velocity * friction;
 
@@ -288,6 +304,12 @@ public class Entity : MonoBehaviour
 		}
 
 		possibleCollides.Clear();
+
+		if (overlaps.Count > 0)
+			HandleOverlaps(overlaps);
+
+		overlaps.Clear();
+
 		SetFacingDirection();
 
 		Rebase(world);
