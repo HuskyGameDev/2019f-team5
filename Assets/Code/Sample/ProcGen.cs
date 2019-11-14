@@ -103,9 +103,14 @@ public class ProcGen
                 goDown(level, ref roomX, ref roomY);
             }
         }
+    }
 
-
-
+    private bool isSpawnable(Chunk chunk, int tileX, int tileY) {
+        if (chunk.GetTile(tileX, tileY).type == TileType.Air && 
+        chunk.GetTile(tileX, tileY - 1).type != TileType.Air) {
+            return true;
+        }
+        return false;
     }
 
     public void Generate(World world)
@@ -123,28 +128,53 @@ public class ProcGen
         }
 
         TextAsset[,] rooms = new TextAsset[5,3];
-
+        //get all rooms/chunks
         for (int i = 0; i < rooms.GetLength(0); i++) {
             TextAsset[] temp = Resources.LoadAll<TextAsset>("RoomData/type" + i);
             for (int j = 0; j < rooms.GetLength(1); j++) {
                 rooms[i, j] = temp[j];
             }
         }
+        //get all enemy prefabs
+        GameObject[] mobs = Resources.LoadAll<GameObject>("Mobs");
+        int mobCap = 4;
 
+        //fill in level with rooms of appropriate types
         int type;
         int room;
         int row = 3;
         Chunk chunk;
         for (int y = 0; y < level.GetLength(0); y++) {
             for (int x = 0; x < level.GetLength(1); x++) {
+                //generate the room
                 type = level[x, y];
                 room = Random.Range(0, rooms.GetLength(1));
 
                 chunk = new Chunk(x, row, rooms[type, room].text);
                 world.SetChunk(x, row, chunk);
+
+                //generate mobs in the room
+                int mobTot = 0;
+                for (int tileY = 0; tileY < 16; tileY++) {
+                    //stop spawning mobs if the cap is reached
+                    if (mobTot >= mobCap) { break; }
+                    for (int tileX = 0; tileX < 16; tileX++) {
+                        //probability a mob spawns in a given space
+                        int willSpawn = Random.Range(0,100);
+                        if (isSpawnable(chunk, tileX, tileY) && mobTot <= mobCap && willSpawn < 5) {
+                            int randMob = Random.Range(0, mobs.GetLength(0));
+                            GameObject.Instantiate(mobs[randMob], new Vector2(x * 16 + tileX, y * 16 + tileY), Quaternion.identity);
+                            mobTot++;
+
+                        }
+                    }
+                }
+
             }
             row--;
         }
+
+        
         
     }
 
