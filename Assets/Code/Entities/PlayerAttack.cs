@@ -7,41 +7,49 @@ public class PlayerAttack : MonoBehaviour
    World world;
    Entity ent;
 
+    float swingRate = 0.75f;
+    float nextSwing = 0;
+    SpriteRenderer spr;
    Player play;
     void Start(){
         world = GameObject.FindWithTag("Manager").GetComponent<World>();
         ent = GetComponent<Entity>();
         play = GetComponent<Player>();
+        spr = GetComponent<SpriteRenderer>();
     }
-
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0)){
+        if(Input.GetMouseButtonDown(0) && Time.time > nextSwing){
+            nextSwing = Time.time + swingRate;
             Swing();
             ent.PlayAnimation("Attack Animation");
         }
         
+        
     }
 
+    
+
     private void Swing(){
-        Vector3 cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //this will currently hit wherever the cursor is, going to change it to
-        //hit a set amount from the player in the direction clicked next sprint
-        AABB box = AABB.FromCenter(cursor , new Vector2(0.35f, 0.35f));
-       
+        Vector2 cursor = ((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - play.transform.position)).normalized;
+        Vector2 hitloc = (play.Position + cursor); 
+        AABB box = AABB.FromCenter(hitloc , new Vector2(1.25f, 1.25f));
         List<Entity> entities = world.GetOverlappingEntities(box);
 
         if (entities.Count > 0)
         {
             for(int i = 0; i < entities.Count; i++){
+                Vector2 knockbackdir = (entities[i].Position - play.Position) * 30;
+                Debug.Log(knockbackdir);
                 if(entities[i].gameObject.layer == 10){
                     entities[i].Damage(play.damage);
-                    Debug.Log("Hit");
+                    entities[i].ApplyForce(knockbackdir);
+                    
                 }
             }
         }
-
+       
     }
 
     

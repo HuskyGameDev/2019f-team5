@@ -21,8 +21,10 @@ public class Slime : Entity
 	
 	private void Start()
 	{
+		
 		player = GameObject.Find("Player");
 		accel = Vector2.zero;
+		
 	}
 
     private void Update()
