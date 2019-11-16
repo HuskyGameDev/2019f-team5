@@ -165,10 +165,11 @@ public class ProcGen
                     for (int tileX = 0; tileX < 16; tileX++) {
                         //probability a mob spawns in a given space
                         int willSpawn = Random.Range(0,100);
-                        if (isSpawnable(chunk, tileX, tileY) && mobTot <= mobCap && willSpawn < 3) {
+                        if (isSpawnable(chunk, tileX, tileY) && mobTot <= mobCap && willSpawn < 5) {
                             //Debug.Log("test?");
                             int randMob = Random.Range(0, mobs.GetLength(0));
-                            GameObject.Instantiate(mobs[randMob], new Vector2(x * 16 + tileX, y * 16 + tileY), Quaternion.identity);
+                            GameObject.Instantiate(mobs[randMob], 
+                                new Vector2(x * 16 + tileX + .5f, y * 16 + tileY), Quaternion.identity);
                             mobTot++;
 
                         }
