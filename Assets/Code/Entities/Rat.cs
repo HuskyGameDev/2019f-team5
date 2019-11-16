@@ -17,8 +17,8 @@ public class Rat : Entity
 	private void Start()
 	{
 		player = GameObject.Find("Player");
-		health = 6;
 	}
+
     private void Update()
 	{
 		float PlayerY = player.transform.position.y;

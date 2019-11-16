@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class Slime : Entity
 {
@@ -22,8 +23,8 @@ public class Slime : Entity
 	{
 		player = GameObject.Find("Player");
 		accel = Vector2.zero;
-		health = 15;
 	}
+
     private void Update()
 	{	
 		jumpTime -= Time.deltaTime;
@@ -66,5 +67,13 @@ public class Slime : Entity
 		}
 
 		Move(world, accel, gravity);
+	}
+
+	protected override void HandleOverlaps(List<CollideResult> overlaps)
+	{
+		for (int i = 0; i < overlaps.Count; ++i)
+		{
+			CollideResult result = overlaps[i];
+		}
 	}
 }

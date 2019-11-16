@@ -27,7 +27,6 @@ public class Arrow : Entity
 
     void Update()
 	{
-        health = 6;
         Move(world, moveDirection, gravity);
     }
 

@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890d399b82aee8d46a86b78cbf8b1122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 15
   speed: 60
   size: {x: 0.9, y: 0.9}
   jumpVelocity: 15

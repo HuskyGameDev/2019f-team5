@@ -26,6 +26,7 @@ public class Player : Entity
 	{
 		damage = 5;
 		jumps = 0;
+		hasInvincibleFrames = true;
 	}
 
 	private Vector2 SetNormal()

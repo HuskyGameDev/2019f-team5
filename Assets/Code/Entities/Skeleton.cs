@@ -20,7 +20,6 @@ public class Skeleton : Entity
         player = GameObject.Find("Player");
         fireRate = 3f;
         nextFire = Time.time;
-        health = 15;
     }
 
     // Update is called once per frame

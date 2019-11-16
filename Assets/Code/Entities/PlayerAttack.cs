@@ -36,7 +36,7 @@ public class PlayerAttack : MonoBehaviour
         {
             for(int i = 0; i < entities.Count; i++){
                 if(entities[i].gameObject.layer == 10){
-                    entities[i].health -= play.damage;
+                    entities[i].Damage(play.damage);
                     Debug.Log("Hit");
                 }
             }

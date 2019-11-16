@@ -33,9 +33,15 @@ public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
 
-	public int health;
+	private static WaitForSeconds invincibleWait = new WaitForSeconds(0.5f);
+	private Coroutine invincibleRoutine;
+
+	private int health;
 	public int damage;
 	public float speed;
+
+	protected bool hasInvincibleFrames = false;
+	private bool invincible;
 
 	protected MoveState moveState;
 	public Vector2 size;
@@ -132,6 +138,32 @@ public class Entity : MonoBehaviour
 
 	protected virtual void OnKill()
 		=> Destroy(gameObject);
+
+	public void Damage(int amount)
+	{
+		if (invincible) return;
+
+		health = Mathf.Max(health - amount, 0);
+
+		if (health == 0)
+			OnKill();
+
+		if (hasInvincibleFrames)
+		{
+			invincible = true;
+
+			if (invincibleRoutine != null)
+				StopCoroutine(invincibleRoutine);
+
+			invincibleRoutine = StartCoroutine(InvincibleWait());
+		}
+	}
+
+	private IEnumerator InvincibleWait()
+	{
+		yield return invincibleWait;
+		invincible = false;
+	}
 
 	private void GetPossibleCollidingTiles(World world, AABB entityBB, Vector2Int min, Vector2Int max)
 	{
@@ -317,9 +349,6 @@ public class Entity : MonoBehaviour
 		SetFacingDirection();
 
 		Rebase(world);
-
-		if (health <= 0)
-			OnKill();
 	}
 
 	private bool TestTileCollision(World world, AABB a, AABB b, Vector2 delta, ref float tMin, ref Vector2 normal)
