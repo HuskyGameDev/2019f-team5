@@ -30,7 +30,7 @@ public class Skeleton : Entity
         float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 14 && Math.Abs(PlayerY - transform.position.y) < 8)
+		if(Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 8)
 		{
 			aggro = true;
 		}
