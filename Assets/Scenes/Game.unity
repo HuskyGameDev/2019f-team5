@@ -238,7 +238,7 @@ MonoBehaviour:
   health: 0
   damage: 0
   speed: 100
-  size: {x: 0.92, y: 0.9}
+  size: {x: 0.8, y: 0.88}
   jumpVelocity: 8.5
   gravity: -30
   flying: 0
