@@ -21,10 +21,13 @@ public static class Utils
 	public static Vector2Int WorldToChunkP(Vector3 wP)
 		=> WorldToChunkP(Mathf.FloorToInt(wP.x), Mathf.FloorToInt(wP.y));
 
+	public static int Mod(int a, int n)
+		=> ((a % n) + n) % n;
+
 	// Converts a world (tile) position to a position relative
 	// to the chunk (between 0 and Chunk.Size - 1).
 	public static Vector2Int WorldToRelP(int wX, int wY)
-		=> new Vector2Int(wX % Chunk.Size, wY % Chunk.Size);
+		=> new Vector2Int(Mod(wX, Chunk.Size), Mod(wY, Chunk.Size));
 
 	public static float Square(float v)
 		=> v * v;

@@ -50,7 +50,7 @@ public class World : MonoBehaviour
 
 	// Sets a tile at the given world location. Computes the chunk the tile belongs
 	// in, and creates it if it doesn't exist.
-	public void SetTile(int wX, int wY, Tile tile)
+	public Chunk SetTile(int wX, int wY, Tile tile)
 	{
 		Vector2Int cP = Utils.WorldToChunkP(wX, wY);
 		Chunk chunk = GetChunk(cP);
@@ -63,6 +63,8 @@ public class World : MonoBehaviour
 
 		Vector2Int rel = Utils.WorldToRelP(wX, wY);
 		chunk.SetTile(rel.x, rel.y, tile);
+
+		return chunk;
 	}
 
 	public List<Entity> GetOverlappingEntities(AABB bb)
@@ -94,5 +96,22 @@ public class World : MonoBehaviour
 		}
 
 		return result;
+	}
+
+	public void Update()
+	{
+		if (Debug.isDebugBuild && Input.GetMouseButton(1))
+		{
+			Vector2 cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			Vector2Int cursorP = Utils.TilePos(cursor);
+
+			Tile tile = GetTile(cursorP.x, cursorP.y);
+
+			if (tile != TileType.Air || tile != TileType.CaveWall)
+			{
+				Chunk chunk = SetTile(cursorP.x, cursorP.y, TileType.CaveWall);
+				chunk.SetModified();
+			}
+		}
 	}
 }

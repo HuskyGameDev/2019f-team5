@@ -49,9 +49,7 @@ public class DebugHelper : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		Gizmos.color = Color.red;
-
-		for (int i = outlines.Count - 1; i >= 0.0f; --i)
+		for (int i = outlines.Count - 1; i >= 0; --i)
 		{
 			Outline o = outlines[i];
 			Gizmos.color = o.color;
