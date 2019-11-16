@@ -36,7 +36,7 @@ public class Entity : MonoBehaviour
 	private static WaitForSeconds invincibleWait = new WaitForSeconds(0.5f);
 	private Coroutine invincibleRoutine;
 
-	private int health;
+	[SerializeField] private int health;
 	public int damage;
 	public float speed;
 
