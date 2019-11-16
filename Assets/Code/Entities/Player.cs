@@ -66,7 +66,7 @@ public class Player : Entity
 
 		if (accel != Vector2.zero)
 			accel = accel.normalized;
-
+		jumps = 0;
 		return accel;
 	}
 

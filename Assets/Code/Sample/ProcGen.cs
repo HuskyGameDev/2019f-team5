@@ -129,7 +129,9 @@ public class ProcGen
             Debug.Log(output);
         }
 
-        TextAsset[,] rooms = new TextAsset[5,3];
+        // This variable controls the number of unique rooms of each room type.
+        int numRooms = 4;
+        TextAsset[,] rooms = new TextAsset[5,numRooms];
         //get all rooms/chunks
         for (int i = 0; i < rooms.GetLength(0); i++) {
             TextAsset[] temp = Resources.LoadAll<TextAsset>("RoomData/type" + i);
