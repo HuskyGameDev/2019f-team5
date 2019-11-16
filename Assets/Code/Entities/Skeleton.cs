@@ -25,7 +25,7 @@ public class Skeleton : Entity
     // Update is called once per frame
     void Update()
     {
-        FireOrNot();
+        StartCoroutine(FireOrNot());
 
         float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
@@ -61,9 +61,13 @@ public class Skeleton : Entity
 		Move(world, accel, -30);
     }
 
-    void FireOrNot(){
+    IEnumerator FireOrNot(){
         if(Time.time > nextFire && aggro){
+			PlayAnimation("SkeletonAttack");
+			yield return new WaitForSeconds(.5f);
+			if(Time.time > nextFire) {
             Instantiate(Arrow, transform.position, Quaternion.identity);
+			}
             nextFire = Time.time + fireRate;
         }
     }
