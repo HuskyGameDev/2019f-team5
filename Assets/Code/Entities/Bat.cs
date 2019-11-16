@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class Bat : Entity
 {
@@ -53,5 +54,32 @@ public class Bat : Entity
 		}
 
 		Move(world, accel, 0);
+	}
+
+	protected override void HandleOverlaps(List<CollideResult> overlaps)
+	{
+		for (int i = 0; i < overlaps.Count; ++i)
+		{
+			CollideResult result = overlaps[i];
+			Entity target = result.entity;
+
+			if (target != null && target is Player)
+			{
+				Vector2 diff = (target.Position - Position).normalized;
+
+				if (Mathf.Abs(diff.y) > 0.4f)
+				{
+					Damage(5);
+					target.ApplyForce(0.0f, 7.5f);
+				}
+				else
+				{
+					target.Damage(3);
+					Vector2 force = diff * 20.0f;
+					force.y = Mathf.Max(force.y, 2.0f);
+					target.ApplyForce(force);
+				}
+			}
+		}
 	}
 }

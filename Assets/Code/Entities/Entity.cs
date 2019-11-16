@@ -350,6 +350,9 @@ public class Entity : MonoBehaviour
 		SetFacingDirection();
 
 		Rebase(world);
+
+		if (DebugHelper.showOutlines)
+			GetBoundingBox().Draw(Color.green);
 	}
 
 	private bool TestTileCollision(World world, AABB a, AABB b, Vector2 delta, ref float tMin, ref Vector2 normal)
