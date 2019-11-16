@@ -52,4 +52,7 @@ public struct AABB
 
 		return overlapX && overlapY;
 	}
+	
+	public void Draw(Color color, float time)
+		=> DebugHelper.ShowOutline(center, radius * 2.0f, color, time);
 }

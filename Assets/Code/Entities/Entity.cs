@@ -214,12 +214,13 @@ public class Entity : MonoBehaviour
 				for (int i = 0; i < list.Count; i++)
 				{
 					Entity targetEntity = list[i];
+					AABB targetBB = targetEntity.GetBoundingBox();
 
 					if (!Physics2D.GetIgnoreLayerCollision(gameObject.layer, targetEntity.gameObject.layer))
 					{
-						if (AABB.TestOverlap(bounds, entityBB))
+						if (AABB.TestOverlap(bounds, targetBB))
 						{
-							CollideResult info = new CollideResult(targetEntity.GetBoundingBox(), targetEntity);
+							CollideResult info = new CollideResult(targetBB, targetEntity);
 							overlaps.Add(info);
 						}
 					}
