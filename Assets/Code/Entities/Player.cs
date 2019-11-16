@@ -121,4 +121,8 @@ public class Player : Entity
 
 	}
 
+	protected override void OnKill()
+	{
+		
+	}
 }
