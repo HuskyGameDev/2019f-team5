@@ -139,7 +139,7 @@ public class Entity : MonoBehaviour
 	protected virtual void OnKill()
 		=> Destroy(gameObject);
 
-	public void Damage(int amount)
+	public void Damage(int amount, Vector2 knockback)
 	{
 		if (invincible) return;
 
@@ -147,6 +147,7 @@ public class Entity : MonoBehaviour
 
 		if (health == 0)
 			OnKill();
+		else ApplyForce(knockback);
 
 		if (hasInvincibleFrames)
 		{
@@ -158,6 +159,9 @@ public class Entity : MonoBehaviour
 			invincibleRoutine = StartCoroutine(InvincibleWait());
 		}
 	}
+
+	public void Damage(int amount)
+		=> Damage(amount, Vector2.zero);
 
 	private IEnumerator InvincibleWait()
 	{
@@ -442,7 +446,10 @@ public class Entity : MonoBehaviour
 	private IEnumerator DestroyAtFrameEnd(Object obj, float time)
 	{
 		yield return destroyWait;
-		chunk.RemoveEntity(this);
+
+		if (chunk != null)
+			chunk.RemoveEntity(this);
+
 		Object.Destroy(obj, time);
 	}
 }

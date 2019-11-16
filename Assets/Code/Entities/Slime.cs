@@ -92,10 +92,9 @@ public class Slime : Entity
 				}
 				else
 				{
-					target.Damage(3);
 					Vector2 force = diff * 20.0f;
 					force.y = Mathf.Max(force.y, 2.0f);
-					target.ApplyForce(force);
+					target.Damage(3, force);
 				}
 			}
 		}
