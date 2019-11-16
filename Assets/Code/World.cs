@@ -107,7 +107,7 @@ public class World : MonoBehaviour
 
 			Tile tile = GetTile(cursorP.x, cursorP.y);
 
-			if (tile != TileType.Air || tile != TileType.CaveWall)
+			if (tile != TileType.Air && tile != TileType.CaveWall)
 			{
 				Chunk chunk = SetTile(cursorP.x, cursorP.y, TileType.CaveWall);
 				chunk.SetModified();

@@ -85,7 +85,6 @@ public class ProcGen
         while (roomY < level.GetLength(1))
         {
             direction = Random.Range(0,5);
-            Debug.Log(direction);
 
             if (direction == 0 || direction == 1)
             {
@@ -106,7 +105,6 @@ public class ProcGen
     }
 
     private bool isSpawnable(Chunk chunk, int tileX, int tileY) {
-        Debug.Log(tileX + " " + tileY);
         if ( tileY > 0 &&
         TileManager.GetData(chunk.GetTile(tileX, tileY)).passable && 
         !(TileManager.GetData(chunk.GetTile(tileX, tileY - 1)).passable) ) {
@@ -126,7 +124,6 @@ public class ProcGen
             for (int x = 0; x < level.GetLength(0); x++) {
                 output += level[x, y];
             }
-            Debug.Log(output);
         }
 
         // This variable controls the number of unique rooms of each room type.
@@ -169,7 +166,7 @@ public class ProcGen
                             //Debug.Log("test?");
                             int randMob = Random.Range(0, mobs.GetLength(0));
                             GameObject.Instantiate(mobs[randMob], 
-                                new Vector2(x * 16 + tileX + .5f, y * 16 + tileY), Quaternion.identity);
+                                new Vector2(x * 16 + tileX + .5f, row * 16 + tileY), Quaternion.identity);
                             mobTot++;
 
                         }

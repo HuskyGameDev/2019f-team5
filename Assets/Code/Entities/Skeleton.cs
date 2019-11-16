@@ -71,4 +71,29 @@ public class Skeleton : Entity
             nextFire = Time.time + fireRate;
         }
     }
+
+	protected override void HandleOverlaps(List<CollideResult> overlaps)
+	{
+		for (int i = 0; i < overlaps.Count; ++i)
+		{
+			CollideResult result = overlaps[i];
+			Entity target = result.entity;
+
+			if (target != null && target is Player)
+			{
+				Vector2 diff = (target.Position - Position).normalized;
+
+				if (diff.y > 0.4f)
+				{
+					Damage(5);
+					target.ApplyForce(0.0f, 7.5f);
+				}
+				else
+				{
+					Vector2 force = diff * 20.0f;
+					target.Damage(3, force);
+				}
+			}
+		}
+	}
 }

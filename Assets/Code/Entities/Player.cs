@@ -26,7 +26,7 @@ public class Player : Entity
 	{
 		damage = 5;
 		jumps = 0;
-		hasInvincibleFrames = true;
+		invincibleWait = new WaitForSeconds(0.5f);
 	}
 
 	private Vector2 SetNormal()

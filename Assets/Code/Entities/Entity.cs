@@ -33,14 +33,13 @@ public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
 
-	private static WaitForSeconds invincibleWait = new WaitForSeconds(0.5f);
+	protected static WaitForSeconds invincibleWait = new WaitForSeconds(0.1f);
 	private Coroutine invincibleRoutine;
 
 	[SerializeField] private int health;
 	public int damage;
 	public float speed;
 
-	protected bool hasInvincibleFrames = false;
 	private bool invincible;
 
 	protected MoveState moveState;
@@ -144,20 +143,17 @@ public class Entity : MonoBehaviour
 		if (invincible) return;
 
 		health = Mathf.Max(health - amount, 0);
+		ApplyForce(knockback);
 
 		if (health == 0)
 			OnKill();
-		else ApplyForce(knockback);
 
-		if (hasInvincibleFrames)
-		{
-			invincible = true;
+		invincible = true;
 
-			if (invincibleRoutine != null)
-				StopCoroutine(invincibleRoutine);
+		if (invincibleRoutine != null)
+			StopCoroutine(invincibleRoutine);
 
-			invincibleRoutine = StartCoroutine(InvincibleWait());
-		}
+		invincibleRoutine = StartCoroutine(InvincibleWait());
 	}
 
 	public void Damage(int amount)
@@ -199,8 +195,6 @@ public class Entity : MonoBehaviour
 
 	private void GetPossibleCollidingEntities(World world, AABB entityBB, Vector2Int min, Vector2Int max)
 	{
-		AABB bounds = AABB.FromMinMax(min, max);
-
 		Vector2Int minChunk = Utils.WorldToChunkP(min.x, min.y);
 		Vector2Int maxChunk = Utils.WorldToChunkP(max.x, max.y);
 
@@ -222,7 +216,7 @@ public class Entity : MonoBehaviour
 
 					if (!Physics2D.GetIgnoreLayerCollision(gameObject.layer, targetEntity.gameObject.layer))
 					{
-						if (AABB.TestOverlap(bounds, targetBB))
+						if (AABB.TestOverlap(entityBB, targetBB))
 						{
 							CollideResult info = new CollideResult(targetBB, targetEntity);
 							overlaps.Add(info);

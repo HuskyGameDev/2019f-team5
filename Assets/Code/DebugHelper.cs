@@ -34,17 +34,6 @@ public class DebugHelper : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.B))
 			showOutlines = !showOutlines;
-
-		for (int i = outlines.Count - 1; i >= 0; --i)
-		{
-			Outline o = outlines[i];
-
-			if (o.timeLeft != -1.0f)
-				o.timeLeft -= Time.deltaTime;
-
-			if (o.timeLeft <= 0.0f)
-				outlines.RemoveAt(i);
-		}
 	}
 
 	private void OnDrawGizmos()
@@ -55,7 +44,9 @@ public class DebugHelper : MonoBehaviour
 			Gizmos.color = o.color;
 			Gizmos.DrawWireCube(outlines[i].pos, outlines[i].size);
 
-			if (o.timeLeft == -1.0f)
+			o.timeLeft -= Time.deltaTime;
+
+			if (o.timeLeft <= 0.0f)
 				outlines.RemoveAt(i);
 		}
 	}
