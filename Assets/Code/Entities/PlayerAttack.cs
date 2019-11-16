@@ -36,12 +36,11 @@ public class PlayerAttack : MonoBehaviour
         Vector2 hitloc = (play.Position + cursor); 
         AABB box = AABB.FromCenter(hitloc , new Vector2(1.25f, 1.25f));
         List<Entity> entities = world.GetOverlappingEntities(box);
-
+        box.Draw(Color.red, 0.5f);
         if (entities.Count > 0)
         {
             for(int i = 0; i < entities.Count; i++){
                 Vector2 knockbackdir = (entities[i].Position - play.Position) * 30;
-                Debug.Log(knockbackdir);
                 if(entities[i].gameObject.layer == 10){
                     entities[i].Damage(play.damage);
                     entities[i].ApplyForce(knockbackdir);
