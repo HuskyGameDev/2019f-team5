@@ -129,6 +129,9 @@ public class Entity : MonoBehaviour
 	protected virtual void OnCollide(CollideResult result) { }
 	protected virtual void HandleOverlaps(List<CollideResult> overlaps) { }
 
+	protected virtual void OnKill()
+		=> Destroy(gameObject);
+
 	private void GetPossibleCollidingTiles(World world, AABB entityBB, Vector2Int min, Vector2Int max)
 	{
 		for (int y = min.y; y <= max.y; ++y)
@@ -184,7 +187,7 @@ public class Entity : MonoBehaviour
 						if (AABB.TestOverlap(bounds, entityBB))
 						{
 							CollideResult info = new CollideResult(targetEntity.GetBoundingBox(), targetEntity);
-							possibleCollides.Add(info);
+							overlaps.Add(info);
 						}
 					}
 				}
@@ -313,6 +316,9 @@ public class Entity : MonoBehaviour
 		SetFacingDirection();
 
 		Rebase(world);
+
+		if (health <= 0)
+			OnKill();
 	}
 
 	private bool TestTileCollision(World world, AABB a, AABB b, Vector2 delta, ref float tMin, ref Vector2 normal)
