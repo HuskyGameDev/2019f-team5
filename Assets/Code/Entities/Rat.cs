@@ -11,6 +11,7 @@ public class Rat : Entity
 	public float jumpVelocity;
 	public float gravity;
 	public bool aggro;
+	public bool movingRight, movingLeft;
 	[SerializeField]
 	public GameObject player;
 	
@@ -38,10 +39,24 @@ public class Rat : Entity
 
 		if(PlayerX < transform.position.x && aggro)
 		{
-			accel = Vector2.left;
+			if(Math.Abs(PlayerY - transform.position.y) > 1 && movingRight) {
+				accel = Vector2.right;
+			} else {
+				accel = Vector2.left;
+				movingRight = false;
+			}
+			
+			movingLeft = true;
 		} else if (aggro)
 		{
-			accel = Vector2.right;
+			if(Math.Abs(PlayerY - transform.position.y) > 1 && movingLeft) {
+				accel = Vector2.left;
+			} else {
+				accel = Vector2.right;
+				movingLeft = false;
+			}
+			movingRight = true;
+			
 		}
 
 		Move(world, accel, gravity);
