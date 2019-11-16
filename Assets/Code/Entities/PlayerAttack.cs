@@ -6,9 +6,12 @@ public class PlayerAttack : MonoBehaviour
 {
    World world;
    Entity ent;
+
+   Player play;
     void Start(){
         world = GameObject.FindWithTag("Manager").GetComponent<World>();
         ent = GetComponent<Entity>();
+        play = GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -32,7 +35,8 @@ public class PlayerAttack : MonoBehaviour
         if (entities.Count > 0)
         {
             for(int i = 0; i < entities.Count; i++){
-                if(!entities[i].name.Equals("Arrow") || !entities[i].name.Equals("Player")){
+                if(entities[i].gameObject.layer == 10){
+                    entities[i].health -= play.damage;
                     Debug.Log("Hit");
                 }
             }

@@ -24,6 +24,7 @@ public class Player : Entity
 
 	private void Start() 
 	{
+		damage = 5;
 		jumps = 0;
 	}
 

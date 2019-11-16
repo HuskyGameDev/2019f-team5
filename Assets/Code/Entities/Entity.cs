@@ -34,6 +34,7 @@ public class Entity : MonoBehaviour
 	public const float Epsilon = 0.0001f;
 
 	public int health;
+	public int damage;
 	public float speed;
 
 	protected MoveState moveState;
