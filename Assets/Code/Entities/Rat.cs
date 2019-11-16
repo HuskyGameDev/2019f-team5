@@ -25,7 +25,7 @@ public class Rat : Entity
 		float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 10 && Math.Abs(PlayerY - transform.position.y) < .2)
+		if(Math.Abs(PlayerX - transform.position.x) <= 10 && Math.Abs(PlayerY - transform.position.y) < 1.2)
 		{
 			aggro = true;
 		}
