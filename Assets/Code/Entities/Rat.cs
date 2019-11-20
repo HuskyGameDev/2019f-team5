@@ -5,6 +5,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Rat : Entity
 {
@@ -15,6 +16,8 @@ public class Rat : Entity
 	public bool movingRight, movingLeft;
 	[SerializeField]
 	public GameObject player;
+	public float count = 0;
+	public Vector2 stay;
 	
 	private void Start()
 	{
@@ -40,27 +43,19 @@ public class Rat : Entity
 
 		if(PlayerX < transform.position.x && aggro)
 		{
-			if(Math.Abs(PlayerY - transform.position.y) > 1 && movingRight) {
-				accel = Vector2.right;
-			} else {
-				accel = Vector2.left;
-				movingRight = false;
-			}
-			
-			movingLeft = true;
+			accel = Vector2.left;
 		} else if (aggro)
 		{
-			if(Math.Abs(PlayerY - transform.position.y) > 1 && movingLeft) {
-				accel = Vector2.left;
-			} else {
-				accel = Vector2.right;
-				movingLeft = false;
-			}
-			movingRight = true;
-			
+			accel = Vector2.right;
 		}
-
-		Move(world, accel, gravity);
+		
+		if((PlayerY - transform.position.y) > 1.99) {
+			Move(world, -accel, gravity);
+			StartCoroutine(wait());
+			Move(world, accel, gravity);
+		} else {
+			Move(world, accel, gravity);
+		}
 	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
@@ -86,5 +81,8 @@ public class Rat : Entity
 				}
 			}
 		}
+	}
+	IEnumerator wait() {
+		yield return new WaitForSeconds(5.0f);
 	}
 }
