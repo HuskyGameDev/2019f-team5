@@ -53,10 +53,16 @@ public sealed class Chunk
 
 	private ChunkState state;
 
-	public Chunk(int cX, int cY)
+	public Chunk(int cX, int cY, bool fillBackground = false)
 	{
 		cPos = new Vector2Int(cX, cY);
 		wPos = Utils.ChunkToWorldP(cX, cY);
+
+		if (fillBackground)
+		{
+			for (int i = 0; i < tiles.Length; ++i)
+				tiles[i] = TileType.CaveWall;
+		}
 	}
 
 	public Chunk(int cX, int cY, string dataText) : this(cX, cY)

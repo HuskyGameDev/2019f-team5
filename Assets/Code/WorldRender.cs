@@ -62,15 +62,18 @@ public class WorldRender : MonoBehaviour
 			{
 				Chunk chunk = world.GetChunk(x, y);
 
-				if (chunk != null)
+				if (chunk == null)
 				{
-					// If a chunk is still in view, it's no longer pending clear.
-					// Any chunks still pending clear after this function returns
-					// are actually out of view and can be cleared.
-					if (visibleChunks.Contains(chunk))
-						chunk.pendingClear = false;
-					else visibleChunks.Add(chunk);
+					chunk = new Chunk(x, y, true);
+					world.SetChunk(x, y, chunk);
 				}
+
+				// If a chunk is still in view, it's no longer pending clear.
+				// Any chunks still pending clear after this function returns
+				// are actually out of view and can be cleared.
+				if (visibleChunks.Contains(chunk))
+					chunk.pendingClear = false;
+				else visibleChunks.Add(chunk);
 			}
 		}
 	}
