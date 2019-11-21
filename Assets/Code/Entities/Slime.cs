@@ -92,7 +92,7 @@ public class Slime : Entity
 				}
 				else
 				{
-					Vector2 force = diff * 40.0f;
+					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
 				}
 			}

@@ -40,6 +40,8 @@ public class Entity : MonoBehaviour
 	public int damage;
 	public float speed;
 
+	[SerializeField] protected float knockbackForce;
+
 	private bool invincible;
 
 	protected MoveState moveState;

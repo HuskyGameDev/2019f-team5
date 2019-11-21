@@ -76,7 +76,7 @@ public class Rat : Entity
 				}
 				else
 				{
-					Vector2 force = diff * 80.0f;
+					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
 				}
 			}

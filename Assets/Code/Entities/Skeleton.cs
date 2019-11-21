@@ -90,7 +90,7 @@ public class Skeleton : Entity
 				}
 				else
 				{
-					Vector2 force = diff * 20.0f;
+					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
 				}
 			}
