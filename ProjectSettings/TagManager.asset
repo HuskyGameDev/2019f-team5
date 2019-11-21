@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GameAssets
   - Manager
+  - Enemy
   layers:
   - Default
   - TransparentFX

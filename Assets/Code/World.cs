@@ -100,17 +100,31 @@ public class World : MonoBehaviour
 
 	public void Update()
 	{
-		if (Debug.isDebugBuild && Input.GetMouseButton(1))
+		if (Debug.isDebugBuild)
 		{
-			Vector2 cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			Vector2Int cursorP = Utils.TilePos(cursor);
-
-			Tile tile = GetTile(cursorP.x, cursorP.y);
-
-			if (tile != TileType.Air && tile != TileType.CaveWall)
+			if (Input.GetMouseButton(1))
 			{
-				Chunk chunk = SetTile(cursorP.x, cursorP.y, TileType.CaveWall);
-				chunk.SetModified();
+				Vector2 cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				Vector2Int cursorP = Utils.TilePos(cursor);
+
+				Tile tile = GetTile(cursorP.x, cursorP.y);
+
+				if (tile != TileType.Air && tile != TileType.CaveWall)
+				{
+					Chunk chunk = SetTile(cursorP.x, cursorP.y, TileType.CaveWall);
+					chunk.SetModified();
+				}
+			}
+
+			if (Input.GetKeyDown(KeyCode.K))
+			{
+				GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+				for (int i = 0; i < enemies.Length; ++i)
+				{
+					Entity entity = enemies[i].GetComponent<Entity>();
+					entity.Damage(int.MaxValue);
+				}
 			}
 		}
 	}

@@ -63,6 +63,8 @@ public class Entity : MonoBehaviour
 
 	private Comparison<CollideResult> collideCompare;
 
+	private static Vector2 currentKnockback;
+
 	public Chunk chunk;
 
 	private static WaitForEndOfFrame destroyWait = new WaitForEndOfFrame();
@@ -125,10 +127,10 @@ public class Entity : MonoBehaviour
 	public void MoveBy(Vector2 p)
 		=> MoveBy(p.x, p.y);
 
-	public void ApplyForce(Vector2 force)
-		=> velocity = force;
+	public void ApplyKnockback(Vector2 force)
+		=> ApplyKnockback(force.x, force.y);
 
-	public void ApplyForce(float x, float y)
+	public void ApplyKnockback(float x, float y)
 		=> velocity = new Vector2(x, y);
 
 	public AABB GetBoundingBox()
@@ -145,7 +147,7 @@ public class Entity : MonoBehaviour
 		if (invincible) return;
 
 		health = Mathf.Max(health - amount, 0);
-		ApplyForce(knockback);
+		ApplyKnockback(knockback);
 
 		if (health == 0)
 			OnKill();

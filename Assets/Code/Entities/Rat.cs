@@ -72,7 +72,7 @@ public class Rat : Entity
 				if (diff.y > 0.4f)
 				{
 					Damage(5);
-					target.ApplyForce(0.0f, 7.5f);
+					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
 				{

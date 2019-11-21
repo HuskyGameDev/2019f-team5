@@ -46,7 +46,7 @@ public class PlayerAttack : MonoBehaviour
                 Vector2 knockbackdir = (entities[i].Position - play.Position) * knockbackAmount;
                 if(entities[i].gameObject.layer == 10){
                     entities[i].Damage(play.damage);
-                    entities[i].ApplyForce(knockbackdir);
+                    entities[i].ApplyKnockback(knockbackdir);
                     
                 }
             }
