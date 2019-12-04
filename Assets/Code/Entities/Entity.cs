@@ -109,6 +109,9 @@ public class Entity : MonoBehaviour
 			rend.flipX = false;
 	}
 
+	public void SetFacingDirection(bool left)
+		=> rend.flipX = left;
+
 	public void MoveTo(float x, float y)
 	{
 		Vector2 p = new Vector2(x, y);
