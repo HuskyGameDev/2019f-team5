@@ -85,6 +85,8 @@ public class RoomBuilder : EditorWindow
 
 		if (room) DecodeRoomRLE(data);
 		else DecodeBlockRLE(data);
+
+		titleContent = new GUIContent(Path.GetFileNameWithoutExtension(path));
 	}
 
 	// The GUI for building rooms is flipped by default from how data is represented in
@@ -180,6 +182,7 @@ public class RoomBuilder : EditorWindow
 				}
 				
 				AssetDatabase.Refresh();
+				titleContent = new GUIContent(fileName);
 			}
 		}
 
