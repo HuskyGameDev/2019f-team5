@@ -13,6 +13,7 @@ public class Skeleton : Entity
 	public bool aggro;
 	[SerializeField]
 	public GameObject player;
+	public bool collide;
 
     // Start is called before the first frame update
     void Start()
@@ -44,19 +45,27 @@ public class Skeleton : Entity
 
 		if(PlayerX < transform.position.x && aggro)
 		{
-			accel += Vector2.left;
+			if(Math.Abs(PlayerX - transform.position.x) >= 5)
+			{
+				accel = Vector2.left;
+			}
+			SetFacingDirection(true);
+
 		} else if (aggro)
 		{
-			accel += Vector2.right;
+			if(Math.Abs(PlayerX - transform.position.x) >= 5)
+			{
+				accel = Vector2.right;
+			}
+			SetFacingDirection(false);
 		}
 		
-		if(PlayerY < transform.position.y && aggro)
+		if(collide && aggro)
 		{
-			accel += Vector2.down;
-		} else if (aggro)
-		{
-			accel += Vector2.up;
+			velocity.y = jumpVelocity;
+			collide = false;
 		}
+
 
 		Move(world, accel, -30);
     }
@@ -70,6 +79,13 @@ public class Skeleton : Entity
 			}
             nextFire = Time.time + fireRate;
         }
+    }
+
+	protected override void OnCollide(CollideResult col)
+	{
+		if((colFlags & CollisionFlags.Sides) != 0 && (colFlags & CollisionFlags.Below) != 0){
+		collide = true;
+		}
     }
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
