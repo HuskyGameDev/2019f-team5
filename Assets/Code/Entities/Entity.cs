@@ -32,6 +32,7 @@ public struct CollideResult
 public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
+	private const float KnockbackFriction = 0.25f;
 
 	protected static WaitForSeconds invincibleWait = new WaitForSeconds(0.1f);
 	private Coroutine invincibleRoutine;
@@ -142,7 +143,13 @@ public class Entity : MonoBehaviour
 		=> ApplyKnockback(force.x, force.y);
 
 	public void ApplyKnockback(float x, float y)
-		=> velocity = new Vector2(x, y);
+	{
+		velocity = new Vector2(x, y);
+		Ray ray = new Ray(Position, new Vector3(x, y).normalized);
+
+		if (!world.TileRaycast(ray, 2.0f, out _))
+			velocity *= KnockbackFriction;
+	}
 
 	public AABB GetBoundingBox()
 		=> AABB.FromBottomCenter(Position, size);

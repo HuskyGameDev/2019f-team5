@@ -149,7 +149,7 @@ public class World : MonoBehaviour
 		return nearP > 0.0f ? nearP : farP;
 	}
 
-	public bool TileRaycast(Ray ray, float dist, ref Vector2 result)
+	public bool TileRaycast(Ray ray, float dist, out Vector2 result)
 	{
 		Vector2Int start = Utils.TilePos(ray.origin);
 		Vector2Int end = Utils.TilePos(ray.origin + ray.direction * dist);
@@ -178,7 +178,7 @@ public class World : MonoBehaviour
 
 				if (TileManager.GetData(tile).passable) continue;
 
-				float newDist = TileRayIntersection(new Vector2((float)x, (float)y), ray);
+				float newDist = TileRayIntersection(new Vector2(x, y), ray);
 				minDistance = Mathf.Min(minDistance, newDist);
 			}
 		}
@@ -189,6 +189,7 @@ public class World : MonoBehaviour
 			return true;
 		}
 
+		result = Vector2.zero;
 		return false;
 	}
 
