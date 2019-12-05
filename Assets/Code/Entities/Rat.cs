@@ -44,15 +44,19 @@ public class Rat : Entity
 		if(PlayerX < transform.position.x && aggro)
 		{
 			if(Math.Abs(PlayerX - transform.position.x) >= .9)
-		{
-			accel = Vector2.left;
-		}
+			{
+				accel = Vector2.left;
+			}
+
+			SetFacingDirection(true);
 		} else if (aggro)
 		{
 			if(Math.Abs(PlayerX - transform.position.x) >= .9)
-		{
-			accel = Vector2.right;
-		}
+			{
+				accel = Vector2.right;
+			}
+
+			SetFacingDirection(false);
 		}
 		
 		if((PlayerY - transform.position.y) > 1.99) {

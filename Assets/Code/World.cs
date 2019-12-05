@@ -67,6 +67,18 @@ public class World : MonoBehaviour
 		return chunk;
 	}
 
+	public void SetTileArea(AABB bb, Tile tile)
+	{
+		Vector2Int min = Utils.TilePos(bb.center - bb.radius);
+		Vector2Int max = Utils.TilePos(bb.center + bb.radius);
+
+		for (int y = min.y; y <= max.y; ++y)
+		{
+			for (int x = min.x; x <= max.x; ++x)
+				SetTile(x, y, tile);
+		}
+	}
+
 	public List<Entity> GetOverlappingEntities(AABB bb)
 	{
 		List<Entity> result = new List<Entity>();
@@ -96,6 +108,88 @@ public class World : MonoBehaviour
 		}
 
 		return result;
+	}
+
+	private float TileRayIntersection(Vector2 tilePos, Ray ray)
+	{
+		float nearP = -float.MaxValue;
+		float farP = float.MaxValue;
+
+		for (int i = 0; i < 2; i++)
+		{
+			float min = tilePos[i];
+			float max = tilePos[i] + 1.0f;
+
+			float pos = ray.origin[i];
+			float dir = ray.direction[i];
+
+			if (Mathf.Abs(dir) <= Mathf.Epsilon)
+			{
+				if ((pos < min) || (pos > max))
+					return float.MaxValue;
+			}
+
+			float t0 = (min - pos) / dir;
+			float t1 = (max - pos) / dir;
+
+			if (t0 > t1)
+			{
+				float tmp = t0;
+				t0 = t1;
+				t1 = tmp;
+			}
+
+			nearP = Mathf.Max(t0, nearP);
+			farP = Mathf.Min(t1, farP);
+
+			if (nearP > farP) return float.MaxValue;
+			if (farP < 0.0f) return float.MaxValue;
+		}
+
+		return nearP > 0.0f ? nearP : farP;
+	}
+
+	public bool TileRaycast(Ray ray, float dist, ref Vector2 result)
+	{
+		Vector2Int start = Utils.TilePos(ray.origin);
+		Vector2Int end = Utils.TilePos(ray.origin + ray.direction * dist);
+
+		if (start.x > end.x)
+		{
+			int tmp = start.x;
+			start.x = end.x;
+			end.x = tmp;
+		}
+
+		if (start.y > end.y)
+		{
+			int tmp = start.y;
+			start.y = end.y;
+			end.y = tmp;
+		}
+
+		float minDistance = dist;
+
+		for (int y = start.y; y <= end.y; y++)
+		{
+			for (int x = start.x; x <= end.x; x++)
+			{
+				Tile tile = GetTile(x, y);
+
+				if (TileManager.GetData(tile).passable) continue;
+
+				float newDist = BlockRayIntersection(new Vector2((float)x, (float)y), ray);
+				minDistance = Mathf.Min(minDistance, newDist);
+			}
+		}
+
+		if (minDistance != dist)
+		{
+			result = ray.origin + ray.direction * minDistance;
+			return true;
+		}
+
+		return false;
 	}
 
 	public void Update()
