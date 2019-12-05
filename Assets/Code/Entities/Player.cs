@@ -22,11 +22,15 @@ public class Player : Entity
 	public bool flying;
 	public int jumps;
 
+	public int[] collectables = new int[3];
 	private void Start() 
 	{
 		damage = 5;
 		jumps = 0;
 		invincibleWait = new WaitForSeconds(0.5f);
+		for(int i = 0; i < collectables.Length; i++){
+			collectables[i] = 0;
+		}
 	}
 
 	private Vector2 SetNormal()
