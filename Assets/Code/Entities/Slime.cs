@@ -64,15 +64,18 @@ public class Slime : Entity
 			if (PlayerX < transform.position.x && aggro && ((colFlags & CollisionFlags.Below) == 0))
 			{
 				accel = Vector2.left;
+				SetFacingDirection(false);
 			}
 			else if (PlayerX > transform.position.x && aggro && ((colFlags & CollisionFlags.Below) == 0))
 			{
 				accel = Vector2.right;
+				SetFacingDirection(true);
 			}
 		}
 
 		Move(world, accel, gravity);
 	}
+
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{

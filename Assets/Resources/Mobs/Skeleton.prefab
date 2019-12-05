@@ -100,10 +100,11 @@ MonoBehaviour:
   knockbackForce: 20
   size: {x: 0.92, y: 0.95}
   Arrow: {fileID: 5547222984940325992, guid: c70621be114be6c42a2e4d8a2aea7a18, type: 3}
-  jumpVelocity: 5
+  jumpVelocity: 7.81
   gravity: -30
   aggro: 0
   player: {fileID: 0}
+  collide: 0
 --- !u!95 &-8919783170057923555
 Animator:
   serializedVersion: 3

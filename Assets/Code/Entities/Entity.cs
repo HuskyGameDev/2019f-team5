@@ -32,6 +32,7 @@ public struct CollideResult
 public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
+	private const float KnockbackFriction = 0.25f;
 
 	protected static WaitForSeconds invincibleWait = new WaitForSeconds(0.1f);
 	private Coroutine invincibleRoutine;
@@ -55,6 +56,8 @@ public class Entity : MonoBehaviour
 	private Animator anim;
 	private SpriteRenderer rend;
 	private Transform t;
+
+	private bool setFacingFromVelocity = true;
 
 	// Possible collisions and overlaps can be shared between all entities since only one entity will 
 	// be using them at a time - this saves memory.
@@ -103,10 +106,19 @@ public class Entity : MonoBehaviour
 
 	private void SetFacingDirection()
 	{
-		if (velocity.x < -Mathf.Epsilon)
-			rend.flipX = true;
-		else if (velocity.x > Mathf.Epsilon)
-			rend.flipX = false;
+		if (setFacingFromVelocity)
+		{
+			if (velocity.x < -Mathf.Epsilon)
+				rend.flipX = true;
+			else if (velocity.x > Mathf.Epsilon)
+				rend.flipX = false;
+		}
+	}
+
+	public void SetFacingDirection(bool left)
+	{
+		rend.flipX = left;
+		setFacingFromVelocity = false;
 	}
 
 	public void MoveTo(float x, float y)
@@ -131,7 +143,13 @@ public class Entity : MonoBehaviour
 		=> ApplyKnockback(force.x, force.y);
 
 	public void ApplyKnockback(float x, float y)
-		=> velocity = new Vector2(x, y);
+	{
+		velocity = new Vector2(x, y);
+		Ray ray = new Ray(Position, new Vector3(x, y).normalized);
+
+		if (!world.TileRaycast(ray, 2.0f, out _))
+			velocity *= KnockbackFriction;
+	}
 
 	public AABB GetBoundingBox()
 		=> AABB.FromBottomCenter(Position, size);
