@@ -178,7 +178,7 @@ public class World : MonoBehaviour
 
 				if (TileManager.GetData(tile).passable) continue;
 
-				float newDist = BlockRayIntersection(new Vector2((float)x, (float)y), ray);
+				float newDist = TileRayIntersection(new Vector2((float)x, (float)y), ray);
 				minDistance = Mathf.Min(minDistance, newDist);
 			}
 		}
