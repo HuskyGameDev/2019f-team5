@@ -87,7 +87,6 @@ public class ProcGen
         while (roomY < level.GetLength(1))
         {
             direction = Random.Range(0,5);
-            Debug.Log(direction);
 
             if (direction == 0 || direction == 1)
             {

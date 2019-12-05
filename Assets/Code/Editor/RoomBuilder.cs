@@ -19,9 +19,12 @@ public class RoomBuilder : EditorWindow
 
 	private const float PPU = 32.0f;
 
+	// Stores tiles for the room being edited.
 	private TileType[] roomTiles = new TileType[Chunk.Size2];
+
 	private Texture[] textures = new Texture[(int)TileType.Count];
 
+	// Stores tiles for the obstacle block being edited.
 	private TileType[] blockTiles = new TileType[Chunk.ObstacleBlockWidth * Chunk.ObstacleBlockHeight];
 
 	private EditMode mode = EditMode.Room;
@@ -58,6 +61,7 @@ public class RoomBuilder : EditorWindow
 	private bool ValidFileName(string s)
 		=> fileName.Length > 0 && fileName.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
 
+	// Fill all tiles in the room or obstacle block being edited with the current active tile.
 	private void Fill()
 	{
 		TileType[] tiles = mode == EditMode.Room ? roomTiles : blockTiles;
@@ -68,6 +72,8 @@ public class RoomBuilder : EditorWindow
 		Repaint();
 	}
 
+	// Attempts to load in room or obstacle block data from
+	// a text asset file on disk.
 	private void LoadData(string path, bool room)
 	{
 		string json = File.ReadAllText(path);
@@ -86,6 +92,8 @@ public class RoomBuilder : EditorWindow
 		if (room) DecodeRoomRLE(data);
 		else DecodeBlockRLE(data);
 
+		// Set the title of the room builder editor window to the name of the file being edited
+		// without the full path nor extensions.
 		titleContent = new GUIContent(Path.GetFileNameWithoutExtension(path));
 	}
 
@@ -137,6 +145,7 @@ public class RoomBuilder : EditorWindow
 
 		Rect hRect = new Rect(gridStart.x, 15.0f, 115.0f, 20.0f);
 
+		// Display a button to show the mode we're in, and to toggle modes.
 		if (GUI.Button(hRect, "Mode: " + (mode == EditMode.Room ? "Room" : "Obstacle")))
 			mode = mode == EditMode.Room ? EditMode.ObstacleBlock : EditMode.Room;
 
@@ -254,6 +263,7 @@ public class RoomBuilder : EditorWindow
 		}
 	}
 
+	// Runs when we're editing a room.
 	private void RoomEditMode(Vector2 gridStart)
 	{
 		EventType e = Event.current.type;
@@ -277,6 +287,7 @@ public class RoomBuilder : EditorWindow
 			}
 		}
 
+		// Draw the tiles making up the current room being edited.
 		for (int y = 0; y < Chunk.Size; ++y)
 		{
 			for (int x = 0; x < Chunk.Size; ++x)
@@ -289,6 +300,7 @@ public class RoomBuilder : EditorWindow
 		}
 	}
 
+	// Called when we're editing an obstacle block.
 	private void ObstacleBlockEditMode(Vector2 gridStart)
 	{
 		EventType e = Event.current.type;
@@ -312,6 +324,7 @@ public class RoomBuilder : EditorWindow
 			}
 		}
 
+		// Draw the tiles making up the obstacle block being edited.
 		for (int y = 0; y < Chunk.ObstacleBlockHeight; ++y)
 		{
 			for (int x = 0; x < Chunk.ObstacleBlockWidth; ++x)

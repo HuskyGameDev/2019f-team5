@@ -115,6 +115,9 @@ public sealed class Chunk
 		}
 	}
 
+	// Loads an obstacle block into this chunk using the dataText provided.
+	// It is assumed this text is RLE-encoded tile data saved from the
+	// room builder in the editor.
 	public void SetObstacleBlock(int x, int y, string dataText)
 	{
 		ChunkData data = JsonUtility.FromJson<ChunkData>(dataText);

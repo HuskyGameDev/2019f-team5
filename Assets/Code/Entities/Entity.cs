@@ -66,8 +66,6 @@ public class Entity : MonoBehaviour
 
 	private Comparison<CollideResult> collideCompare;
 
-	private static Vector2 currentKnockback;
-
 	public Chunk chunk;
 
 	private static WaitForEndOfFrame destroyWait = new WaitForEndOfFrame();
@@ -96,6 +94,10 @@ public class Entity : MonoBehaviour
 		};
 	}
 
+	// Plays the animation with the current name (name comes from the animator state machine
+	// in the editor). This will only transition to the state if the current animation is looping.
+	// Non-looping animations are expected to play through entirely before transitioning.
+	// We could use animation parameters to make this more flexible if needed.
 	public void PlayAnimation(string name)
 	{
 		AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
@@ -147,6 +149,10 @@ public class Entity : MonoBehaviour
 		velocity = new Vector2(x, y);
 		Ray ray = new Ray(Position, new Vector3(x, y).normalized);
 
+		// This is a hacky way to try to improve knockback. It attempts
+		// to apply friction if the knockback isn't already forcing the
+		// entity into an obstacle that would naturally apply friction.
+		// This should be handled in a better way, but time was limited.
 		if (!world.TileRaycast(ray, 2.0f, out _))
 			velocity *= KnockbackFriction;
 	}
@@ -160,6 +166,10 @@ public class Entity : MonoBehaviour
 	protected virtual void OnKill()
 		=> Destroy(gameObject);
 
+	// Apply damage to this entity. A knockback force can be given to apply knockback to this entity.
+	// This will do no damage if the entity is invincible, and will apply invincible frames
+	// for all entities.
+	// If health is 0, the OnKill method is called and can be handled based on the entity.
 	public void Damage(int amount, Vector2 knockback)
 	{
 		if (invincible) return;
@@ -198,6 +208,8 @@ public class Entity : MonoBehaviour
 
 				AABB bb = AABB.FromCorner(new Vector2(x, y), Vector2.one);
 
+				// If the tile is not passable, treat it as a collision. 
+				// Otherwise, add it to the list of overlapping tiles to consider.
 				if (!tileData.passable)
 					possibleCollides.Add(new CollideResult(bb, tile));
 				else
@@ -236,8 +248,11 @@ public class Entity : MonoBehaviour
 					Entity targetEntity = list[i];
 					AABB targetBB = targetEntity.GetBoundingBox();
 
+					// Ensure these entities are allowed to collide. This uses the collision matrix
+					// from project settings in the editor.
 					if (!Physics2D.GetIgnoreLayerCollision(gameObject.layer, targetEntity.gameObject.layer))
 					{
+						// Currently, all entity collision is considered as overlap.
 						if (AABB.TestOverlap(entityBB, targetBB))
 						{
 							CollideResult info = new CollideResult(targetBB, targetEntity);
@@ -249,6 +264,8 @@ public class Entity : MonoBehaviour
 		}
 	}
 
+	// Maps the entity to the correct chunk it belongs to based on its position.
+	// This allows us to have a spatial partition of entities.
 	private void Rebase(World world)
 	{
 		Vector2Int cP = Utils.WorldToChunkP(Position);

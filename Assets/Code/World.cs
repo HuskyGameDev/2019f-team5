@@ -67,6 +67,9 @@ public class World : MonoBehaviour
 		return chunk;
 	}
 
+	// Sets the given tile to all tile locations that
+	// intersect the given AABB. This can be used for 
+	// destroying tiles in an explosion, for example.
 	public void SetTileArea(AABB bb, Tile tile)
 	{
 		Vector2Int min = Utils.TilePos(bb.center - bb.radius);
