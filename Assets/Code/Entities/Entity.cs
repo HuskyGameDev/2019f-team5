@@ -56,6 +56,8 @@ public class Entity : MonoBehaviour
 	private SpriteRenderer rend;
 	private Transform t;
 
+	private bool setFacingFromVelocity = true;
+
 	// Possible collisions and overlaps can be shared between all entities since only one entity will 
 	// be using them at a time - this saves memory.
 	private static List<CollideResult> possibleCollides = new List<CollideResult>();
@@ -103,14 +105,20 @@ public class Entity : MonoBehaviour
 
 	private void SetFacingDirection()
 	{
-		if (velocity.x < -Mathf.Epsilon)
-			rend.flipX = true;
-		else if (velocity.x > Mathf.Epsilon)
-			rend.flipX = false;
+		if (setFacingFromVelocity)
+		{
+			if (velocity.x < -Mathf.Epsilon)
+				rend.flipX = true;
+			else if (velocity.x > Mathf.Epsilon)
+				rend.flipX = false;
+		}
 	}
 
 	public void SetFacingDirection(bool left)
-		=> rend.flipX = left;
+	{
+		rend.flipX = left;
+		setFacingFromVelocity = false;
+	}
 
 	public void MoveTo(float x, float y)
 	{
