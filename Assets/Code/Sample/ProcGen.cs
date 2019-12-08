@@ -125,6 +125,7 @@ public class ProcGen
         //2d array of rooms
         int[,] level = new int[4,4];
         int sRoomX = makeSolutionPath(level);
+        bool pSpawned = false;
 
         for (int y = 0; y < level.GetLength(1); y++) {
             string output = "";
@@ -163,19 +164,19 @@ public class ProcGen
                 world.SetChunk(x, row, chunk);
 
                 //spawn the player in a safe space if it's the starting room
-                if (x == sRoomX) {
-                    bool spawned = false;
+                if (x == sRoomX && pSpawned == false) {
+                    
                     player = GameObject.Find("Player");
                     int playerX = 8, playerY = 8;
 
                     int direct = 0;
                     int turns = 0;
                     int cDist = 0, mDist = 1;
-                    while (!spawned) {
+                    while (!pSpawned) {
                         Debug.Log(playerX + " " + playerY);
                         if (isSpawnable(chunk, playerX, playerY)) {
                             player.transform.position = new Vector2(16 * x + playerX + 0.5f, 16 * row + playerY);
-                            spawned = true;
+                            pSpawned = true;
                         } else {
                             //move outward in spiral pattern to find a spawnpoint close to the center
                             switch (direct) {
