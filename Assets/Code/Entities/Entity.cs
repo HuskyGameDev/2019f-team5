@@ -57,6 +57,8 @@ public class Entity : MonoBehaviour
 	private SpriteRenderer rend;
 	private Transform t;
 
+	private bool disabled = false;
+
 	private bool setFacingFromVelocity = true;
 
 	// Possible collisions and overlaps can be shared between all entities since only one entity will 
@@ -159,6 +161,12 @@ public class Entity : MonoBehaviour
 
 	public AABB GetBoundingBox()
 		=> AABB.FromBottomCenter(Position, size);
+
+	public void Disable()
+	{
+		rend.enabled = false;
+		disabled = true;
+	}
 
 	protected virtual void OnCollide(CollideResult result) { }
 	protected virtual void HandleOverlaps(List<CollideResult> overlaps) { }
@@ -290,6 +298,9 @@ public class Entity : MonoBehaviour
 
 	public void Move(World world, Vector2 accel, float gravity)
 	{
+		if (disabled)
+			return;
+
 		moveState = MoveState.Normal;
 
 		accel *= speed;

@@ -3,8 +3,10 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [Flags]
 public enum MoveState
@@ -129,6 +131,13 @@ public class Player : Entity
 
 	protected override void OnKill()
 	{
-		
+		Disable();
+		StartCoroutine(Restart());
+	}
+
+	private IEnumerator Restart()
+	{
+		yield return new WaitForSeconds(3.0f);
+		SceneManager.LoadScene("Game");
 	}
 }

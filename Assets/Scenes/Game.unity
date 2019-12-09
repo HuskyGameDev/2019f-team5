@@ -235,14 +235,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85da40c010f769b4394689e936ee1e65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
+  health: 20
   damage: 0
   speed: 100
+  knockbackForce: 0
   size: {x: 0.8, y: 0.88}
   jumpVelocity: 8.5
   gravity: -30
   flying: 0
   jumps: 0
+  collectables: 000000000000000000000000
 --- !u!114 &480360551
 MonoBehaviour:
   m_ObjectHideFlags: 0

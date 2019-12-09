@@ -3,6 +3,7 @@
 // 
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class World : MonoBehaviour
@@ -225,5 +226,8 @@ public class World : MonoBehaviour
 				}
 			}
 		}
+
+		if (Input.GetKeyDown(KeyCode.Escape))
+			SceneManager.LoadScene("Game");
 	}
 }
