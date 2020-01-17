@@ -14,6 +14,7 @@ public class Spider : Entity
 	[SerializeField]
 	public GameObject player;
 	public bool collide;
+    Vector3 rotateAmmount;
 
     // Start is called before the first frame update
     void Start()
@@ -73,7 +74,9 @@ public class Spider : Entity
             
         } else if((colFlags & CollisionFlags.Above) != 0 && aggro) 
         {
+            rotateAmmount.z = 180;
             gravity = 0;
+            transform.Rotate(rotateAmmount);
             if((PlayerY - transform.position.y) <= 0) 
             {
                 gravity = -60;
