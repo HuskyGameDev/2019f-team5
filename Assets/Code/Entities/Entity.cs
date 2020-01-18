@@ -29,6 +29,16 @@ public struct CollideResult
 	}
 }
 
+[Flags]
+public enum CollideFlags
+{
+	None = 0,
+	Above = 1,
+	Below = 2,
+	Left = 4,
+	Right = 8
+}
+
 public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
@@ -51,7 +61,7 @@ public class Entity : MonoBehaviour
 	protected Vector2 velocity;
 	private float friction = -16.0f;
 
-	protected CollisionFlags colFlags;
+	protected CollideFlags colFlags;
 
 	private Animator anim;
 	private SpriteRenderer rend;
@@ -95,6 +105,21 @@ public class Entity : MonoBehaviour
 			return distA < distB ? -1 : 1;
 		};
 	}
+
+	public bool CollidedBelow()
+		=> (colFlags & CollideFlags.Below) != 0;
+
+	public bool CollidedAbove()
+		=> (colFlags & CollideFlags.Above) != 0;
+
+	public bool CollidedLeft()
+		=> (colFlags & CollideFlags.Left) != 0;
+
+	public bool CollidedRight()
+		=> (colFlags & CollideFlags.Right) != 0;
+
+	public bool CollidedSides()
+		=> CollidedLeft() || CollidedRight();
 
 	// Plays the animation with the current name (name comes from the animator state machine
 	// in the editor). This will only transition to the state if the current animation is looping.
@@ -327,7 +352,7 @@ public class Entity : MonoBehaviour
 		Vector2 target = Position + delta;
 		AABB entityBB = GetBoundingBox();
 
-		colFlags = CollisionFlags.None;
+		colFlags = CollideFlags.None;
 
 		// Player size in tiles.
 		Vector2Int tSize = Utils.CeilToInt(entityBB.radius * 2.0f);
@@ -425,7 +450,7 @@ public class Entity : MonoBehaviour
 
 			if (delta.y < 0.0f)
 			{
-				colFlags |= CollisionFlags.Below;
+				colFlags |= CollideFlags.Below;
 				result = true;
 			}
 		}
@@ -434,7 +459,7 @@ public class Entity : MonoBehaviour
 		if (TileManager.GetData(down).passable && TestWall(delta, a.center, wMin.y, wMin, wMax, 1, 0, ref tMin))
 		{
 			normal = Vector2.down;
-			colFlags |= CollisionFlags.Above;
+			colFlags |= CollideFlags.Above;
 			result = true;
 		}
 
@@ -442,7 +467,7 @@ public class Entity : MonoBehaviour
 		if (TileManager.GetData(left).passable && TestWall(delta, a.center, wMin.x, wMin, wMax, 0, 1, ref tMin))
 		{
 			normal = Vector2.left;
-			colFlags |= CollisionFlags.Sides;
+			colFlags |= CollideFlags.Left;
 			result = true;
 		}
 
@@ -450,7 +475,7 @@ public class Entity : MonoBehaviour
 		if (TileManager.GetData(right).passable && TestWall(delta, a.center, wMax.x, wMin, wMax, 0, 1, ref tMin))
 		{
 			normal = Vector2.right;
-			colFlags |= CollisionFlags.Sides;
+			colFlags |= CollideFlags.Right;
 			result = true;
 		}
 

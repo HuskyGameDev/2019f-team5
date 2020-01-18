@@ -5,32 +5,27 @@ using System;
 
 public class Spider : Entity
 {
-    public GameObject Arrow;
-    float fireRate;
-    float nextFire;
     public float jumpVelocity;
 	public float gravity;
 	public bool aggro;
 	[SerializeField]
 	public GameObject player;
 	public bool collide;
-    Vector3 rotateAmmount;
+    float rotation;
 
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player");
-        fireRate = 3f;
-        nextFire = Time.time;
+        player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(FireOrNot());
-
         float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
+
+		rotation = 0.0f;
 
 		if(Math.Abs(PlayerX - transform.position.x) <= 6 && Math.Abs(PlayerY - transform.position.y) < 6)
 		{
@@ -62,49 +57,46 @@ public class Spider : Entity
 			SetFacingDirection(false);
 		}
 		
-		if((colFlags & CollisionFlags.Sides) != 0 && aggro)
+		if (CollidedLeft() || CollidedRight() && aggro)
 		{
 			velocity.y = jumpVelocity;
             gravity = 2;
             
-		} else if((colFlags & CollisionFlags.Below) != 0 && aggro) 
+		} 
+		else if (CollidedBelow() && aggro) 
         {
 			collide = false;
             gravity = -30;
             
-        } else if((colFlags & CollisionFlags.Above) != 0 && aggro) 
+        } 
+		else if (CollidedAbove() && aggro) 
         {
-            rotateAmmount.z = 180;
+            rotation = 180.0f;
             gravity = 0;
-            transform.Rotate(rotateAmmount);
+         
             if((PlayerY - transform.position.y) <= 0) 
             {
                 gravity = -60;
                 collide = false;
             }
-        } else {
+        } 
+		else 
+		{
             gravity = -30;
         }
 
+		Vector3 pivot = Position;
+		pivot.y += 0.5f;
 
+		transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotation);
 		Move(world, accel, gravity);
-    }
-
-    IEnumerator FireOrNot(){
-        if(Time.time > nextFire && aggro){
-			PlayAnimation("SkeletonAttack");
-			yield return new WaitForSeconds(.5f);
-			if(Time.time > nextFire) {
-            Instantiate(Arrow, transform.position, Quaternion.identity);
-			}
-            nextFire = Time.time + fireRate;
-        }
     }
 
 	protected override void OnCollide(CollideResult col)
 	{
-		if((colFlags & CollisionFlags.Sides) != 0 && (colFlags & CollisionFlags.Below) != 0){
-		collide = true;
+		if (CollidedSides() && CollidedBelow())
+		{
+			collide = true;
 		}
     }
 

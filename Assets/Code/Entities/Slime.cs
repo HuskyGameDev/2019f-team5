@@ -42,9 +42,7 @@ public class Slime : Entity
 			aggro = false;
 		}
 
-
-
-		if (aggro && (colFlags & CollisionFlags.Below) != 0)
+		if (aggro && (colFlags & CollideFlags.Below) != 0)
 		{
 			if (isJumping)
 			{
@@ -61,12 +59,12 @@ public class Slime : Entity
 		else if (aggro && !isJumping)
 		{
 			isJumping = true;
-			if (PlayerX < transform.position.x && aggro && ((colFlags & CollisionFlags.Below) == 0))
+			if (PlayerX < transform.position.x && aggro && !CollidedBelow())
 			{
 				accel = Vector2.left;
 				SetFacingDirection(false);
 			}
-			else if (PlayerX > transform.position.x && aggro && ((colFlags & CollisionFlags.Below) == 0))
+			else if (PlayerX > transform.position.x && aggro && !CollidedBelow())
 			{
 				accel = Vector2.right;
 				SetFacingDirection(true);

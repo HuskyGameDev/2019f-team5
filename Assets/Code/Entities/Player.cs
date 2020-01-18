@@ -48,7 +48,7 @@ public class Player : Entity
 			}
 		}
 
-		if ((colFlags & CollisionFlags.Below) != 0)
+		if (CollidedBelow())
 		{
 			jumps = 0;
 		}

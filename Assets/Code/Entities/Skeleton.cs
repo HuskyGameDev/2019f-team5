@@ -70,21 +70,27 @@ public class Skeleton : Entity
 		Move(world, accel, -30);
     }
 
-    IEnumerator FireOrNot(){
-        if(Time.time > nextFire && aggro){
+    IEnumerator FireOrNot()
+	{
+        if(Time.time > nextFire && aggro)
+		{
 			PlayAnimation("SkeletonAttack");
 			yield return new WaitForSeconds(.5f);
-			if(Time.time > nextFire) {
-            Instantiate(Arrow, transform.position, Quaternion.identity);
+
+			if(Time.time > nextFire) 
+			{
+				Instantiate(Arrow, transform.position, Quaternion.identity);
 			}
+
             nextFire = Time.time + fireRate;
         }
     }
 
 	protected override void OnCollide(CollideResult col)
 	{
-		if((colFlags & CollisionFlags.Sides) != 0 && (colFlags & CollisionFlags.Below) != 0){
-		collide = true;
+		if (CollidedSides() && CollidedBelow())
+		{
+			collide = true;
 		}
     }
 
