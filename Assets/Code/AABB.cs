@@ -4,6 +4,10 @@
 
 using UnityEngine;
 
+// Axis-Aligned Bounding Box. Represents a rectangular area in space.
+// Used primarily for collision detection. AABB is defined as a center
+// and a radius. 'radius' really refers to half-extents - the distance
+// from the center to the edge of the box on any given axis, not at an angle.
 public struct AABB
 {
 	public Vector2 center;

@@ -33,6 +33,8 @@ public class World : MonoBehaviour
 	public Chunk GetChunk(Vector2Int cP)
 		=> GetChunk(cP.x, cP.y);
 
+	// Sets the chunk to the world at the given position.
+	// The chunk should already be created.
 	public void SetChunk(int cX, int cY, Chunk chunk)
 		=> chunks.Add(new Vector2Int(cX, cY), chunk);
 
@@ -83,6 +85,11 @@ public class World : MonoBehaviour
 		}
 	}
 
+	// Given an AABB, returns all entities that intersect it in the world.
+	// See AABB.cs for details on AABBs.
+	// To do so, we get the chunk at the min and max corner of the AABB,
+	// and get out each entity in each chunk in between. These entities can
+	// have their AABB tested for intersection with this AABB.
 	public List<Entity> GetOverlappingEntities(AABB bb)
 	{
 		List<Entity> result = new List<Entity>();
@@ -114,6 +121,8 @@ public class World : MonoBehaviour
 		return result;
 	}
 
+	// Helper function to test for a ray intersection with a tile 
+	// at the given tile position.
 	private float TileRayIntersection(Vector2 tilePos, Ray ray)
 	{
 		float nearP = -float.MaxValue;
@@ -153,6 +162,7 @@ public class World : MonoBehaviour
 		return nearP > 0.0f ? nearP : farP;
 	}
 
+	// Casts a ray. It returns the intersection point with a solid tile.
 	public bool TileRaycast(Ray ray, float dist, out Vector2 result)
 	{
 		Vector2Int start = Utils.TilePos(ray.origin);
@@ -199,8 +209,10 @@ public class World : MonoBehaviour
 
 	public void Update()
 	{
+		// Implement some debug features only if we're in debug mode.
 		if (Debug.isDebugBuild)
 		{
+			// Destroy tiles when right clicking.
 			if (Input.GetMouseButton(1))
 			{
 				Vector2 cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -215,6 +227,7 @@ public class World : MonoBehaviour
 				}
 			}
 
+			// Kill all enemies when pressing K.
 			if (Input.GetKeyDown(KeyCode.K))
 			{
 				GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");

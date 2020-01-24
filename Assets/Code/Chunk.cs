@@ -14,6 +14,11 @@ public enum ChunkState
 	Filled
 }
 
+// Each SpriteRect maps to one Unity SpriteRenderer.
+// This is computed by a greedy algorithm to try to 
+// create larger rectangles of the same tile type,
+// so we can use a single tiled SpriteRenderer 
+// to display all the tiles in the rect.
 public sealed class SpriteRect
 {
 	public int startX, startY;
@@ -21,6 +26,9 @@ public sealed class SpriteRect
 	public Tile tile;
 }
 
+// The world is composed of chunks. These allow a spatial
+// partitioning of the world. Chunks store tiles and entities
+// from the world.
 public sealed class Chunk
 {
 	// Size of the chunk in tiles.
@@ -53,6 +61,10 @@ public sealed class Chunk
 
 	private ChunkState state;
 
+	// Creates a new chunk. If fillBackground is true,
+	// the chunk will be filled with background tiles. 
+	// Otherwise, it is assumed that the chunk will be loaded
+	// with data from a room file.
 	public Chunk(int cX, int cY, bool fillBackground = false)
 	{
 		cPos = new Vector2Int(cX, cY);
@@ -91,7 +103,10 @@ public sealed class Chunk
 
 	public void SetModified()
 		=> pendingUpdate = true;
-
+		
+	// Chunk data can be built in the editor and saved into JSON room files.
+	// This data can be loaded into a chunk by passing the JSON string here
+	// to create the chunk. Tiles will match how they appear in the room editor.
 	private void DecodeData(string data)
 	{
 		ChunkData chunkData = JsonUtility.FromJson<ChunkData>(data);
@@ -181,7 +196,7 @@ public sealed class Chunk
 		rects.Add(tileRect);
 	}
 
-	// Finds the next tile to begin a rectangle from.
+	// Finds the next tile to begin a rectangle from for our greedy algorithm.
 	private SpriteRect GetNextRectStart(int startX, int startY)
 	{
 		int y = startY, x = startX;
@@ -297,6 +312,8 @@ public sealed class Chunk
 		state = ChunkState.Filled;
 	}
 
+	// Clears all SpriteRenderer objects from this
+	// chunk and returns them to a pool.
 	public void ClearSprites(WorldRender rend)
 	{
 		for (int i = 0; i < rects.Count; ++i)

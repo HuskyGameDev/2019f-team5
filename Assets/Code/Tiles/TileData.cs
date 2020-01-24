@@ -20,5 +20,7 @@ public class TileData
 	public TileOverlapType overlapType { get; protected set; }
 	public string name { get; protected set; }
 
+	// Called whenever a tile is set into the world. Allows per-tile
+	// functionality in this regard.
 	public virtual void OnSet(Chunk chunk, int x, int y) { }
 }

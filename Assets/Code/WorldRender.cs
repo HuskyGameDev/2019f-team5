@@ -19,6 +19,10 @@ public class WorldRender : MonoBehaviour
 		cam = Camera.main;
 	}
 
+	// Returns a SpriteRenderer to be used to display
+	// tiles in a chunk from our pool. 
+	// Pooling is much more efficient than instantiating/destroying
+	// objects constantly.
 	public SpriteRenderer GetTileRect()
 	{
 		SpriteRenderer rect;
