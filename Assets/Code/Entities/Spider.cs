@@ -11,6 +11,7 @@ public class Spider : Entity
 	[SerializeField]
 	public GameObject player;
 	public bool collide;
+	public bool facing;
     float rotation;
 
     // Start is called before the first frame update
@@ -44,6 +45,7 @@ public class Spider : Entity
 			if(Math.Abs(PlayerX - transform.position.x) >= .9)
 			{
 				accel = Vector2.left;
+				facing = true;
 			}
 
 			SetFacingDirection(true);
@@ -52,6 +54,7 @@ public class Spider : Entity
 			if(Math.Abs(PlayerX - transform.position.x) >= .9)
 			{
 				accel = Vector2.right;
+				facing = false;
 			}
 
 			SetFacingDirection(false);
@@ -60,7 +63,12 @@ public class Spider : Entity
 		if (CollidedLeft() || CollidedRight() && aggro)
 		{
 			velocity.y = jumpVelocity;
-            gravity = 2;
+            gravity = 0;
+			if( facing) {
+				rotation = -90f;
+			} else {
+				rotation = 90f;
+			}
             
 		} 
 		else if (CollidedBelow() && aggro) 

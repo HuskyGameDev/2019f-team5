@@ -95,15 +95,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 8
-  damage: 5
-  speed: 85
+  damage: 4
+  speed: 75
   knockbackForce: 8
-  size: {x: 0.9, y: 0.85}
+  size: {x: 0.85, y: 0.85}
   jumpVelocity: 7.81
   gravity: -30
   aggro: 1
   player: {fileID: 0}
   collide: 0
+  facing: 0
 --- !u!95 &5039439098904833595
 Animator:
   serializedVersion: 3
