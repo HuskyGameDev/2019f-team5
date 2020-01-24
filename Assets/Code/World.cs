@@ -13,12 +13,17 @@ public class World : MonoBehaviour
 	// Accessing chunks is slightly slower, but the difference is negligible.
 	private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
+	private RectInt levelBounds;
+
 	private void Start()
 	{
 		//SampleRoomLoader generator = new SampleRoomLoader();
 		ProcGen generator = new ProcGen();
-		generator.Generate(this);
+		levelBounds = generator.Generate(this);
 	}
+
+	public RectInt GetBounds()
+		=> levelBounds;
 
 	// Returns the chunk at the given position, or null if the
 	// chunk doesn't exist.

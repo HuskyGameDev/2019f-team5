@@ -139,7 +139,7 @@ public class ProcGen
 		return false;
 	}
 
-	public void Generate(World world, int seed = -1)
+	public RectInt Generate(World world, int seed = -1)
 	{
 		player = GameObject.FindWithTag("Player");
 
@@ -263,5 +263,7 @@ public class ProcGen
 			row--;
 			mobCap++;
 		}
+
+		return new RectInt(0, 0, Chunk.Size * 4, Chunk.Size * 4);
 	}
 }
