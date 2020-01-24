@@ -58,6 +58,8 @@ public class Entity : MonoBehaviour
 	protected MoveState moveState;
 	public Vector2 size;
 
+	public bool useCenterPivot;
+
 	protected Vector2 velocity;
 	private float friction = -16.0f;
 
@@ -185,7 +187,11 @@ public class Entity : MonoBehaviour
 	}
 
 	public AABB GetBoundingBox()
-		=> AABB.FromBottomCenter(Position, size);
+	{
+		if (useCenterPivot)
+			return AABB.FromCenter(Position, size * 0.5f);
+		else return AABB.FromBottomCenter(Position, size);
+	}
 
 	public void Disable()
 	{

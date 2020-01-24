@@ -25,6 +25,7 @@ public class Player : Entity
 	public int jumps;
 
 	public int[] collectables = new int[3];
+
 	private void Start() 
 	{
 		damage = 5;
@@ -122,11 +123,6 @@ public class Player : Entity
 					moveState |= MoveState.Climbing;
 			}
 		}
-	}
-
-	protected override void OnCollide(CollideResult result)
-	{
-
 	}
 
 	protected override void OnKill()

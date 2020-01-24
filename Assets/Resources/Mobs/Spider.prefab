@@ -99,6 +99,7 @@ MonoBehaviour:
   speed: 75
   knockbackForce: 8
   size: {x: 0.85, y: 0.85}
+  useCenterPivot: 1
   jumpVelocity: 7.81
   gravity: -30
   aggro: 1
