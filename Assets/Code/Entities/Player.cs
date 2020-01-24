@@ -44,7 +44,8 @@ public class Player : Entity
 		{
 			if (Input.GetButtonDown("jump"))
 			{
-				velocity.y = jumpVelocity;
+                FindObjectOfType<Audiomanager>().Play("Jump");
+                velocity.y = jumpVelocity;
 				jumps++;
 			}
 		}
@@ -103,7 +104,7 @@ public class Player : Entity
 		Move(world, accel, currentGravity);
 
 		if(accel != Vector2.zero) {
-			PlayAnimation("Walking animation");
+            PlayAnimation("Walking animation");
 		} else {
 			PlayAnimation("Static animation");
 		}

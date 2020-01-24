@@ -24,6 +24,7 @@ public class PlayerAttack : MonoBehaviour
     void Update()
     {
         if(Input.GetMouseButtonDown(0) && Time.time > nextSwing){
+            FindObjectOfType<Audiomanager>().Play("PlayerAttack");
             nextSwing = Time.time + swingRate;
             Swing();
             ent.PlayAnimation("Attack Animation");
