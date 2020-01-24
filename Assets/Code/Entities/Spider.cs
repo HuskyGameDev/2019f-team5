@@ -82,11 +82,7 @@ public class Spider : Entity
             rotation = 180.0f;
             gravity = 0;
          
-            if((PlayerY - transform.position.y) <= 0) 
-            {
-                gravity = -60;
-                collide = false;
-            }
+             
         } 
 		else 
 		{
@@ -121,7 +117,7 @@ public class Spider : Entity
 
 				if (diff.y > 0.4f)
 				{
-					Damage(5);
+					Damage(4);
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else

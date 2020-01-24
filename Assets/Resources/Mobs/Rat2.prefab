@@ -96,10 +96,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 6
   damage: 0
-  speed: 121
+  speed: 126
   knockbackForce: 80
   size: {x: 0.92, y: 0.5}
-  jumpVelocity: 0
+  useCenterPivot: 0
+  jumpVelocity: 7.8
   gravity: -30
   aggro: 0
   movingRight: 0
@@ -107,6 +108,7 @@ MonoBehaviour:
   player: {fileID: 0}
   count: 0
   stay: {x: 0, y: 0}
+  tilePos: {x: 0, y: 0}
 --- !u!95 &5912052113585515295
 Animator:
   serializedVersion: 3

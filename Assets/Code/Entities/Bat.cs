@@ -53,8 +53,12 @@ public class Bat : Entity
 			accel += Vector2.up;
 		}
 
+		
+
 		Move(world, accel, 0);
 	}
+
+
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{

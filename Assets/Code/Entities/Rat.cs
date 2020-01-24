@@ -18,6 +18,8 @@ public class Rat : Entity
 	public GameObject player;
 	public float count = 0;
 	public Vector2 stay;
+	public Vector2Int tilePos;
+	public bool facing;
 	
 	private void Start()
 	{
@@ -46,6 +48,7 @@ public class Rat : Entity
 			if(Math.Abs(PlayerX - transform.position.x) >= .9)
 			{
 				accel = Vector2.left;
+				facing = true;
 			}
 
 			SetFacingDirection(true);
@@ -54,9 +57,18 @@ public class Rat : Entity
 			if(Math.Abs(PlayerX - transform.position.x) >= .9)
 			{
 				accel = Vector2.right;
+				facing = false;
 			}
 
 			SetFacingDirection(false);
+		}
+		
+		tilePos = Utils.TilePos(Position);
+
+		if(TileManager.GetData(world.GetTile(tilePos.x+1, tilePos.y-1)).passable && CollidedBelow() && aggro && !facing) {
+			velocity.y = jumpVelocity;
+		} else if(TileManager.GetData(world.GetTile(tilePos.x-1, tilePos.y-1)).passable && CollidedBelow() && aggro && facing) {
+			velocity.y = jumpVelocity;
 		}
 		
 		if((PlayerY - transform.position.y) > 1.99) {
