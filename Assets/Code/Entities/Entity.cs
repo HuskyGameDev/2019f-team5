@@ -429,8 +429,8 @@ public class Entity : MonoBehaviour
 		SetFacingDirection();
 
 		Rebase(world);
-
-		if (DebugHelper.showOutlines)
+		
+		if (DebugServices.Instance.ShowDebug)
 			GetBoundingBox().Draw(Color.green);
 	}
 

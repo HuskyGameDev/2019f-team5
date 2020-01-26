@@ -13,6 +13,9 @@ public struct AABB
 	public Vector2 center;
 	public Vector2 radius;
 
+	public Vector2 BottomLeft => center - radius;
+	public Vector2 TopRight => center + radius;
+
 	public void Expand(Vector2 amount)
 		=> radius += amount;
 
@@ -56,10 +59,13 @@ public struct AABB
 
 		return overlapX && overlapY;
 	}
-	
+
+	public override int GetHashCode()
+		=> center.GetHashCode();
+
 	public void Draw(Color color, float time)
-		=> DebugHelper.ShowOutline(center, radius * 2.0f, color, time);
+		=> DebugServices.Instance.DrawOutline(this, color, time);
 
 	public void Draw(Color color)
-		=> DebugHelper.ShowOutline(center, radius * 2.0f, color);
+		=> DebugServices.Instance.DrawOutline(this, color);
 }
