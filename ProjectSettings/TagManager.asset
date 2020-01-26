@@ -7,6 +7,7 @@ TagManager:
   - GameAssets
   - Manager
   - Enemy
+  - Audio
   layers:
   - Default
   - TransparentFX

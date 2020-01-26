@@ -26,6 +26,8 @@ public class Player : Entity
 
 	public int[] collectables = new int[3];
 
+	private Audiomanager audioManager;
+
 	private void Start() 
 	{
 		damage = 5;
@@ -34,6 +36,8 @@ public class Player : Entity
 		for(int i = 0; i < collectables.Length; i++){
 			collectables[i] = 0;
 		}
+
+		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
 	}
 
 	private Vector2 SetNormal()
@@ -44,7 +48,7 @@ public class Player : Entity
 		{
 			if (Input.GetButtonDown("jump"))
 			{
-                FindObjectOfType<Audiomanager>().Play("Jump");
+				audioManager.Play("Jump");
                 velocity.y = jumpVelocity;
 				jumps++;
 			}
