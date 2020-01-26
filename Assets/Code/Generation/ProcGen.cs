@@ -209,6 +209,7 @@ public class ProcGen
 						{
 							player.transform.position = new Vector2(16 * x + playerX + 0.5f, 16 * row + playerY + 0.05f);
 							pSpawned = true;
+							EventManager.Instance.SignalEvent(GameEvent.PlayerSpawned, null);
 						}
 						else
 						{

@@ -5,7 +5,7 @@
 using UnityEngine;
 using System;
 
-public class CameraMove : MonoBehaviour
+public class TestCameraMove : MonoBehaviour
 {
 	public float speed;
 
