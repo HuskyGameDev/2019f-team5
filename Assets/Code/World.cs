@@ -20,6 +20,8 @@ public class World : MonoBehaviour
 		//SampleRoomLoader generator = new SampleRoomLoader();
 		ProcGen generator = new ProcGen();
 		levelBounds = generator.Generate(this);
+
+		EventManager.Instance.SignalEvent(GameEvent.LevelGenerated, this);
 	}
 
 	public RectInt GetBounds()

@@ -84,21 +84,20 @@ public class Skeleton : Entity
 		Vector2 Skele = Position;
 		Vector2 Play;
 		Skele.y+=.5f;
-		AABB rad = AABB.FromCenter(Position, new Vector2 (9, 9));
+		AABB rad = AABB.FromCenter(Position, new Vector2 (16, 16));
 		List<Entity> list = world.GetOverlappingEntities(rad);
 		for( int i = 0; i < list.Count; i++) {
 			if(list[i] is Player) {
 				Play = list[i].Position;
 				Play.y+=.5f;
-				Ray ray = new Ray(Skele, (Skele - Play).normalized);
-				InView = world.TileRaycast(ray, 10, out Vector2 result);
-				Eyes = false;
+				Ray ray = new Ray(Skele, (Play - Skele).normalized);
+				InView = !world.TileRaycast(ray, 16, out Vector2 result);
+				Eyes = InView;
 			}
 		}
 		
         if(Time.time > nextFire && aggro && InView)
 		{
-			Eyes = true;
 			PlayAnimation("SkeletonAttack");
 			yield return new WaitForSeconds(.5f);
 
