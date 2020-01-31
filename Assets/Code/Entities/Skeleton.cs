@@ -14,6 +14,7 @@ public class Skeleton : Entity
 	[SerializeField]
 	public GameObject player;
 	public bool collide;
+	public bool Facing = false;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +49,7 @@ public class Skeleton : Entity
 			if(Math.Abs(PlayerX - transform.position.x) >= 5)
 			{
 				accel = Vector2.left;
+				Facing = true;
 			}
 			SetFacingDirection(true);
 
@@ -56,6 +58,7 @@ public class Skeleton : Entity
 			if(Math.Abs(PlayerX - transform.position.x) >= 5)
 			{
 				accel = Vector2.right;
+				Facing = false;
 			}
 			SetFacingDirection(false);
 		}
@@ -72,14 +75,38 @@ public class Skeleton : Entity
 
     IEnumerator FireOrNot()
 	{
-        if(Time.time > nextFire && aggro)
+		bool InView = false;
+		Vector2 Skele = Position;
+		Vector2 Play;
+		Skele.y+=.5f;
+		AABB rad = AABB.FromCenter(Position, new Vector2 (9, 9));
+		List<Entity> list = world.GetOverlappingEntities(rad);
+		for( int i = 0; i < list.Count; i++) {
+			if(list[i] is Player) {
+				Play = list[i].Position;
+				Play.y+=.5f;
+				Ray ray = new Ray(Skele, (Skele - Play).normalized);
+				InView = world.TileRaycast(ray, 10, out Vector2 result);
+			}
+		}
+		
+        if(Time.time > nextFire && aggro && InView)
 		{
 			PlayAnimation("SkeletonAttack");
 			yield return new WaitForSeconds(.5f);
 
 			if(Time.time > nextFire) 
 			{
-				Instantiate(Arrow, transform.position, Quaternion.identity);
+				Vector2 arrowS ;
+				arrowS = transform.position;
+				arrowS.y += .25f;
+				if(Facing) {
+					arrowS.x -= .5f;
+				} else {
+					arrowS.x += .5f;
+				}
+				
+				Instantiate(Arrow, arrowS, Quaternion.identity);
 			}
 
             nextFire = Time.time + fireRate;
