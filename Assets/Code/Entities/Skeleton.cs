@@ -15,6 +15,7 @@ public class Skeleton : Entity
 	public GameObject player;
 	public bool collide;
 	public bool Facing = false;
+	public bool Eyes = false;
 
     // Start is called before the first frame update
     void Start()
@@ -46,19 +47,23 @@ public class Skeleton : Entity
 
 		if(PlayerX < transform.position.x && aggro)
 		{
-			if(Math.Abs(PlayerX - transform.position.x) >= 5)
-			{
-				accel = Vector2.left;
-				Facing = true;
+			if(!Eyes) {
+				if((Math.Abs(PlayerX - transform.position.x) >= 5))
+				{
+					accel = Vector2.left;
+					Facing = true;
+				}
 			}
 			SetFacingDirection(true);
 
 		} else if (aggro)
 		{
-			if(Math.Abs(PlayerX - transform.position.x) >= 5)
-			{
-				accel = Vector2.right;
-				Facing = false;
+			if(!Eyes) {
+				if((Math.Abs(PlayerX - transform.position.x) >= 5))
+				{
+					accel = Vector2.right;
+					Facing = false;
+				}
 			}
 			SetFacingDirection(false);
 		}
@@ -87,11 +92,13 @@ public class Skeleton : Entity
 				Play.y+=.5f;
 				Ray ray = new Ray(Skele, (Skele - Play).normalized);
 				InView = world.TileRaycast(ray, 10, out Vector2 result);
+				Eyes = false;
 			}
 		}
 		
         if(Time.time > nextFire && aggro && InView)
 		{
+			Eyes = true;
 			PlayAnimation("SkeletonAttack");
 			yield return new WaitForSeconds(.5f);
 
