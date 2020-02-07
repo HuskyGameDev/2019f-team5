@@ -43,7 +43,7 @@ public sealed class Pathfinder
 	private bool InBounds(Vector2Int p)
 	{
 		RectInt bounds = world.GetBounds();
-		return p.x >= bounds.min.x && p.y >= bounds.min.y && p.x <= bounds.max.x && p.y <= bounds.max.y;
+		return p.x >= bounds.min.x && p.y >= bounds.min.y && p.x < bounds.max.x && p.y < bounds.max.y;
 	}
 
 	// Fills the path to follow into a stack.

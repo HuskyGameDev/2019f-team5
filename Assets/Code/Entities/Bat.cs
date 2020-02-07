@@ -15,10 +15,13 @@ public class Bat : Entity
 	[SerializeField]
 	public GameObject player;
     int i = 0;
+	Stack <Vector2> path = new Stack<Vector2>();
+	Vector3 NextPos;
 	
 	private void Start()
 	{
 		player = GameObject.Find("Player");
+		EventManager.Instance.Subscribe(GameEvent.LevelGenerated, InvokePath);
 	}
 
     private void Update()
@@ -26,30 +29,19 @@ public class Bat : Entity
 		float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 5 && Math.Abs(PlayerY - transform.position.y) < 5)
+		if(Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 50)
 		{
 			aggro = true;
 		}
 
 		Vector2 accel = Vector2.zero;
-
-		if(PlayerX < transform.position.x && aggro)
-		{
-			accel += Vector2.left;
-		} else if (aggro)
-		{
-			accel += Vector2.right;
-		}
 		
-		if(PlayerY < transform.position.y && aggro)
-		{
-			accel += Vector2.down;
-		} else if (aggro)
-		{
-			accel += Vector2.up;
-		}
+			Vector3.MoveTowards(transform.position, NextPos, Time.deltaTime * speed);
 
 		
+		if(transform.position == NextPos && path.Count > 0) {
+			NextPos = path.Pop();
+		}
 
 		Move(world, accel, 0);
         if (aggro && i == 0)
@@ -59,7 +51,16 @@ public class Bat : Entity
         }
     }
 
+	private void InvokePath(object Obj) {
+		InvokeRepeating("FindPath", 0, 2);
+	}
 
+	private void FindPath() {
+		world.FindPath(Utils.TilePos(transform.position), Utils.TilePos(player.transform.position), path);
+		if(path.Count > 0) {
+			NextPos = path.Pop();
+		}
+	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
