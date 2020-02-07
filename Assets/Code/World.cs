@@ -32,9 +32,9 @@ public class World : MonoBehaviour
 	{
 		pathGrid = new PathCellInfo[levelBounds.width, levelBounds.height];
 
-		for (int y = levelBounds.min.y; y <= levelBounds.max.y; ++y)
+		for (int y = levelBounds.min.y; y < levelBounds.max.y; ++y)
 		{
-			for (int x = levelBounds.min.x; x <= levelBounds.max.x; ++x)
+			for (int x = levelBounds.min.x; x < levelBounds.max.x; ++x)
 			{
 				Tile tile = GetTile(x, y);
 				bool passable = TileManager.GetData(tile).passable;
