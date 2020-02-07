@@ -90,8 +90,9 @@ public class Skeleton : Entity
 			if(list[i] is Player) {
 				Play = list[i].Position;
 				Play.y+=.5f;
-				Ray ray = new Ray(Skele, (Play - Skele).normalized);
-				InView = !world.TileRaycast(ray, 16, out Vector2 result);
+				Vector2 dist = Play - Skele;
+				Ray ray = new Ray(Skele, dist.normalized);
+				InView = !world.TileRaycast(ray, dist.magnitude, out Vector2 result);
 				Eyes = InView;
 			}
 		}
