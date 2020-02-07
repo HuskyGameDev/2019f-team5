@@ -33,12 +33,12 @@ public class Skeleton : Entity
         float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 8)
+		if(Math.Abs(PlayerX - transform.position.x) <= 9 && Math.Abs(PlayerY - transform.position.y) < 9)
 		{
 			aggro = true;
 		}
 
-		if(Math.Abs(PlayerX - transform.position.x) >= 16 || Math.Abs(PlayerY - transform.position.y) >= 16)
+		if(Math.Abs(PlayerX - transform.position.x) >= 17 || Math.Abs(PlayerY - transform.position.y) >= 17)
 		{
 			aggro = false;
 		}
@@ -73,7 +73,6 @@ public class Skeleton : Entity
 			velocity.y = jumpVelocity;
 			collide = false;
 		}
-
 
 		Move(world, accel, -30);
     }
