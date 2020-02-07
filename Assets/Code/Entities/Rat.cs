@@ -20,6 +20,7 @@ public class Rat : Entity
 	public Vector2 stay;
 	public Vector2Int tilePos;
 	public bool facing;
+    int i = 0;
 
     private void Start()
 	{
@@ -78,8 +79,9 @@ public class Rat : Entity
 		} else {
 			Move(world, accel, gravity);
 		}
-        if (aggro)
+        if (aggro && i==0)
         {
+            i++;
             FindObjectOfType<Audiomanager>().Play("Rat Cry");
         }
     }

@@ -31,7 +31,6 @@ public class Spider : Entity
 
 		if(Math.Abs(PlayerX - transform.position.x) <= 6 && Math.Abs(PlayerY - transform.position.y) < 6)
 		{
-            FindObjectOfType<Audiomanager>().Play("Spider Cry");
             aggro = true;
 		}
 

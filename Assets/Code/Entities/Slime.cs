@@ -34,7 +34,6 @@ public class Slime : Entity
 
 		if (Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 8)
 		{
-            FindObjectOfType<Audiomanager>().Play("Slime Cry");
             aggro = true;
 		}
 
@@ -47,12 +46,12 @@ public class Slime : Entity
 		{
 			if (isJumping)
 			{
-                FindObjectOfType<Audiomanager>().Play("Slime Cry");
                 isJumping = false;
 				accel = Vector2.zero;
 			}
 			if (jumpTime <= 0)
 			{
+                FindObjectOfType<Audiomanager>().Play("Slime Cry");
                 velocity.y = jumpVelocity;
 				jumpTime = 1.5f;
 

@@ -99,7 +99,6 @@ public class Player : Entity
 		{
 			if ((moveState & MoveState.Climbing) != 0)
 			{
-                FindObjectOfType<Audiomanager>().Play("Walk");
                 accel = SetClimbing();
 				currentGravity = 0.0f;
 			}
@@ -111,7 +110,8 @@ public class Player : Entity
 		if(accel != Vector2.zero) {
             PlayAnimation("Walking animation");
 		} else {
-			PlayAnimation("Static animation");
+            FindObjectOfType<Audiomanager>().Play("Walk");
+            PlayAnimation("Static animation");
 		}
 	}
 

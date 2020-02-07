@@ -16,7 +16,7 @@ public class Skeleton : Entity
 	public bool collide;
 	public bool Facing = false;
 	public bool Eyes = false;
-
+    int i = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -75,6 +75,11 @@ public class Skeleton : Entity
 		}
 
 		Move(world, accel, -30);
+        if (aggro && i ==0)
+        {
+            i++;
+            FindObjectOfType<Audiomanager>().Play("Skeleton Cry");
+        }
     }
 
     IEnumerator FireOrNot()

@@ -14,6 +14,7 @@ public class Bat : Entity
 	public bool aggro;
 	[SerializeField]
 	public GameObject player;
+    int i = 0;
 	
 	private void Start()
 	{
@@ -51,7 +52,12 @@ public class Bat : Entity
 		
 
 		Move(world, accel, 0);
-	}
+        if (aggro && i == 0)
+        {
+            i++;
+            FindObjectOfType<Audiomanager>().Play("Bat Cry");
+        }
+    }
 
 
 
