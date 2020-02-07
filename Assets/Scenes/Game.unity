@@ -377,7 +377,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mat: {fileID: 0}
-  material: {fileID: 0}
 --- !u!114 &1115185761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,21 +541,21 @@ MonoBehaviour:
   sounds:
   - name: Level Theme
     clip: {fileID: 8300000, guid: ba90dd9dd11c12e48836aafe58381f9a, type: 3}
-    volume: 1
+    volume: 0.75
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: Jump
-    clip: {fileID: 8300000, guid: 91d94771fe613254db532ed7db9dc746, type: 3}
+    clip: {fileID: 8300000, guid: e14d0910f6be6fb43abd531328c0ee6f, type: 3}
     volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: Walk
     clip: {fileID: 8300000, guid: 1a78f5205d26e3c44841be33c27d19da, type: 3}
-    volume: 1
+    volume: 3
     pitch: 1
-    loop: 0
+    loop: 1
     source: {fileID: 0}
   - name: PlayerAttack
     clip: {fileID: 8300000, guid: a68d502181942854bb5200917afe5fe5, type: 3}
@@ -564,32 +563,56 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: 
-    clip: {fileID: 8300000, guid: 91d94771fe613254db532ed7db9dc746, type: 3}
-    volume: 1
+  - name: Rat Cry
+    clip: {fileID: 8300000, guid: f36f795f7b320504a9208eb87c0c9b69, type: 3}
+    volume: 3
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: 
-    clip: {fileID: 8300000, guid: 91d94771fe613254db532ed7db9dc746, type: 3}
-    volume: 1
+  - name: Rat Attack
+    clip: {fileID: 8300000, guid: be3060d82b6fb0a408a24e256ed9c1ed, type: 3}
+    volume: 3
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: 
-    clip: {fileID: 8300000, guid: 91d94771fe613254db532ed7db9dc746, type: 3}
-    volume: 1
+  - name: Slime Cry
+    clip: {fileID: 8300000, guid: 2bb726baebb793440b35e34f51643ea5, type: 3}
+    volume: 3
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: 
-    clip: {fileID: 8300000, guid: 91d94771fe613254db532ed7db9dc746, type: 3}
-    volume: 1
+  - name: Slime Attack
+    clip: {fileID: 8300000, guid: 792eb22e18d2ada49a1a2821dc3f36ab, type: 3}
+    volume: 3
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: 
-    clip: {fileID: 8300000, guid: 91d94771fe613254db532ed7db9dc746, type: 3}
+  - name: Bat Cry
+    clip: {fileID: 8300000, guid: d7eecc8e4720c7944b6f6c1493a3f023, type: 3}
+    volume: 3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Bat Attack
+    clip: {fileID: 8300000, guid: 93ee494719f27f944adfc0dbeaeda9c0, type: 3}
+    volume: 3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Skeleton Cry
+    clip: {fileID: 8300000, guid: 5d179ba80b4b87744a62b8d39e2cee3d, type: 3}
+    volume: 3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: skeleton Attack
+    clip: {fileID: 8300000, guid: 08903de8bd7d66244bda4754853256d6, type: 3}
+    volume: 3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Damage
+    clip: {fileID: 8300000, guid: f74ba2af4dc3aaa439af26ed7a880774, type: 3}
     volume: 1
     pitch: 1
     loop: 0

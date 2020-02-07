@@ -205,7 +205,11 @@ public class Entity : MonoBehaviour
 	// If health is 0, the OnKill method is called and can be handled based on the entity.
 	public void Damage(int amount, Vector2 knockback)
 	{
-		if (invincible) return;
+        if (this is Player)
+        {
+            FindObjectOfType<Audiomanager>().Play("Damage");
+        }
+        if (invincible) return;
 
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);

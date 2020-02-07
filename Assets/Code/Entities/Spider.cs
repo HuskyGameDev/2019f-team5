@@ -18,6 +18,7 @@ public class Spider : Entity
     void Start()
     {
         player = GameObject.FindWithTag("Player");
+
     }
 
     // Update is called once per frame
@@ -30,12 +31,13 @@ public class Spider : Entity
 
 		if(Math.Abs(PlayerX - transform.position.x) <= 6 && Math.Abs(PlayerY - transform.position.y) < 6)
 		{
-			aggro = true;
+            FindObjectOfType<Audiomanager>().Play("Spider Cry");
+            aggro = true;
 		}
 
 		if(Math.Abs(PlayerX - transform.position.x) >= 12 || Math.Abs(PlayerY - transform.position.y) >= 12)
 		{
-			aggro = false;
+            aggro = false;
 		}
 
 		Vector2 accel = Vector2.zero;

@@ -99,7 +99,8 @@ public class Player : Entity
 		{
 			if ((moveState & MoveState.Climbing) != 0)
 			{
-				accel = SetClimbing();
+                FindObjectOfType<Audiomanager>().Play("Walk");
+                accel = SetClimbing();
 				currentGravity = 0.0f;
 			}
 			else accel = SetNormal();

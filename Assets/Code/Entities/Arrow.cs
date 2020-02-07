@@ -10,7 +10,8 @@ public class Arrow : Entity
 
     void Start()
 	{
-		if (target == null)
+        FindObjectOfType<Audiomanager>().Play("Skeleton Attack");
+        if (target == null)
 			target = GameObject.FindWithTag("Player").GetComponent<Player>();
 
         moveDirection = (target.transform.position - transform.position).normalized * speed;

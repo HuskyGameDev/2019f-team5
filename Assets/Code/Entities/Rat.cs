@@ -20,11 +20,11 @@ public class Rat : Entity
 	public Vector2 stay;
 	public Vector2Int tilePos;
 	public bool facing;
-	
-	private void Start()
+
+    private void Start()
 	{
 		player = GameObject.Find("Player");
-	}
+    }
 
     private void Update()
 	{
@@ -33,28 +33,28 @@ public class Rat : Entity
 
 		if(Math.Abs(PlayerX - transform.position.x) <= 10 && Math.Abs(PlayerY - transform.position.y) < 3.2)
 		{
-			aggro = true;
+            aggro = true;
 		}
 
 		if(Math.Abs(PlayerX - transform.position.x) >= 15)
 		{
-			aggro = false;
+            aggro = false;
 		}
 
 		Vector2 accel = Vector2.zero;
 
 		if(PlayerX < transform.position.x && aggro)
 		{
-			if(Math.Abs(PlayerX - transform.position.x) >= .9)
+            if (Math.Abs(PlayerX - transform.position.x) >= .9)
 			{
-				accel = Vector2.left;
+                accel = Vector2.left;
 				facing = true;
-			}
+            }
 
 			SetFacingDirection(true);
 		} else if (aggro)
 		{
-			if(Math.Abs(PlayerX - transform.position.x) >= .9)
+            if (Math.Abs(PlayerX - transform.position.x) >= .9)
 			{
 				accel = Vector2.right;
 				facing = false;
@@ -78,7 +78,11 @@ public class Rat : Entity
 		} else {
 			Move(world, accel, gravity);
 		}
-	}
+        if (aggro)
+        {
+            FindObjectOfType<Audiomanager>().Play("Rat Cry");
+        }
+    }
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
@@ -89,7 +93,7 @@ public class Rat : Entity
 
 			if (target != null && target is Player)
 			{
-				Vector2 diff = (target.Position - Position).normalized;
+                Vector2 diff = (target.Position - Position).normalized;
 
 				if (diff.y > 0.4f)
 				{
