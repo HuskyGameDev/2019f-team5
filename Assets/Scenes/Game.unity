@@ -583,7 +583,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Slime Attack
     clip: {fileID: 8300000, guid: 792eb22e18d2ada49a1a2821dc3f36ab, type: 3}
-    volume: 3
+    volume: 0
     pitch: 1
     loop: 0
     source: {fileID: 0}
@@ -605,7 +605,7 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: skeleton Attack
+  - name: Skeleton Attack
     clip: {fileID: 8300000, guid: 08903de8bd7d66244bda4754853256d6, type: 3}
     volume: 3
     pitch: 1
