@@ -66,7 +66,7 @@ public class Entity : MonoBehaviour
 	protected CollideFlags colFlags;
 
 	private Animator anim;
-	private SpriteRenderer rend;
+	protected SpriteRenderer rend;
 	private Transform t;
 
 	private bool disabled = false;
@@ -191,12 +191,6 @@ public class Entity : MonoBehaviour
 		if (useCenterPivot)
 			return AABB.FromCenter(Position, size * 0.5f);
 		else return AABB.FromBottomCenter(Position, size);
-	}
-
-	public void Disable()
-	{
-		rend.enabled = false;
-		disabled = true;
 	}
 
 	protected virtual void OnCollide(CollideResult result) { }

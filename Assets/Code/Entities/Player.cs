@@ -132,7 +132,9 @@ public class Player : Entity
 
 	protected override void OnKill()
 	{
-		Disable();
+		rend.enabled = false;
+		enabled = false;
+		GetComponent<PlayerAttack>().enabled = false;
 		StartCoroutine(Restart());
 	}
 
