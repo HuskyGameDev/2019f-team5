@@ -16,7 +16,7 @@ public class Skeleton : Entity
 	public bool collide;
 	public bool Facing = false;
 	public bool Eyes = false;
-
+    int i = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,12 +33,12 @@ public class Skeleton : Entity
         float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 8)
+		if(Math.Abs(PlayerX - transform.position.x) <= 9 && Math.Abs(PlayerY - transform.position.y) < 9)
 		{
 			aggro = true;
 		}
 
-		if(Math.Abs(PlayerX - transform.position.x) >= 16 || Math.Abs(PlayerY - transform.position.y) >= 16)
+		if(Math.Abs(PlayerX - transform.position.x) >= 17 || Math.Abs(PlayerY - transform.position.y) >= 17)
 		{
 			aggro = false;
 		}
@@ -74,8 +74,12 @@ public class Skeleton : Entity
 			collide = false;
 		}
 
-
 		Move(world, accel, -30);
+        if (aggro && i ==0)
+        {
+            i++;
+            FindObjectOfType<Audiomanager>().Play("Skeleton Cry");
+        }
     }
 
     IEnumerator FireOrNot()
@@ -90,8 +94,9 @@ public class Skeleton : Entity
 			if(list[i] is Player) {
 				Play = list[i].Position;
 				Play.y+=.5f;
-				Ray ray = new Ray(Skele, (Play - Skele).normalized);
-				InView = !world.TileRaycast(ray, 16, out Vector2 result);
+				Vector2 dist = Play - Skele;
+				Ray ray = new Ray(Skele, dist.normalized);
+				InView = !world.TileRaycast(ray, dist.magnitude, out Vector2 result);
 				Eyes = InView;
 			}
 		}

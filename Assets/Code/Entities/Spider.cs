@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Random = UnityEngine.Random;
 
 public class Spider : Entity
 {
+	public GameObject BabySpider;
     public float jumpVelocity;
 	public float gravity;
 	public bool aggro;
@@ -18,6 +20,7 @@ public class Spider : Entity
     void Start()
     {
         player = GameObject.FindWithTag("Player");
+
     }
 
     // Update is called once per frame
@@ -30,12 +33,13 @@ public class Spider : Entity
 
 		if(Math.Abs(PlayerX - transform.position.x) <= 6 && Math.Abs(PlayerY - transform.position.y) < 6)
 		{
-			aggro = true;
+            FindObjectOfType<Audiomanager>().Play("Spider Cry");
+            aggro = true;
 		}
 
 		if(Math.Abs(PlayerX - transform.position.x) >= 12 || Math.Abs(PlayerY - transform.position.y) >= 12)
 		{
-			aggro = false;
+            aggro = false;
 		}
 
 		Vector2 accel = Vector2.zero;
@@ -92,6 +96,8 @@ public class Spider : Entity
 		Vector3 pivot = Position;
 		pivot.y += 0.5f;
 
+		
+
 		transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotation);
 		Move(world, accel, gravity);
     }
@@ -103,6 +109,14 @@ public class Spider : Entity
 			collide = true;
 		}
     }
+
+	protected override void OnKill() {
+			int revive = Random.Range(1, 26);
+			if(revive == 13) {
+				Instantiate(BabySpider, transform.position, Quaternion.identity);
+			}
+			base.OnKill();
+		}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{

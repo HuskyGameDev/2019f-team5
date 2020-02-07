@@ -53,7 +53,7 @@ public class Entity : MonoBehaviour
 
 	[SerializeField] protected float knockbackForce;
 
-	private bool invincible;
+	protected bool invincible;
 
 	protected MoveState moveState;
 	public Vector2 size;
@@ -66,7 +66,7 @@ public class Entity : MonoBehaviour
 	protected CollideFlags colFlags;
 
 	private Animator anim;
-	private SpriteRenderer rend;
+	protected SpriteRenderer rend;
 	private Transform t;
 
 	private bool disabled = false;
@@ -193,12 +193,6 @@ public class Entity : MonoBehaviour
 		else return AABB.FromBottomCenter(Position, size);
 	}
 
-	public void Disable()
-	{
-		rend.enabled = false;
-		disabled = true;
-	}
-
 	protected virtual void OnCollide(CollideResult result) { }
 	protected virtual void HandleOverlaps(List<CollideResult> overlaps) { }
 
@@ -211,7 +205,12 @@ public class Entity : MonoBehaviour
 	// If health is 0, the OnKill method is called and can be handled based on the entity.
 	public void Damage(int amount, Vector2 knockback)
 	{
-		if (invincible) return;
+        if (invincible || health == 0) return;
+
+		if (this is Player)
+		{
+			FindObjectOfType<Audiomanager>().Play("Damage");
+		}
 
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);

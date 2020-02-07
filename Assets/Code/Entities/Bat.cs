@@ -14,6 +14,7 @@ public class Bat : Entity
 	public bool aggro;
 	[SerializeField]
 	public GameObject player;
+    int i = 0;
 	
 	private void Start()
 	{
@@ -25,14 +26,9 @@ public class Bat : Entity
 		float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 6 && Math.Abs(PlayerY - transform.position.y) < 6)
+		if(Math.Abs(PlayerX - transform.position.x) <= 5 && Math.Abs(PlayerY - transform.position.y) < 5)
 		{
 			aggro = true;
-		}
-
-		if(Math.Abs(PlayerX - transform.position.x) >= 10 || Math.Abs(PlayerY - transform.position.y) >= 10)
-		{
-			aggro = false;
 		}
 
 		Vector2 accel = Vector2.zero;
@@ -56,7 +52,12 @@ public class Bat : Entity
 		
 
 		Move(world, accel, 0);
-	}
+        if (aggro && i == 0)
+        {
+            i++;
+            FindObjectOfType<Audiomanager>().Play("Bat Cry");
+        }
+    }
 
 
 

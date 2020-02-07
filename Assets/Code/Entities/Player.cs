@@ -99,7 +99,7 @@ public class Player : Entity
 		{
 			if ((moveState & MoveState.Climbing) != 0)
 			{
-				accel = SetClimbing();
+                accel = SetClimbing();
 				currentGravity = 0.0f;
 			}
 			else accel = SetNormal();
@@ -110,7 +110,8 @@ public class Player : Entity
 		if(accel != Vector2.zero) {
             PlayAnimation("Walking animation");
 		} else {
-			PlayAnimation("Static animation");
+            FindObjectOfType<Audiomanager>().Play("Walk");
+            PlayAnimation("Static animation");
 		}
 	}
 
@@ -132,7 +133,9 @@ public class Player : Entity
 
 	protected override void OnKill()
 	{
-		Disable();
+		rend.enabled = false;
+		enabled = false;
+		GetComponent<PlayerAttack>().enabled = false;
 		StartCoroutine(Restart());
 	}
 

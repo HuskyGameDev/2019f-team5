@@ -42,7 +42,7 @@ public class PlayerAttack : MonoBehaviour
 	{
 		Vector2 cursor = ((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - play.transform.position)).normalized;
 		Vector2 hitloc = (play.Position + cursor) + (Vector2.up / 2);
-		AABB box = AABB.FromCenter(hitloc, new Vector2(1.25f, 1.25f));
+		AABB box = AABB.FromCenter(hitloc, new Vector2(0.8f, 0.8f));
 		List<Entity> entities = world.GetOverlappingEntities(box);
 		box.Draw(Color.red, 0.5f);
 

@@ -1,4 +1,4 @@
-﻿//
+﻿ //
 // When We Fell
 //
 
@@ -34,7 +34,7 @@ public class Slime : Entity
 
 		if (Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 8)
 		{
-			aggro = true;
+            aggro = true;
 		}
 
 		if (Math.Abs(PlayerX - transform.position.x) >= 15 || Math.Abs(PlayerY - transform.position.y) >= 15)
@@ -46,12 +46,13 @@ public class Slime : Entity
 		{
 			if (isJumping)
 			{
-				isJumping = false;
+                isJumping = false;
 				accel = Vector2.zero;
 			}
 			if (jumpTime <= 0)
 			{
-				velocity.y = jumpVelocity;
+                FindObjectOfType<Audiomanager>().Play("Slime Cry");
+                velocity.y = jumpVelocity;
 				jumpTime = 1.5f;
 
 			}
@@ -84,11 +85,11 @@ public class Slime : Entity
 
 			if (target != null && target is Player)
 			{
-				Vector2 diff = (target.Position - Position).normalized;
+                Vector2 diff = (target.Position - Position).normalized;
 
 				if (diff.y > 0.4f)
 				{
-					Damage(5);
+                    Damage(5);
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
