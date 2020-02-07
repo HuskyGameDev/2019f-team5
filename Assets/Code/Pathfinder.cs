@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System;
 
-public sealed class PathComputer
+public sealed class Pathfinder
 {
 	private PathCellInfo[,] grid;
 
@@ -27,7 +27,7 @@ public sealed class PathComputer
 
 	private Vector2Int[] directions = new Vector2Int[4];
 
-	public PathComputer(World world, PathCellInfo[,] grid)
+	public Pathfinder(World world, PathCellInfo[,] grid)
 	{
 		this.world = world;
 		this.grid = grid;
@@ -41,66 +41,13 @@ public sealed class PathComputer
 		nodes = new PathNode[bounds.width, bounds.height];
 	}
 
-	public void SetInfo(Vector2Int start, Vector2Int target, Stack<Vector2> path)
-	{
-		this.start = start;
-		this.target = target;
-		this.path = path;
-	}
-
-	private PathNode GetNode(Vector2Int p)
-	{
-		PathNode node = nodes[p.x, p.y];
-
-		if (node == null)
-		{
-			node = new PathNode();
-			nodes[p.x, p.y] = node;
-		}
-
-		node.pos = p;
-		return node;
-	}
-
 	private bool InBounds(Vector2Int p)
 	{
 		RectInt bounds = world.GetBounds();
 		return p.x >= bounds.min.x && p.y >= bounds.min.y && p.x <= bounds.max.x && p.y <= bounds.max.y;
 	}
 
-	private void GetSuccessors(PathNode current, Vector2Int pos)
-	{
-		successorCount = 0;
-
-		for (int i = 0; i < 4; i++)
-		{
-			Vector2Int next = pos + directions[i];
-
-			if (InBounds(next) && grid[next.x, next.y].passable)
-				successors[successorCount++] = GetNode(next);
-		}
-
-		for (int i = 4; i < 8; i++)
-		{
-			Vector2Int dir = directions[i];
-			Vector2Int next = pos + dir;
-
-			if (InBounds(next))
-			{
-				PathCellInfo diag = grid[next.x, next.y];
-
-				if (diag.passable)
-				{
-					PathCellInfo adjX = grid[pos.x + dir.x, pos.y];
-					PathCellInfo adjY = grid[pos.x, pos.y + dir.y];
-
-					if (adjX.passable && !adjX.trigger && adjY.passable && !adjY.trigger)
-						successors[successorCount++] = GetNode(next);
-				}
-			}
-		}
-	}
-
+	// Fills the path to follow into a stack.
 	private void TracePath(PathNode dest)
 	{
 		PathNode current = dest;
@@ -118,11 +65,16 @@ public sealed class PathComputer
 	private int ComputeHeuristic(Vector2Int start, Vector2Int end)
 		=> Mathf.Abs(end.x - start.x) + Mathf.Abs(end.y - start.y);
 
-	public void FindPath(Action callback)
+	// Use a background thread to compute the path, which is filled in the 'path' stack.
+	public void FindPath(Vector2Int start, Vector2Int target, Stack<Vector2> path, Action callback)
 	{
+		this.start = start;
+		this.target = target;
+		this.path = path;
 		ThreadPool.QueueUserWorkItem(FindPath, callback);
 	}
 
+	// An implementation of the A* pathfinding algorithm.
 	private void FindPath(object dataPtr)
 	{
 		try
@@ -182,6 +134,33 @@ public sealed class PathComputer
 		{
 			Debug.LogError("An exception occurred while computing the path: " + e.ToString());
 			Debug.LogError(e.StackTrace);
+		}
+	}
+
+	private PathNode GetNode(Vector2Int p)
+	{
+		PathNode node = nodes[p.x, p.y];
+
+		if (node == null)
+		{
+			node = new PathNode();
+			nodes[p.x, p.y] = node;
+		}
+
+		node.pos = p;
+		return node;
+	}
+
+	private void GetSuccessors(PathNode current, Vector2Int pos)
+	{
+		successorCount = 0;
+
+		for (int i = 0; i < 4; i++)
+		{
+			Vector2Int next = pos + directions[i];
+
+			if (InBounds(next) && grid[next.x, next.y].passable)
+				successors[successorCount++] = GetNode(next);
 		}
 	}
 

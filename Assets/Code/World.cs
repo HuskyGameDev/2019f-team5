@@ -15,13 +15,35 @@ public class World : MonoBehaviour
 
 	private RectInt levelBounds;
 
+	private Pathfinder pathfinder;
+	private PathCellInfo[,] pathGrid;
+
 	private void Start()
 	{
 		//SampleRoomLoader generator = new SampleRoomLoader();
 		ProcGen generator = new ProcGen();
 		levelBounds = generator.Generate(this);
 
+		FillPathCellInfo();
 		EventManager.Instance.SignalEvent(GameEvent.LevelGenerated, this);
+	}
+
+	private void FillPathCellInfo()
+	{
+		pathGrid = new PathCellInfo[levelBounds.width, levelBounds.height];
+
+		for (int y = levelBounds.min.y; y <= levelBounds.max.y; ++y)
+		{
+			for (int x = levelBounds.min.x; x <= levelBounds.max.x; ++x)
+			{
+				Tile tile = GetTile(x, y);
+				bool passable = TileManager.GetData(tile).passable;
+
+				pathGrid[x, y] = new PathCellInfo(passable, false, passable ? 0 : int.MaxValue);
+			}
+		}
+
+		pathfinder = new Pathfinder(this, pathGrid);
 	}
 
 	public RectInt GetBounds()
