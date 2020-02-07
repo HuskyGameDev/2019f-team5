@@ -5,7 +5,6 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 using System.Collections.Generic;
-using System.Threading;
 using System;
 
 public sealed class Pathfinder
@@ -65,75 +64,60 @@ public sealed class Pathfinder
 	private int ComputeHeuristic(Vector2Int start, Vector2Int end)
 		=> Mathf.Abs(end.x - start.x) + Mathf.Abs(end.y - start.y);
 
-	// Use a background thread to compute the path, which is filled in the 'path' stack.
-	public void FindPath(Vector2Int start, Vector2Int target, Stack<Vector2> path, Action callback)
+	// An implementation of the A* pathfinding algorithm.
+	public void FindPath(Vector2Int start, Vector2Int target, Stack<Vector2> path)
 	{
 		this.start = start;
 		this.target = target;
 		this.path = path;
-		ThreadPool.QueueUserWorkItem(FindPath, callback);
-	}
 
-	// An implementation of the A* pathfinding algorithm.
-	private void FindPath(object dataPtr)
-	{
-		try
+		openList.Add(start, GetNode(start));
+
+		while (openList.Count > 0)
 		{
-			openList.Add(start, GetNode(start));
+			PathNode current = openList.First;
+			openList.RemoveFirst(current.pos, current);
+			closedList.Add(current);
 
-			while (openList.Count > 0)
+			if (current.pos == target)
 			{
-				PathNode current = openList.First;
-				openList.RemoveFirst(current.pos, current);
-				closedList.Add(current);
+				TracePath(current);
+				return;
+			}
 
-				if (current.pos == target)
+			GetSuccessors(current, current.pos);
+
+			for (int i = 0; i < successorCount; i++)
+			{
+				PathNode next = successors[i];
+
+				if (closedList.Contains(next))
+					continue;
+
+				Vector2Int nP = next.pos;
+				int cost = grid[nP.x, nP.y].cost;
+				int newG = current.g + cost;
+
+				if (!openList.TryGetValue(next.pos, out PathNode node))
 				{
-					TracePath(current);
-					var callback = (Action)dataPtr;
-					callback.Invoke();
-					return;
+					next.g = newG;
+					next.h = ComputeHeuristic(nP, target);
+					next.f = next.g + next.h;
+					next.parent = current;
+					openList.Add(next.pos, next);
 				}
-
-				GetSuccessors(current, current.pos);
-
-				for (int i = 0; i < successorCount; i++)
+				else
 				{
-					PathNode next = successors[i];
-
-					if (closedList.Contains(next))
-						continue;
-
-					Vector2Int nP = next.pos;
-					int cost = grid[nP.x, nP.y].cost;
-					int newG = current.g + cost;
-
-					if (!openList.TryGetValue(next.pos, out PathNode node))
+					if (newG < node.g)
 					{
-						next.g = newG;
-						next.h = ComputeHeuristic(nP, target);
-						next.f = next.g + next.h;
-						next.parent = current;
-						openList.Add(next.pos, next);
-					}
-					else
-					{
-						if (newG < node.g)
-						{
-							openList.Remove(node);
-							node.g = newG;
-							node.f = node.g + node.h;
-							node.parent = current;
-							openList.Add(node);
-						}
+						openList.Remove(node);
+						node.g = newG;
+						node.f = node.g + node.h;
+						node.parent = current;
+						openList.Add(node);
 					}
 				}
 			}
-		}
-		catch (Exception e)
-		{
-			Debug.LogError("An exception occurred while computing the path: " + e.ToString());
-			Debug.LogError(e.StackTrace);
 		}
 	}
 
