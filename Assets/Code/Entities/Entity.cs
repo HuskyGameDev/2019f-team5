@@ -91,7 +91,7 @@ public class Entity : MonoBehaviour
 		set { t.position = value; }
 	}
 
-	private void Awake()
+	protected virtual void Awake()
 	{
 		if (world == null)
 			world = GameObject.FindWithTag("Manager").GetComponent<World>();

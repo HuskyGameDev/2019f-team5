@@ -18,13 +18,17 @@ public class World : MonoBehaviour
 	private Pathfinder pathfinder;
 	private PathCellInfo[,] pathGrid;
 
-	private void Start()
+	private void Awake()
 	{
 		//SampleRoomLoader generator = new SampleRoomLoader();
 		ProcGen generator = new ProcGen();
 		levelBounds = generator.Generate(this);
 
 		FillPathCellInfo();
+	}
+
+	private void Start()
+	{
 		EventManager.Instance.SignalEvent(GameEvent.LevelGenerated, this);
 	}
 
@@ -98,6 +102,9 @@ public class World : MonoBehaviour
 
 		Vector2Int rel = Utils.WorldToRelP(wX, wY);
 		chunk.SetTile(rel.x, rel.y, tile);
+
+		TileData data = TileManager.GetData(tile);
+		pathGrid[wX, wY] = new PathCellInfo(data.passable, false, data.passable ? 0 : int.MaxValue);
 
 		return chunk;
 	}

@@ -18,8 +18,10 @@ public class Bat : Entity
 	Stack <Vector2> path = new Stack<Vector2>();
 	Vector3 NextPos;
 	
-	private void Start()
+	protected override void Awake()
 	{
+		base.Awake();
+
 		player = GameObject.Find("Player");
 		EventManager.Instance.Subscribe(GameEvent.LevelGenerated, InvokePath);
 	}
@@ -36,14 +38,12 @@ public class Bat : Entity
 
 		Vector2 accel = Vector2.zero;
 		
-			Vector3.MoveTowards(transform.position, NextPos, Time.deltaTime * speed);
-
+		transform.position = Vector3.MoveTowards(transform.position, NextPos, Time.deltaTime * speed);
 		
 		if(transform.position == NextPos && path.Count > 0) {
 			NextPos = path.Pop();
 		}
 
-		Move(world, accel, 0);
         if (aggro && i == 0)
         {
             i++;
@@ -52,7 +52,7 @@ public class Bat : Entity
     }
 
 	private void InvokePath(object Obj) {
-		InvokeRepeating("FindPath", 0, 2);
+		InvokeRepeating("FindPath", 0, 0.5f);
 	}
 
 	private void FindPath() {

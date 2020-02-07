@@ -22,7 +22,7 @@ public sealed class Pathfinder
 	private HashSet<PathNode> closedList = new HashSet<PathNode>();
 
 	private int successorCount = 0;
-	private PathNode[] successors = new PathNode[8];
+	private PathNode[] successors = new PathNode[4];
 
 	private Vector2Int[] directions = new Vector2Int[4];
 
@@ -67,6 +67,8 @@ public sealed class Pathfinder
 	// An implementation of the A* pathfinding algorithm.
 	public void FindPath(Vector2Int start, Vector2Int target, Stack<Vector2> path)
 	{
+		Clear();
+
 		this.start = start;
 		this.target = target;
 		this.path = path;
@@ -148,7 +150,7 @@ public sealed class Pathfinder
 		}
 	}
 
-	public void Clear()
+	private void Clear()
 	{
 		openList.Clear();
 		closedList.Clear();
