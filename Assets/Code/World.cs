@@ -46,6 +46,9 @@ public class World : MonoBehaviour
 		pathfinder = new Pathfinder(this, pathGrid);
 	}
 
+	public void FindPath(Vector2Int start, Vector2Int target, Stack<Vector2> path)
+		=> pathfinder.FindPath(start, target, path);
+
 	public RectInt GetBounds()
 		=> levelBounds;
 
