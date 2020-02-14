@@ -38,8 +38,15 @@ public class Bat : Entity
 
 		Vector2 accel = Vector2.zero;
 		
-		transform.position = Vector3.MoveTowards(transform.position, NextPos, Time.deltaTime * speed);
-		
+		if(Math.Abs(PlayerX - transform.position.x) <= 20 && Math.Abs(PlayerY - transform.position.y) < 20)
+		{
+			aggro = true;
+		}
+
+		if(aggro) {
+			transform.position = Vector3.MoveTowards(transform.position, NextPos, Time.deltaTime * speed);
+		}
+
 		if(transform.position == NextPos && path.Count > 0) {
 			NextPos = path.Pop();
 		}
