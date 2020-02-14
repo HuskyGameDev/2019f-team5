@@ -48,7 +48,7 @@ public class Skeleton : Entity
 		if(PlayerX < transform.position.x && aggro)
 		{
 			if(!Eyes) {
-				if((Math.Abs(PlayerX - transform.position.x) >= 5))
+				if((Math.Abs(PlayerX - transform.position.x) >= 3))
 				{
 					accel = Vector2.left;
 					Facing = true;
@@ -59,7 +59,7 @@ public class Skeleton : Entity
 		} else if (aggro)
 		{
 			if(!Eyes) {
-				if((Math.Abs(PlayerX - transform.position.x) >= 5))
+				if((Math.Abs(PlayerX - transform.position.x) >= 3))
 				{
 					accel = Vector2.right;
 					Facing = false;
