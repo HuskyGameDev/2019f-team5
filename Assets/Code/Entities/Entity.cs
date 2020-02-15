@@ -428,7 +428,16 @@ public class Entity : MonoBehaviour
 		SetFacingDirection();
 
 		Rebase(world);
-		
+
+		// Effectively creates an invisible wall around the level boundaries.
+		// We may not need to keep this, but I'm adding it for now to stop
+		// things from falling out of the level.
+		RectInt bounds = world.GetBounds();
+		Vector2 clampedP = Position;
+		clampedP.x = Mathf.Clamp(clampedP.x, bounds.min.x + 0.5f, bounds.max.x - 0.5f);
+		clampedP.y = Mathf.Clamp(clampedP.y, bounds.min.y + 0.5f, bounds.max.y - 0.5f);
+		Position = clampedP;
+
 		if (DebugServices.Instance.ShowDebug)
 			GetBoundingBox().Draw(Color.green);
 	}

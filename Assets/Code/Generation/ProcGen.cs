@@ -1,17 +1,54 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+
+// Notes on room types:
+// 0 = arbitrary
+// 1 = exits to the left and right.
+// 2 = exits to the left, right, and down.
+// 3 = exits to the left, right, and up.
+// 4 = exits in all four directions. 
 
 public class ProcGen
 {
+	struct PathEntry
+	{
+		public int x, y;
+		public bool[] dirs;
+		
+		public PathEntry(int x, int y)
+		{
+			this.x = x;
+			this.y = y;
+			dirs = new bool[4];
+		}
+	}
+
+	private const int Left = 0, Right = 1, Down = 2, Up = 3;
+
 	private GameObject player;
 	private GameObject[] mobs;
 	private int mobCap = 2;
 
+	private const int numTypes = 5;
+	private const int numRooms = 4;
+
 	// Width and height of the level in rooms.
-	private int levelWidth = 4;
-	private int levelHeight = 4;
+	private readonly int levelWidth = 4;
+	private readonly int levelHeight = 4;
 
 	// A flattened 2D array representing the room types at each location.
 	private int[] level;
+
+	private List<PathEntry> solutionPath = new List<PathEntry>();
+
+	// Tracks which rooms have been put in the solution path already.
+	// This prevents the path overwriting itself.
+	private HashSet<Vector2Int> checkedRooms = new HashSet<Vector2Int>();
+
+	// Provides all options for a given exit direction.
+	// For example, the hash set corresponding to index 0
+	// contains all rooms that exit to the left.
+	private HashSet<int>[] roomOptions = new HashSet<int>[4];
 
 	public ProcGen()
 	{
@@ -19,6 +56,11 @@ public class ProcGen
 		player = GameObject.FindWithTag("Player");
 
 		level = new int[levelWidth * levelHeight];
+
+		roomOptions[Left] = new HashSet<int>() { 1, 2, 3, 4 };
+		roomOptions[Right] = new HashSet<int>() { 1, 2, 3, 4 };
+		roomOptions[Down] = new HashSet<int>() { 2, 4 };
+		roomOptions[Up] = new HashSet<int>() { 3, 4 };
 	}
 
 	public RectInt Generate(World world, int seed = -1)
@@ -29,12 +71,10 @@ public class ProcGen
 		Random.InitState(seed);
 		Debug.Log("Seed: " + seed);
 
-		Vector2Int startRoom = makeSolutionPath();
-		bool pSpawned = false;
+		Vector2Int startRoom = MakeSolutionPath();
+		SetSolutionPathRooms();
 
-		// This variable controls the number of unique rooms of each room type.
-		int numTypes = 5;
-		int numRooms = 4;
+		bool pSpawned = false;
 
 		TextAsset[] rooms = new TextAsset[numTypes * numRooms];
 
@@ -73,7 +113,7 @@ public class ProcGen
 					int cDist = 0, mDist = 1;
 					while (!pSpawned)
 					{
-						if (isSpawnable(chunk, playerX, playerY))
+						if (IsSpawnable(chunk, playerX, playerY))
 						{
 							player.transform.position = new Vector2(16 * roomX + playerX + 0.5f, 16 * roomY + playerY + 0.05f);
 							pSpawned = true;
@@ -123,7 +163,7 @@ public class ProcGen
 						//probability a mob spawns in a given space
 						int willSpawn = Random.Range(0, 100);
 
-						if (isSpawnable(chunk, tileX, tileY) && mobTot <= mobCap && willSpawn < 5)
+						if (IsSpawnable(chunk, tileX, tileY) && mobTot <= mobCap && willSpawn < 5)
 						{
 							int randMob = Random.Range(0, mobs.GetLength(0));
 							SpawnEnemy(randMob, roomX, roomY, tileX, tileY);
@@ -154,98 +194,119 @@ public class ProcGen
 			level[roomY * levelWidth + roomX] = type;
 	}
 	
-	//returns the position of the starting room
-	private Vector2Int makeSolutionPath()
+	// Fills the solutionPath list with a path through the level.
+	// It is guaranteed this path will be traversable. Other paths
+	// could also generate off the main path by chance.
+	private Vector2Int MakeSolutionPath()
 	{
-		int roomX = Random.Range(0, 4);
-		int roomY = levelHeight - 1;
+		int startRoomX = Random.Range(0, 4);
+		int startRoomY = levelHeight - 1;
 
-		int direction = 0;
-		SetRoomType(roomX, roomY, 1);
+		int roomX = startRoomX;
+		int roomY = startRoomY;
+
+		PathEntry first = new PathEntry(roomX, roomY);
+		solutionPath.Add(first);
+		checkedRooms.Add(new Vector2Int(roomX, roomY));
+
+		int prevIndex = 0;
 
 		while (roomY >= 0)
 		{
-			direction = Random.Range(0, 5);
+			PathEntry prev = solutionPath[prevIndex];
+			int direction = Random.Range(0, 5);
 
 			if (direction == 0 || direction == 1)
-				goLeft(ref roomX, ref roomY);
+			{
+				if (roomX > 0 && !checkedRooms.Contains(new Vector2Int(roomX - 1, roomY)))
+					AddLeft();
+				else AddDown();
+			}
 			else if (direction == 2 || direction == 3)
-				goRight(ref roomX, ref roomY);
-			else goDown(ref roomX, ref roomY);
+			{
+				if (roomX < levelWidth - 1 && !checkedRooms.Contains(new Vector2Int(roomX + 1, roomY)))
+					AddRight();
+				else AddDown();
+			}
+			else AddDown();
+
+			solutionPath[prevIndex++] = prev;
+
+			void AddLeft()
+			{
+				--roomX;
+				prev.dirs[Left] = true;
+
+				PathEntry next = new PathEntry(roomX, roomY);
+				next.dirs[Right] = true;
+
+				solutionPath.Add(next);
+				checkedRooms.Add(new Vector2Int(roomX, roomY));
+			}
+
+			void AddRight()
+			{
+				++roomX;
+				prev.dirs[Right] = true;
+
+				PathEntry next = new PathEntry(roomX, roomY);
+				next.dirs[Left] = true;
+
+				solutionPath.Add(next);
+				checkedRooms.Add(new Vector2Int(roomX, roomY));
+			}
+
+			void AddDown()
+			{
+				--roomY;
+				prev.dirs[Down] = true;
+
+				PathEntry next = new PathEntry(roomX, roomY);
+				next.dirs[Up] = true;
+
+				solutionPath.Add(next);
+				checkedRooms.Add(new Vector2Int(roomX, roomY));
+			}
 		}
 
-		return new Vector2Int(roomX, 0);
+		return new Vector2Int(startRoomX, startRoomY);
 	}
 
-	private void goDown(ref int roomX, ref int roomY)
+	// Given a filled solution path, sets the room types
+	// along the path randomly according to what is possible.
+	// This method is not very efficient, though it won't matter
+	// for our purposes currently. If it later does, we can optimize 
+	// it then.
+	private void SetSolutionPathRooms()
 	{
-		int belowType = GetRoomType(roomX, roomY - 1);
-
-		//if trying to go down out of the level, the path is complete
-		if (roomY == levelHeight - 1)
+		for (int i = 0; i < solutionPath.Count; ++i)
 		{
-			//if the level[roomX, roomY-1]ious movement was down, make the current room type 3.
-			if (belowType == 2 || belowType == 4)
-				SetRoomType(roomX, roomY, 3);
+			PathEntry entry = solutionPath[i];
 
-			roomY--;
-			return;
+			HashSet<int> options = null;
+
+			// Go through each direction and add all types
+			// that are supported by all directions we need
+			// to support for this room.
+			for (int j = 0; j < 4; ++j)
+			{
+				if (entry.dirs[j])
+				{
+					if (options == null)
+						options = roomOptions[j];
+					else options.IntersectWith(roomOptions[j]);
+				}
+			}
+
+			int[] arr = new int[options.Count];
+			options.CopyTo(arr);
+
+			int choice = Random.Range(0, arr.Length);
+			SetRoomType(entry.x, entry.y, arr[choice]);
 		}
-
-		if (roomY > 0 && (belowType == 2 || belowType == 4))
-			SetRoomType(roomX, roomY, 4);
-		else SetRoomType(roomX, roomY, 2);
-
-		roomY--;
 	}
 
-	private void goLeft(ref int roomX, ref int roomY)
-	{
-		int leftType = GetRoomType(roomX - 1, roomY);
-
-		if (roomX == 0)
-		{
-			SetRoomType(roomX, roomY, 1);
-			goDown(ref roomX, ref roomY);
-			return;
-		}
-
-		if (roomY > 0 && (leftType == 2 || leftType == 4))
-			SetRoomType(roomX, roomY, 3);
-		else if (GetRoomType(roomX, roomY) == 3)
-		{
-			//3 type rooms already have side exits
-			//do nothing so the top exit gets preserved    
-		}
-		else SetRoomType(roomX, roomY, 1);
-
-		roomX--;
-	}
-
-	private void goRight(ref int roomX, ref int roomY)
-	{
-		int rightType = GetRoomType(roomX + 1, roomY);
-
-		if (roomX == levelWidth - 1)
-		{
-			SetRoomType(roomX, roomY, 1);
-			goDown(ref roomX, ref roomY);
-			return;
-		}
-
-		if (roomY > 0 && (rightType == 2 || rightType == 4))
-			SetRoomType(roomX, roomY, 3);
-		else if (GetRoomType(roomX, roomY) == 3)
-		{
-			//3 type rooms already have side exits
-			//do nothing so the top exit gets preserved    
-		}
-		else SetRoomType(roomX, roomY, 1);
-
-		roomX++;
-	}
-
-	private bool isSpawnable(Chunk chunk, int tileX, int tileY)
+	private bool IsSpawnable(Chunk chunk, int tileX, int tileY)
 	{
 		// We ensure tileY is larger than 0 for now to ensure the tileY - 1 check doesn't
 		// go out of bounds. This prevents enemies from spawning on the bottom row of the room.
