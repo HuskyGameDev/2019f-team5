@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Arrow : Entity
@@ -8,33 +7,31 @@ public class Arrow : Entity
     static Player target;
     Vector2 moveDirection;
 
-    void Start()
+    private void Start()
 	{
-        FindObjectOfType<Audiomanager>().Play("Skeleton Attack");
+        GameObject.FindWithTag("Audio").GetComponent<Audiomanager>().Play("Skeleton Attack");
+
         if (target == null)
 			target = GameObject.FindWithTag("Player").GetComponent<Player>();
 
-        moveDirection = (target.transform.position - transform.position).normalized * speed;
+		Vector3 targetP = target.transform.position;
+		Vector3 pos = transform.position;
+
+		moveDirection = (targetP - pos).normalized * speed;
         float angle;
-        if(target.transform.position.x < transform.position.x)
-        {
-            angle = 180 + Mathf.Atan2 (target.transform.position.y - transform.position.y, target.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
-        } else
-        {
-            angle = Mathf.Atan2 (target.transform.position.y - transform.position.y, target.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
-        }
-        this.transform.rotation = Quaternion.Euler (new Vector3(0, 0, angle));
+
+        if (targetP.x < pos.x)
+			angle = 180 + Mathf.Atan2 (targetP.y - pos.y, targetP.x - pos.x) * Mathf.Rad2Deg;
+        else angle = Mathf.Atan2 (targetP.y - pos.y, targetP.x - pos.x) * Mathf.Rad2Deg;
+      
+		transform.rotation = Quaternion.Euler (new Vector3(0, 0, angle));
     }
 
-    void Update()
-	{
-        Move(world, moveDirection, gravity);
-    }
+    private void Update()
+		=> Move(moveDirection, gravity);
 
     protected override void OnCollide(CollideResult col)
-	{
-		Destroy(gameObject);
-    }
+		=> Destroy(gameObject);
 
     protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
@@ -60,5 +57,4 @@ public class Arrow : Entity
 			}
 		}
 	}
-    
 }

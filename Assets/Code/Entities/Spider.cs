@@ -10,52 +10,50 @@ public class Spider : Entity
     public float jumpVelocity;
 	public float gravity;
 	public bool aggro;
-	[SerializeField]
 	public GameObject player;
 	public bool collide;
 	public bool facing;
     float rotation;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        player = GameObject.FindWithTag("Player");
+	private Audiomanager audioManager;
 
-    }
+	private void Start()
+	{
+		player = GameObject.FindWithTag("Player");
+		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
+	}
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
 		rotation = 0.0f;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 6 && Math.Abs(PlayerY - transform.position.y) < 6)
+		if (Math.Abs(PlayerX - Position.x) <= 6 && Math.Abs(PlayerY - Position.y) < 6)
 		{
-            FindObjectOfType<Audiomanager>().Play("Spider Cry");
+            audioManager.Play("Spider Cry");
             aggro = true;
 		}
 
-		if(Math.Abs(PlayerX - transform.position.x) >= 12 || Math.Abs(PlayerY - transform.position.y) >= 12)
-		{
-            aggro = false;
-		}
+		if (Math.Abs(PlayerX - Position.x) >= 12 || Math.Abs(PlayerY - Position.y) >= 12)
+			aggro = false;
 
 		Vector2 accel = Vector2.zero;
 
-        if(PlayerX < transform.position.x && aggro)
+        if (PlayerX < Position.x && aggro)
 		{
-			if(Math.Abs(PlayerX - transform.position.x) >= .9)
+			if(Math.Abs(PlayerX - Position.x) >= 0.9f)
 			{
 				accel = Vector2.left;
 				facing = true;
 			}
 
 			SetFacingDirection(true);
-		} else if (aggro)
+		} 
+		else if (aggro)
 		{
-			if(Math.Abs(PlayerX - transform.position.x) >= .9)
+			if(Math.Abs(PlayerX - Position.x) >= 0.9f)
 			{
 				accel = Vector2.right;
 				facing = false;
@@ -68,12 +66,9 @@ public class Spider : Entity
 		{
 			velocity.y = jumpVelocity;
             gravity = 0;
-			if( facing) {
+			if (facing)
 				rotation = -90f;
-			} else {
-				rotation = 90f;
-			}
-            
+			else rotation = 90f;
 		} 
 		else if (CollidedBelow() && aggro) 
         {
@@ -85,38 +80,31 @@ public class Spider : Entity
         {
             rotation = 180.0f;
             gravity = 0;
-         
-             
         } 
-		else 
-		{
-            gravity = -30;
-        }
+		else gravity = -30;
 
 		Vector3 pivot = Position;
 		pivot.y += 0.5f;
-
 		
-
 		transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotation);
-		Move(world, accel, gravity);
+		Move(accel, gravity);
     }
 
 	protected override void OnCollide(CollideResult col)
 	{
 		if (CollidedSides() && CollidedBelow())
-		{
 			collide = true;
-		}
     }
 
-	protected override void OnKill() {
-			int revive = Random.Range(1, 26);
-			if(revive == 13) {
-				Instantiate(BabySpider, transform.position, Quaternion.identity);
-			}
-			base.OnKill();
-		}
+	protected override void OnKill() 
+	{
+		int revive = Random.Range(1, 26);
+
+		if (revive == 13)
+			Instantiate(BabySpider, transform.position, Quaternion.identity);
+
+		base.OnKill();
+	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{

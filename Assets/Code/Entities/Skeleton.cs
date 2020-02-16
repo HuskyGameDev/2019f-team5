@@ -11,14 +11,13 @@ public class Skeleton : Entity
     public float jumpVelocity;
 	public float gravity;
 	public bool aggro;
-	[SerializeField]
 	public GameObject player;
 	public bool collide;
 	public bool Facing = false;
 	public bool Eyes = false;
     int i = 0;
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
         player = GameObject.Find("Player");
         fireRate = 3f;
@@ -26,55 +25,57 @@ public class Skeleton : Entity
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         StartCoroutine(FireOrNot());
 
         float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 9 && Math.Abs(PlayerY - transform.position.y) < 9)
-		{
+		if (Math.Abs(PlayerX - transform.position.x) <= 9 && Math.Abs(PlayerY - transform.position.y) < 9)
 			aggro = true;
-		}
 
-		if(Math.Abs(PlayerX - transform.position.x) >= 17 || Math.Abs(PlayerY - transform.position.y) >= 17)
-		{
+		if (Math.Abs(PlayerX - transform.position.x) >= 17 || Math.Abs(PlayerY - transform.position.y) >= 17)
 			aggro = false;
-		}
 
 		Vector2 accel = Vector2.zero;
 
 		if(PlayerX < transform.position.x && aggro)
 		{
-			if(!Eyes) {
-				if((Math.Abs(PlayerX - transform.position.x) >= 3))
+			if(!Eyes) 
+			{
+				if ((Math.Abs(PlayerX - transform.position.x) >= 3))
 				{
 					accel = Vector2.left;
 					Facing = true;
 				}
 			}
+
 			SetFacingDirection(true);
 
-		} else if (aggro)
+		} 
+		else if (aggro)
 		{
-			if(!Eyes) {
+			if (!Eyes) 
+			{
 				if((Math.Abs(PlayerX - transform.position.x) >= 3))
 				{
 					accel = Vector2.right;
 					Facing = false;
 				}
 			}
+
 			SetFacingDirection(false);
 		}
 		
-		if(collide && aggro)
+		if (collide && aggro)
 		{
 			velocity.y = jumpVelocity;
 			collide = false;
 		}
 
-		Move(world, accel, -30);
+		Move(accel, -30);
+
         if (aggro && i ==0)
         {
             i++;
@@ -82,7 +83,7 @@ public class Skeleton : Entity
         }
     }
 
-    IEnumerator FireOrNot()
+    private IEnumerator FireOrNot()
 	{
 		bool InView = false;
 		Vector2 Skele = Position;
@@ -101,7 +102,7 @@ public class Skeleton : Entity
 			}
 		}
 		
-        if(Time.time > nextFire && aggro && InView)
+        if (Time.time > nextFire && aggro && InView)
 		{
 			PlayAnimation("SkeletonAttack");
 			yield return new WaitForSeconds(.5f);
@@ -127,9 +128,7 @@ public class Skeleton : Entity
 	protected override void OnCollide(CollideResult col)
 	{
 		if (CollidedSides() && CollidedBelow())
-		{
 			collide = true;
-		}
     }
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)

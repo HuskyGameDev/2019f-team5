@@ -12,11 +12,9 @@ public class Slime : Entity
 	public float gravity;
 	public bool aggro;
 	public float jumpTime = 1.5f;
-	[SerializeField]
 	public GameObject player;
 
-	Vector2 accel;
-
+	private Vector2 accel;
 	public bool isJumping;
 
 	private void Start()
@@ -33,14 +31,10 @@ public class Slime : Entity
 		float PlayerX = player.transform.position.x;
 
 		if (Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 8)
-		{
-            aggro = true;
-		}
+			aggro = true;
 
-		if (Math.Abs(PlayerX - transform.position.x) >= 15 || Math.Abs(PlayerY - transform.position.y) >= 15)
-		{
+		if (Math.Abs(PlayerX - transform.position.x) >= 15 || Math.Abs(PlayerY - transform.position.y) >= 15)	
 			aggro = false;
-		}
 
 		if (aggro && (colFlags & CollideFlags.Below) != 0)
 		{
@@ -49,6 +43,7 @@ public class Slime : Entity
                 isJumping = false;
 				accel = Vector2.zero;
 			}
+
 			if (jumpTime <= 0)
 			{
                 FindObjectOfType<Audiomanager>().Play("Slime Cry");
@@ -60,6 +55,7 @@ public class Slime : Entity
 		else if (aggro && !isJumping)
 		{
 			isJumping = true;
+
 			if (PlayerX < transform.position.x && aggro && !CollidedBelow())
 			{
 				accel = Vector2.left;
@@ -72,7 +68,7 @@ public class Slime : Entity
 			}
 		}
 
-		Move(world, accel, gravity);
+		Move(accel, gravity);
 	}
 
 

@@ -326,7 +326,7 @@ public class Entity : MonoBehaviour
 		}
 	}
 
-	public void Move(World world, Vector2 accel, float gravity)
+	public void Move(Vector2 accel, float gravity)
 	{
 		if (disabled)
 			return;

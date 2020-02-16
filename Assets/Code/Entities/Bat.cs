@@ -35,8 +35,6 @@ public class Bat : Entity
 		{
 			aggro = true;
 		}
-
-		Vector2 accel = Vector2.zero;
 		
 		if(Math.Abs(PlayerX - transform.position.x) <= 20 && Math.Abs(PlayerY - transform.position.y) < 20)
 		{
@@ -51,22 +49,23 @@ public class Bat : Entity
 			NextPos = path.Pop();
 		}
 
-        if (aggro && i == 0)
-        {
-            i++;
-            FindObjectOfType<Audiomanager>().Play("Bat Cry");
-        }
+		if (aggro && i == 0)
+		{
+			i++;
+			FindObjectOfType<Audiomanager>().Play("Bat Cry");
+		}
     }
 
 	private void InvokePath(object Obj) {
 		InvokeRepeating("FindPath", 0, 0.5f);
 	}
 
-	private void FindPath() {
+	private void FindPath() 
+	{
 		world.FindPath(Utils.TilePos(transform.position), Utils.TilePos(player.transform.position), path);
-		if(path.Count > 0) {
+
+		if (path.Count > 0)
 			NextPos = path.Pop();
-		}
 	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)

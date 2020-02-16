@@ -105,11 +105,12 @@ public class Player : Entity
 			else accel = SetNormal();
 		}
 
-		Move(world, accel, currentGravity);
+		Move(accel, currentGravity);
 
-		if(accel != Vector2.zero) {
+		if(accel != Vector2.zero)
             PlayAnimation("Walking animation");
-		} else {
+		else
+		{
             FindObjectOfType<Audiomanager>().Play("Walk");
             PlayAnimation("Static animation");
 		}
