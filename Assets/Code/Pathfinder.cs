@@ -53,7 +53,7 @@ public sealed class Pathfinder
 
 		while (current.pos != start)
 		{
-			path.Push(new Vector2(current.pos.x + 0.5f, current.pos.y + 0.5f));
+			path.Push(new Vector2(current.pos.x + 0.5f, current.pos.y + 0.05f));
 			current = current.parent;
 			Assert.IsNotNull(current);
 		}

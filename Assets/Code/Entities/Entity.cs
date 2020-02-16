@@ -42,7 +42,6 @@ public enum CollideFlags
 public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
-	private const float KnockbackFriction = 0.25f;
 
 	protected static WaitForSeconds invincibleWait = new WaitForSeconds(0.1f);
 	private Coroutine invincibleRoutine;
@@ -85,6 +84,8 @@ public class Entity : MonoBehaviour
 	private static WaitForEndOfFrame destroyWait = new WaitForEndOfFrame();
 	protected static World world;
 
+	protected Audiomanager audioManager;
+
 	public Vector2 Position
 	{
 		get { return t.position; }
@@ -106,6 +107,8 @@ public class Entity : MonoBehaviour
 			float distB = Vector2.SqrMagnitude(Position - b.bb.center);
 			return distA < distB ? -1 : 1;
 		};
+
+		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
 	}
 
 	public bool CollidedBelow()
@@ -171,20 +174,10 @@ public class Entity : MonoBehaviour
 		=> MoveBy(p.x, p.y);
 
 	public void ApplyKnockback(Vector2 force)
-		=> ApplyKnockback(force.x, force.y);
+		=> velocity = force;
 
 	public void ApplyKnockback(float x, float y)
-	{
-		velocity = new Vector2(x, y);
-		Ray ray = new Ray(Position, new Vector3(x, y).normalized);
-
-		// This is a hacky way to try to improve knockback. It attempts
-		// to apply friction if the knockback isn't already forcing the
-		// entity into an obstacle that would naturally apply friction.
-		// This should be handled in a better way, but time was limited.
-		if (!world.TileRaycast(ray, 2.0f, out _))
-			velocity *= KnockbackFriction;
-	}
+		=> ApplyKnockback(new Vector2(x, y));
 
 	public AABB GetBoundingBox()
 	{
@@ -208,9 +201,7 @@ public class Entity : MonoBehaviour
         if (invincible || health == 0) return;
 
 		if (this is Player)
-		{
-			FindObjectOfType<Audiomanager>().Play("Damage");
-		}
+			audioManager.Play("Damage");
 
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);

@@ -8,15 +8,16 @@ using System.Collections.Generic;
 
 public class Bat : Entity
 {
-
 	public float jumpVelocity;
 	public float gravity;
 	public bool aggro;
-	[SerializeField]
 	public GameObject player;
-    int i = 0;
-	Stack <Vector2> path = new Stack<Vector2>();
-	Vector3 NextPos;
+    
+	private int i = 0;
+	private Stack <Vector2> path = new Stack<Vector2>();
+	private Vector2 NextPos;
+
+	private Audiomanager audioManager;
 	
 	protected override void Awake()
 	{
@@ -24,6 +25,8 @@ public class Bat : Entity
 
 		player = GameObject.Find("Player");
 		EventManager.Instance.Subscribe(GameEvent.LevelGenerated, InvokePath);
+
+		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
 	}
 
     private void Update()
@@ -31,41 +34,40 @@ public class Bat : Entity
 		float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if(Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 50)
-		{
+		if (Math.Abs(PlayerX - Position.x) <= 8 && Math.Abs(PlayerY - Position.y) < 50)
 			aggro = true;
-		}
-		
-		if(Math.Abs(PlayerX - transform.position.x) <= 20 && Math.Abs(PlayerY - transform.position.y) < 20)
-		{
+	
+		if (Math.Abs(PlayerX - Position.x) <= 20 && Math.Abs(PlayerY - Position.y) < 20)
 			aggro = true;
-		}
 
-		if(aggro) {
-			transform.position = Vector3.MoveTowards(transform.position, NextPos, Time.deltaTime * speed);
-		}
+		Vector2 accel = Vector2.zero;
 
-		if(transform.position == NextPos && path.Count > 0) {
+		if (aggro)
+			accel = (NextPos - Position).normalized;
+
+		if ((NextPos - Position).sqrMagnitude <= 1.0f && path.Count > 0)
 			NextPos = path.Pop();
-		}
 
 		if (aggro && i == 0)
 		{
 			i++;
-			FindObjectOfType<Audiomanager>().Play("Bat Cry");
+			audioManager.Play("Bat Cry");
 		}
+
+		Move(accel, gravity);
     }
 
-	private void InvokePath(object Obj) {
-		InvokeRepeating("FindPath", 0, 0.5f);
-	}
+	private void InvokePath(object Obj)
+		=> InvokeRepeating("FindPath", 0, 0.5f);
 
 	private void FindPath() 
 	{
-		world.FindPath(Utils.TilePos(transform.position), Utils.TilePos(player.transform.position), path);
+		world.FindPath(Utils.TilePos(Position), Utils.TilePos(player.transform.position), path);
 
 		if (path.Count > 0)
+		{
 			NextPos = path.Pop();
+		}
 	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)

@@ -9,7 +9,7 @@ public class Arrow : Entity
 
     private void Start()
 	{
-        GameObject.FindWithTag("Audio").GetComponent<Audiomanager>().Play("Skeleton Attack");
+        audioManager.Play("Skeleton Attack");
 
         if (target == null)
 			target = GameObject.FindWithTag("Player").GetComponent<Player>();
