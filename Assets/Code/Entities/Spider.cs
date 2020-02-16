@@ -13,15 +13,10 @@ public class Spider : Entity
 	public GameObject player;
 	public bool collide;
 	public bool facing;
-    float rotation;
-
-	private Audiomanager audioManager;
+    private float rotation;
 
 	private void Start()
-	{
-		player = GameObject.FindWithTag("Player");
-		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
-	}
+		=> player = GameObject.FindWithTag("Player");
 
     private void Update()
     {

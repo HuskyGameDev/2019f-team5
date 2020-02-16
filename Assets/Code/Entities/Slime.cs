@@ -30,10 +30,10 @@ public class Slime : Entity
 		float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
-		if (Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 8)
+		if (Math.Abs(PlayerX - Position.x) <= 8 && Math.Abs(PlayerY - Position.y) < 8)
 			aggro = true;
 
-		if (Math.Abs(PlayerX - transform.position.x) >= 15 || Math.Abs(PlayerY - transform.position.y) >= 15)	
+		if (Math.Abs(PlayerX - Position.x) >= 15 || Math.Abs(PlayerY - Position.y) >= 15)	
 			aggro = false;
 
 		if (aggro && (colFlags & CollideFlags.Below) != 0)
@@ -46,7 +46,7 @@ public class Slime : Entity
 
 			if (jumpTime <= 0)
 			{
-                FindObjectOfType<Audiomanager>().Play("Slime Cry");
+                audioManager.Play("Slime Cry");
                 velocity.y = jumpVelocity;
 				jumpTime = 1.5f;
 
@@ -56,12 +56,12 @@ public class Slime : Entity
 		{
 			isJumping = true;
 
-			if (PlayerX < transform.position.x && aggro && !CollidedBelow())
+			if (PlayerX < Position.x && aggro && !CollidedBelow())
 			{
 				accel = Vector2.left;
 				SetFacingDirection(false);
 			}
-			else if (PlayerX > transform.position.x && aggro && !CollidedBelow())
+			else if (PlayerX > Position.x && aggro && !CollidedBelow())
 			{
 				accel = Vector2.right;
 				SetFacingDirection(true);

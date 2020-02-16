@@ -4,8 +4,8 @@ using UnityEngine;
 public class Arrow : Entity
 {
     public float gravity;
-    static Player target;
-    Vector2 moveDirection;
+    private static Player target;
+    private Vector2 moveDirection;
 
     private void Start()
 	{

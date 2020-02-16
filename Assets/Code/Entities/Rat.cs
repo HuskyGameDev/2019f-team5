@@ -62,6 +62,7 @@ public class Rat : Entity
 
 		if (TileManager.GetData(world.GetTile(tilePos.x + 1, tilePos.y - 1)).passable && CollidedBelow() && aggro && !facing)
 			velocity.y = jumpVelocity;
+
 		else if(TileManager.GetData(world.GetTile(tilePos.x - 1, tilePos.y - 1)).passable && CollidedBelow() && aggro && facing)
 			velocity.y = jumpVelocity;
 		
@@ -76,7 +77,7 @@ public class Rat : Entity
         if (aggro && i==0)
         {
             i++;
-            FindObjectOfType<Audiomanager>().Play("Rat Cry");
+            audioManager.Play("Rat Cry");
         }
     }
 
@@ -104,7 +105,9 @@ public class Rat : Entity
 			}
 		}
 	}
-	IEnumerator wait() {
+
+	private IEnumerator wait()
+	{
 		yield return new WaitForSeconds(5.0f);
 	}
 }

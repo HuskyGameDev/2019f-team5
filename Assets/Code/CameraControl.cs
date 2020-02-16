@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 
 // This is a custom camera class that follows the player around but restricts the view to the edge of the dungeon
 // This prevents the player from seeing "off the map" and increases the atmospheric feel of the game.
@@ -17,13 +15,14 @@ public class CameraControl : MonoBehaviour{
     private float cameraHeight;         // essentially orthoSize
     private float cameraWidth;          // height * adjustment aspect ratio
     
-    void Start(){
-        
+    void Awake()
+    {
         // locks onto and snaps camera to the player on initialization
         player = GameObject.FindWithTag("Player").transform;
 
         // gets the world, and subscribes to the world-spawned and player-spawned event
         world = GameObject.FindWithTag("Manager").GetComponent<World>();
+
         EventManager.Instance.Subscribe( GameEvent.LevelGenerated, OnWorldLoaded );
         EventManager.Instance.Subscribe( GameEvent.PlayerSpawned, OnPlayerSpawned );
     }

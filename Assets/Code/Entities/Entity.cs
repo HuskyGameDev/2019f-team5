@@ -84,7 +84,7 @@ public class Entity : MonoBehaviour
 	private static WaitForEndOfFrame destroyWait = new WaitForEndOfFrame();
 	protected static World world;
 
-	protected Audiomanager audioManager;
+	protected static Audiomanager audioManager;
 
 	public Vector2 Position
 	{
@@ -108,7 +108,8 @@ public class Entity : MonoBehaviour
 			return distA < distB ? -1 : 1;
 		};
 
-		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
+		if (audioManager == null)
+			audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
 	}
 
 	public bool CollidedBelow()

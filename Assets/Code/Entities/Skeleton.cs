@@ -79,7 +79,7 @@ public class Skeleton : Entity
         if (aggro && i ==0)
         {
             i++;
-            FindObjectOfType<Audiomanager>().Play("Skeleton Cry");
+            audioManager.Play("Skeleton Cry");
         }
     }
 

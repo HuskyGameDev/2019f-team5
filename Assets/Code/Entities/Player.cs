@@ -26,18 +26,14 @@ public class Player : Entity
 
 	public int[] collectables = new int[3];
 
-	private Audiomanager audioManager;
-
 	private void Start() 
 	{
 		damage = 5;
 		jumps = 0;
 		invincibleWait = new WaitForSeconds(0.5f);
-		for(int i = 0; i < collectables.Length; i++){
-			collectables[i] = 0;
-		}
 
-		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
+		for(int i = 0; i < collectables.Length; i++)
+			collectables[i] = 0;
 	}
 
 	private Vector2 SetNormal()
@@ -55,9 +51,7 @@ public class Player : Entity
 		}
 
 		if (CollidedBelow())
-		{
 			jumps = 0;
-		}
 
 		return accel;
 	}
@@ -78,6 +72,7 @@ public class Player : Entity
 
 		if (accel != Vector2.zero)
 			accel = accel.normalized;
+
 		jumps = 0;
 		return accel;
 	}
@@ -111,7 +106,7 @@ public class Player : Entity
             PlayAnimation("Walking animation");
 		else
 		{
-            FindObjectOfType<Audiomanager>().Play("Walk");
+            audioManager.Play("Walk");
             PlayAnimation("Static animation");
 		}
 	}

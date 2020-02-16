@@ -18,18 +18,14 @@ public class World : MonoBehaviour
 	private Pathfinder pathfinder;
 	private PathCellInfo[,] pathGrid;
 
-	private void Awake()
+	private void Start()
 	{
-		//SampleRoomLoader generator = new SampleRoomLoader();
 		ProcGen generator = new ProcGen();
 		levelBounds = generator.Generate(this);
 
-		FillPathCellInfo();
-	}
-
-	private void Start()
-	{
 		EventManager.Instance.SignalEvent(GameEvent.LevelGenerated, this);
+
+		FillPathCellInfo();
 	}
 
 	private void FillPathCellInfo()

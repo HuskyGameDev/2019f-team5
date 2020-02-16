@@ -16,8 +16,6 @@ public class Bat : Entity
 	private int i = 0;
 	private Stack <Vector2> path = new Stack<Vector2>();
 	private Vector2 NextPos;
-
-	private Audiomanager audioManager;
 	
 	protected override void Awake()
 	{
@@ -25,8 +23,6 @@ public class Bat : Entity
 
 		player = GameObject.Find("Player");
 		EventManager.Instance.Subscribe(GameEvent.LevelGenerated, InvokePath);
-
-		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
 	}
 
     private void Update()
