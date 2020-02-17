@@ -100,7 +100,9 @@ public class World : MonoBehaviour
 		chunk.SetTile(rel.x, rel.y, tile);
 
 		TileData data = TileManager.GetData(tile);
-		pathGrid[wX, wY] = new PathCellInfo(data.passable, false, data.passable ? 0 : int.MaxValue);
+
+		if (wX >= 0 && wX < pathGrid.GetLength(0) && wY >= 0 && wY < pathGrid.GetLength(1))
+			pathGrid[wX, wY] = new PathCellInfo(data.passable, false, data.passable ? 0 : int.MaxValue);
 
 		return chunk;
 	}

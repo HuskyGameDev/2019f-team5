@@ -177,6 +177,8 @@ public class ProcGen
 			mobCap++;
 		}
 
+		AddSolidPerimeter(world);
+
 		return new RectInt(0, 0, Chunk.Size * 4, Chunk.Size * 4);
 	}
 
@@ -331,5 +333,29 @@ public class ProcGen
 		// Room position * Chunk.Size gets the world position of the room's corner. The tile position 
 		// determines the offset into the room. yOffset prevents clipping into walls on spawn.
 		Object.Instantiate(mobs[num], new Vector2(roomX * Chunk.Size + tileX + 0.5f, row * 16 + tileY + yOffset), Quaternion.identity);
+	}
+
+	// Adds a solid-filled room around the outside of the map.
+	private void AddSolidPerimeter(World world)
+	{
+		TextAsset data = Resources.Load<TextAsset>("RoomData/Solid");
+
+		for (int y = -1; y < levelHeight + 1; ++y)
+		{
+			Chunk left = new Chunk(-1, y, data.text);
+			Chunk right = new Chunk(levelWidth, y, data.text);
+
+			world.SetChunk(-1, y, left);
+			world.SetChunk(levelWidth, y, right);
+		}
+
+		for (int x = 0; x < levelWidth; ++x)
+		{
+			Chunk bottom = new Chunk(x, -1, data.text);
+			Chunk top = new Chunk(x, levelHeight, data.text);
+
+			world.SetChunk(x, -1, bottom);
+			world.SetChunk(x, levelHeight, top);
+		}
 	}
 }

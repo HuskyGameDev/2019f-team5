@@ -327,7 +327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec076699aaf0b1b4ba5bbde92f4ef63c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockbackAmount: 20
+  knockbackAmount: 10
 --- !u!1 &605089497
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,7 +627,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AssetsPPU: 32
   m_RefResolutionX: 1024
-  m_RefResolutionY: 768
+  m_RefResolutionY: 576
   m_UpscaleRT: 0
   m_PixelSnapping: 0
   m_CropFrameX: 0
