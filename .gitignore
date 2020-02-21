@@ -7,3 +7,9 @@ Assembly-CSharp.csproj
 Assembly-CSharp-Editor.csproj
 WhenWeFell.sln
 2019f-team5.sln
+Assets/Shaders/LightProcessor.mat
+Assets/Sprites/Sprites.spriteatlas
+Packages/manifest.json
+Assets/Shaders/LightProcessor.mat
+Assets/Sprites/Sprites.spriteatlas
+Packages/manifest.json
