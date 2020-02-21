@@ -43,12 +43,13 @@ public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
 
-	protected static WaitForSeconds invincibleWait = new WaitForSeconds(0.1f);
+	protected WaitForSeconds invincibleWait = new WaitForSeconds(0.25f);
 	private Coroutine invincibleRoutine;
 
-	[SerializeField] private int health;
-	public int damage;
+	public float health;
+	public float damage;
 	public float speed;
+	public float defense = 1;
 
 	[SerializeField] protected float knockbackForce;
 
@@ -197,18 +198,22 @@ public class Entity : MonoBehaviour
 	// This will do no damage if the entity is invincible, and will apply invincible frames
 	// for all entities.
 	// If health is 0, the OnKill method is called and can be handled based on the entity.
-	public void Damage(int amount, Vector2 knockback)
+	public void Damage(float amount, Vector2 knockback)
 	{
         if (invincible || health == 0) return;
 
 		if (this is Player)
 			audioManager.Play("Damage");
 
+		amount = amount / defense;
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);
 
 		if (health == 0)
+		{
 			OnKill();
+			return;
+		}
 
 		invincible = true;
 
@@ -218,12 +223,14 @@ public class Entity : MonoBehaviour
 		invincibleRoutine = StartCoroutine(InvincibleWait());
 	}
 
-	public void Damage(int amount)
+	public void Damage(float amount)
 		=> Damage(amount, Vector2.zero);
 
 	private IEnumerator InvincibleWait()
 	{
+		rend.color = Color.red;
 		yield return invincibleWait;
+		rend.color = Color.white;
 		invincible = false;
 	}
 

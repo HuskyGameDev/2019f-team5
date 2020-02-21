@@ -307,6 +307,7 @@ MonoBehaviour:
   health: 20
   damage: 0
   speed: 100
+  defense: 1
   knockbackForce: 0
   size: {x: 0.95, y: 0.95}
   useCenterPivot: 0
@@ -327,6 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec076699aaf0b1b4ba5bbde92f4ef63c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  swingRate: 0.75
   knockbackAmount: 10
 --- !u!1 &605089497
 GameObject:
@@ -464,6 +466,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7960529196252392675, guid: c9dd4431b03b46f44b156ec5b1e3c1c4,
+        type: 3}
+      propertyPath: m_Name
+      value: BackgroundBat
+      objectReference: {fileID: 0}
     - target: {fileID: 6159144365777975609, guid: c9dd4431b03b46f44b156ec5b1e3c1c4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -518,11 +525,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7960529196252392675, guid: c9dd4431b03b46f44b156ec5b1e3c1c4,
-        type: 3}
-      propertyPath: m_Name
-      value: BackgroundBat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9dd4431b03b46f44b156ec5b1e3c1c4, type: 3}

@@ -97,6 +97,7 @@ MonoBehaviour:
   health: 15
   damage: 0
   speed: 20
+  defense: 1.1
   knockbackForce: 10
   size: {x: 0.92, y: 0.95}
   useCenterPivot: 0

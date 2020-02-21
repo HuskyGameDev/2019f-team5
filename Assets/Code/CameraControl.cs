@@ -37,8 +37,8 @@ public class CameraControl : MonoBehaviour{
         float newY = Mathf.Lerp( transform.position.y, playerY, Time.deltaTime * followSpeed );
 
         // clamps camera to edge of screen when at the outer bounds of the map
-        newX = Mathf.Clamp(newX, levelBounds.xMin + cameraWidth, levelBounds.xMax - cameraWidth);
-        newY = Mathf.Clamp(newY, levelBounds.yMin + cameraHeight, levelBounds.yMax - cameraHeight);
+        newX = Mathf.Clamp(newX, levelBounds.xMin + cameraWidth - 1, levelBounds.xMax - cameraWidth + 1);
+        newY = Mathf.Clamp(newY, levelBounds.yMin + cameraHeight - 1, levelBounds.yMax - cameraHeight + 1);
 
         // updates camera position
         transform.position = new Vector3(newX, newY, transform.position.z);
