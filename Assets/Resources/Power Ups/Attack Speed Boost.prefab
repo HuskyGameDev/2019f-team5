@@ -44,6 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813f421df5a57da42925b66546d957a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
+  damage: 0
+  speed: 0
+  defense: 1
+  knockbackForce: 0
+  size: {x: 0, y: 0}
+  useCenterPivot: 0
 --- !u!212 &7318485370958657594
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -82,7 +89,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 73aab26e9c6395347a61f2df17d777f5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -90,6 +97,6 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
