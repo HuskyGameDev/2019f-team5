@@ -43,11 +43,11 @@ public class Entity : MonoBehaviour
 {
 	public const float Epsilon = 0.0001f;
 
-	protected static WaitForSeconds invincibleWait = new WaitForSeconds(0.1f);
+	protected WaitForSeconds invincibleWait = new WaitForSeconds(0.25f);
 	private Coroutine invincibleRoutine;
 
 	public float health;
-	public int damage;
+	public float damage;
 	public float speed;
 	public float defense = 1;
 
@@ -204,12 +204,16 @@ public class Entity : MonoBehaviour
 
 		if (this is Player)
 			audioManager.Play("Damage");
+
 		amount = amount / defense;
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);
 
 		if (health == 0)
+		{
 			OnKill();
+			return;
+		}
 
 		invincible = true;
 
@@ -224,7 +228,9 @@ public class Entity : MonoBehaviour
 
 	private IEnumerator InvincibleWait()
 	{
+		rend.color = Color.red;
 		yield return invincibleWait;
+		rend.color = Color.white;
 		invincible = false;
 	}
 
