@@ -49,6 +49,8 @@ public class ProcGen
 	// contains all rooms that exit to the left.
 	private HashSet<int>[] roomOptions = new HashSet<int>[4];
 
+	private static TextAsset[] obstacles;
+
 	public ProcGen()
 	{
 		mobs = Resources.LoadAll<GameObject>("Mobs");
@@ -60,6 +62,17 @@ public class ProcGen
 		roomOptions[Right] = new HashSet<int>() { 1, 2, 3, 4 };
 		roomOptions[Down] = new HashSet<int>() { 2, 4 };
 		roomOptions[Up] = new HashSet<int>() { 3, 4 };
+	}
+
+	// Returns a random obstacle from all obstacle blocks
+	// saved in the Resources/RoomData/Obstacles folder.
+	public static TextAsset GetRandomObstacle()
+	{
+		if (obstacles == null)
+			obstacles = Resources.LoadAll<TextAsset>("RoomData/Obstacles");
+
+		int r = Random.Range(0, obstacles.Length);
+		return obstacles[r];
 	}
 
 	public RectInt Generate(World world, int seed = -1)

@@ -11,7 +11,7 @@ public class SampleGenerator
 		const int FloorLength = 100;
 
 		for (int x = 0; x < FloorLength; ++x)
-			world.SetTile(x, 0, TileType.Floor);
+			world.SetTile(x, 0, TileType.Wall);
 
 		for (int y = 1; y < 15; ++y)
 		{

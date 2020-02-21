@@ -2,10 +2,14 @@
 // When We Fell
 //
 
+// Note: Do not reorder these. It will mess up the saved room data.
+// We could try a more robust system, but it probably won't matter
+// for this project.
+
 public enum TileType
 {
 	Air,
-	Floor,
+	Obstacle,
 	Wall,
 	Platform,
 	CaveWall,
@@ -25,7 +29,7 @@ public static class TileManager
 	private static TileData[] data =
 	{
 		new AirTile(),
-		new FloorTile(),
+		new ObstacleTile(),
 		new WallTile(),
 		new PlatformTile(),
 		new CaveWall(),
