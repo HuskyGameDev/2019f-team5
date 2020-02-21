@@ -7,7 +7,7 @@ public class PlayerAttack : MonoBehaviour
 	World world;
 	Entity ent;
 
-	float swingRate = 0.75f;
+	public float swingRate = 0.75f;
 	float nextSwing = 0;
 	[SerializeField]
 	float knockbackAmount = 30;

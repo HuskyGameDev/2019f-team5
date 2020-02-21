@@ -49,6 +49,7 @@ public class Entity : MonoBehaviour
 	public int health;
 	public int damage;
 	public float speed;
+	public float defense = 1;
 
 	[SerializeField] protected float knockbackForce;
 
@@ -203,7 +204,7 @@ public class Entity : MonoBehaviour
 
 		if (this is Player)
 			audioManager.Play("Damage");
-
+		amount = (int) (amount / defense);
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);
 
