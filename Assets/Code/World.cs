@@ -272,7 +272,7 @@ public class World : MonoBehaviour
 				for (int i = 0; i < enemies.Length; ++i)
 				{
 					Entity entity = enemies[i].GetComponent<Entity>();
-					entity.Damage(int.MaxValue);
+					entity.Destroy(entity.gameObject);
 				}
 			}
 		}

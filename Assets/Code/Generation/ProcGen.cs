@@ -173,7 +173,7 @@ public class ProcGen
 						if (IsSpawnable(chunk, tileX, tileY) && mobTot <= mobCap && willSpawn < 5)
 						{
 							int randMob = Random.Range(0, mobs.GetLength(0));
-							SpawnEnemy(randMob, roomX, roomY, tileX, tileY);
+							SpawnEntity(randMob, roomX, roomY, tileX, tileY);
 							mobTot++;
 
 						}
@@ -184,9 +184,40 @@ public class ProcGen
 			mobCap++;
 		}
 
+		AddPowerups(world);
 		AddSolidPerimeter(world);
 
 		return new RectInt(0, 0, Chunk.Size * 4, Chunk.Size * 4);
+	}
+
+	private void AddPowerups(World world)
+	{
+		GameObject[] powerups = Resources.LoadAll<GameObject>("Power Ups");
+
+		int amt = Random.Range(1, 3);
+
+		for (int i = 0; i < amt; ++i)
+		{
+			PathEntry entry = solutionPath[Random.Range(0, solutionPath.Count)];
+
+			Chunk chunk = world.GetChunk(entry.x, entry.y);
+			bool passable, passableBelow;
+
+			int relX, relY;
+
+			do
+			{
+				relX = Random.Range(0, Chunk.Size);
+				relY = Random.Range(1, Chunk.Size);
+
+				passable = TileManager.GetData(chunk.GetTile(relX, relY)).passable;
+				passableBelow = TileManager.GetData(chunk.GetTile(relX, relY - 1)).passable;
+			}
+			while (passable && !passableBelow);
+
+			GameObject powerup = powerups[Random.Range(0, powerups.Length)];
+			Object.Instantiate(powerup, new Vector2(entry.x * Chunk.Size + relX + 0.5f, entry.y * Chunk.Size + relY + 0.25f), Quaternion.identity);
+		}
 	}
 
 	private int GetRoomType(int roomX, int roomY)
@@ -332,7 +363,7 @@ public class ProcGen
 		return false;
 	}
 
-	private void SpawnEnemy(int num, int roomX, int row, int tileX, int tileY)
+	private void SpawnEntity(int num, int roomX, int row, int tileX, int tileY)
 	{
 		Entity entity = Object.Instantiate(mobs[num]).GetComponent<Entity>();
 		float yOffset = entity.useCenterPivot ? 0.55f : 0.05f;
