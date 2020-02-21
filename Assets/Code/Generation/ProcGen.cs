@@ -30,7 +30,6 @@ public class ProcGen
 	private int mobCap = 2;
 
 	private const int numTypes = 5;
-	private const int numRooms = 4;
 
 	// Width and height of the level in rooms.
 	private readonly int levelWidth = 4;
@@ -76,16 +75,11 @@ public class ProcGen
 
 		bool pSpawned = false;
 
-		TextAsset[] rooms = new TextAsset[numTypes * numRooms];
+		TextAsset[][] roomData = new TextAsset[numTypes][];
 
-		//get all rooms/chunks
+		// Load room data.
 		for (int i = 0; i < numTypes; i++)
-		{
-			TextAsset[] temp = Resources.LoadAll<TextAsset>("RoomData/type" + i);
-
-			for (int j = 0; j < numRooms; j++)
-				rooms[j * numTypes + i] = temp[j];
-		}
+			roomData[i] = Resources.LoadAll<TextAsset>("RoomData/type" + i);
 
 		//fill in level with rooms of appropriate types
 		int type;
@@ -98,9 +92,9 @@ public class ProcGen
 			{
 				//generate the room
 				type = GetRoomType(roomX, roomY);
-				room = Random.Range(0, numRooms);
+				room = Random.Range(0, roomData[type].Length);
 
-				chunk = new Chunk(roomX, roomY, rooms[room * numTypes + type].text);
+				chunk = new Chunk(roomX, roomY, roomData[type][room].text);
 				world.SetChunk(roomX, roomY, chunk);
 
 				//spawn the player in a safe space if it's the starting room
