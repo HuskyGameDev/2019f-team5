@@ -1,13 +1,20 @@
-﻿
+﻿//
+// When we fell
+//
 
-
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DamageBoost : Entity
 {
-    protected override void HandleOverlaps(List<CollideResult> overlaps)
+	private void Update()
+	{
+		// Move so that it works with the collision system, 
+		// even though it doesn't actually move.
+		Move(Vector2.zero, 0.0f);
+	}
+
+	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
 		for (int i = 0; i < overlaps.Count; ++i)
 		{

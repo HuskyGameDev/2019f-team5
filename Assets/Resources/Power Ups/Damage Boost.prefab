@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8205069977705162775}
   - component: {fileID: 7225493530346338739}
   - component: {fileID: 6948444380343357267}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Damage Boost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   speed: 0
   defense: 1
   knockbackForce: 0
-  size: {x: 0, y: 0}
+  size: {x: 1, y: 1}
   useCenterPivot: 0
 --- !u!212 &6948444380343357267
 SpriteRenderer:

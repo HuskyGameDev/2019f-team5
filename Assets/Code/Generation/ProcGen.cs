@@ -190,6 +190,7 @@ public class ProcGen
 		return new RectInt(0, 0, Chunk.Size * 4, Chunk.Size * 4);
 	}
 
+	// Add 1-2 powerups somewhere along the solution path.
 	private void AddPowerups(World world)
 	{
 		GameObject[] powerups = Resources.LoadAll<GameObject>("Power Ups");
@@ -204,6 +205,7 @@ public class ProcGen
 			bool passable, passableBelow;
 
 			int relX, relY;
+			int tries = 0;
 
 			do
 			{
@@ -212,8 +214,11 @@ public class ProcGen
 
 				passable = TileManager.GetData(chunk.GetTile(relX, relY)).passable;
 				passableBelow = TileManager.GetData(chunk.GetTile(relX, relY - 1)).passable;
+
+				if (++tries == 1024)
+					return;
 			}
-			while (passable && !passableBelow);
+			while (!passable || passableBelow);
 
 			GameObject powerup = powerups[Random.Range(0, powerups.Length)];
 			Object.Instantiate(powerup, new Vector2(entry.x * Chunk.Size + relX + 0.5f, entry.y * Chunk.Size + relY + 0.25f), Quaternion.identity);
@@ -251,7 +256,7 @@ public class ProcGen
 
 		int prevIndex = 0;
 
-		while (roomY >= 0)
+		while (roomY > 0)
 		{
 			PathEntry prev = solutionPath[prevIndex];
 			int direction = Random.Range(0, 5);
