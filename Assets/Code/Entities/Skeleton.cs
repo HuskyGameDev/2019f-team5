@@ -42,7 +42,7 @@ public class Skeleton : Entity
 
 		if(PlayerX < transform.position.x && aggro)
 		{
-			if(!Eyes) 
+			if(!Eyes)
 			{
 				if ((Math.Abs(PlayerX - transform.position.x) >= 3))
 				{
@@ -53,10 +53,10 @@ public class Skeleton : Entity
 
 			SetFacingDirection(true);
 
-		} 
+		}
 		else if (aggro)
 		{
-			if (!Eyes) 
+			if (!Eyes)
 			{
 				if((Math.Abs(PlayerX - transform.position.x) >= 3))
 				{
@@ -67,7 +67,7 @@ public class Skeleton : Entity
 
 			SetFacingDirection(false);
 		}
-		
+
 		if (collide && aggro)
 		{
 			velocity.y = jumpVelocity;
@@ -101,13 +101,13 @@ public class Skeleton : Entity
 				Eyes = InView;
 			}
 		}
-		
+
         if (Time.time > nextFire && aggro && InView)
 		{
 			PlayAnimation("SkeletonAttack");
 			yield return new WaitForSeconds(.5f);
 
-			if(Time.time > nextFire) 
+			if(Time.time > nextFire)
 			{
 				Vector2 arrowS ;
 				arrowS = transform.position;
@@ -117,7 +117,7 @@ public class Skeleton : Entity
 				} else {
 					arrowS.x += .5f;
 				}
-				
+
 				Instantiate(Arrow, arrowS, Quaternion.identity);
 			}
 
@@ -145,12 +145,17 @@ public class Skeleton : Entity
 				if (diff.y > 0.4f)
 				{
 					Damage(5);
+          GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+					String damage = target.damage.ToString();
+					points.transform.GetChild(0).GetComponent<TextMesh>().text = damage;
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
 				{
 					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
+          GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+					points.transform.GetChild(0).GetComponent<TextMesh>().text = "3";
 				}
 			}
 		}

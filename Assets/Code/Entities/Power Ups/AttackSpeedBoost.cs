@@ -9,7 +9,7 @@ public class AttackSpeedBoost : Entity
 {
 	private void Update()
 	{
-		// Move so that it works with the collision system, 
+		// Move so that it works with the collision system,
 		// even though it doesn't actually move.
 		Move(Vector2.zero, 0.0f);
 	}
@@ -23,7 +23,7 @@ public class AttackSpeedBoost : Entity
 
 			if (target != null && target is Player)
 			{
-				target.GetComponent<PlayerAttack>().swingRate -= 0.75f;
+				target.GetComponent<PlayerAttack>().swingRate -= 0.05f;
                 Destroy(gameObject);
 			}
 		}

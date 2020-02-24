@@ -94,10 +94,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94fe7463e1efb7f47a957ba9f10d2989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 8
+  health: 9
   damage: 4
   speed: 75
   defense: 0.9
+  DamagePopup: {fileID: 2933997695648047346, guid: 030a87cc47a494e40a08d8961000f9c0,
+    type: 3}
   knockbackForce: 8
   size: {x: 0.85, y: 0.85}
   useCenterPivot: 1

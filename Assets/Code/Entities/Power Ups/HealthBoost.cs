@@ -9,7 +9,7 @@ public class HealthBoost : Entity
 {
 	private void Update()
 	{
-		// Move so that it works with the collision system, 
+		// Move so that it works with the collision system,
 		// even though it doesn't actually move.
 		Move(Vector2.zero, 0.0f);
 	}
@@ -24,6 +24,7 @@ public class HealthBoost : Entity
 			if (target != null && target is Player)
 			{
 				target.health += 2;
+				target.GetComponent<Player>().maxHealth += 2;
                 Destroy(gameObject);
 			}
 		}

@@ -19,6 +19,7 @@ public class Rat : Entity
 	public Vector2 stay;
 	public Vector2Int tilePos;
 	public bool facing;
+
     private int i = 0;
 
     private void Start()
@@ -32,7 +33,7 @@ public class Rat : Entity
 		if (Math.Abs(PlayerX - Position.x) <= 10 && Math.Abs(PlayerY - Position.y) < 3.2f)
 			aggro = true;
 
-		if (Math.Abs(PlayerX - Position.x) >= 15)	
+		if (Math.Abs(PlayerX - Position.x) >= 15)
 			aggro = false;
 
 		Vector2 accel = Vector2.zero;
@@ -46,7 +47,7 @@ public class Rat : Entity
             }
 
 			SetFacingDirection(true);
-		} 
+		}
 		else if (aggro)
 		{
             if (Math.Abs(PlayerX - Position.x) >= 0.9f)
@@ -57,7 +58,7 @@ public class Rat : Entity
 
 			SetFacingDirection(false);
 		}
-		
+
 		tilePos = Utils.TilePos(Position);
 
 		if (TileManager.GetData(world.GetTile(tilePos.x + 1, tilePos.y - 1)).passable && CollidedBelow() && aggro && !facing)
@@ -65,15 +66,15 @@ public class Rat : Entity
 
 		else if(TileManager.GetData(world.GetTile(tilePos.x - 1, tilePos.y - 1)).passable && CollidedBelow() && aggro && facing)
 			velocity.y = jumpVelocity;
-		
-		if ((PlayerY - Position.y) > 1.99f) 
+
+		if ((PlayerY - Position.y) > 1.99f)
 		{
 			Move(-accel, gravity);
 			StartCoroutine(wait());
 			Move(accel, gravity);
-		} 
+		}
 		else Move(accel, gravity);
-		
+
         if (aggro && i==0)
         {
             i++;
@@ -91,16 +92,20 @@ public class Rat : Entity
 			if (target != null && target is Player)
 			{
                 Vector2 diff = (target.Position - Position).normalized;
-
 				if (diff.y > 0.4f)
 				{
 					Damage(5);
+					GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+					String damage = target.damage.ToString();
+					points.transform.GetChild(0).GetComponent<TextMesh>().text = damage;
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
 				{
 					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
+					GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+					points.transform.GetChild(0).GetComponent<TextMesh>().text = "3";
 				}
 			}
 		}

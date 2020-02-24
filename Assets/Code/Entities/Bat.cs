@@ -12,11 +12,11 @@ public class Bat : Entity
 	public float gravity;
 	public bool aggro;
 	public GameObject player;
-    
+
 	private int i = 0;
 	private Stack <Vector2> path = new Stack<Vector2>();
 	private Vector2 NextPos;
-	
+
 	protected override void Awake()
 	{
 		base.Awake();
@@ -32,7 +32,7 @@ public class Bat : Entity
 
 		if (Math.Abs(PlayerX - Position.x) <= 8 && Math.Abs(PlayerY - Position.y) < 50)
 			aggro = true;
-	
+
 		if (Math.Abs(PlayerX - Position.x) <= 20 && Math.Abs(PlayerY - Position.y) < 20)
 			aggro = true;
 
@@ -56,7 +56,7 @@ public class Bat : Entity
 	private void InvokePath(object Obj)
 		=> InvokeRepeating("FindPath", 0, 0.5f);
 
-	private void FindPath() 
+	private void FindPath()
 	{
 		world.FindPath(Utils.TilePos(Position), Utils.TilePos(player.transform.position), path);
 
@@ -80,12 +80,17 @@ public class Bat : Entity
 				if (diff.y > 0.4f)
 				{
 					Damage(5);
+					GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+					String damage = target.damage.ToString();
+					points.transform.GetChild(0).GetComponent<TextMesh>().text = damage;
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
 				{
 					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
+					GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+					points.transform.GetChild(0).GetComponent<TextMesh>().text = "3";
 				}
 			}
 		}

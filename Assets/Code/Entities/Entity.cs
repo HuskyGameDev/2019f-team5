@@ -50,6 +50,7 @@ public class Entity : MonoBehaviour
 	public float damage;
 	public float speed;
 	public float defense = 1;
+	public GameObject DamagePopup;
 
 	[SerializeField] protected float knockbackForce;
 
@@ -73,7 +74,7 @@ public class Entity : MonoBehaviour
 
 	private bool setFacingFromVelocity = true;
 
-	// Possible collisions and overlaps can be shared between all entities since only one entity will 
+	// Possible collisions and overlaps can be shared between all entities since only one entity will
 	// be using them at a time - this saves memory.
 	private static List<CollideResult> possibleCollides = new List<CollideResult>();
 	private static List<CollideResult> overlaps = new List<CollideResult>();
@@ -245,7 +246,7 @@ public class Entity : MonoBehaviour
 
 				AABB bb = AABB.FromCorner(new Vector2(x, y), Vector2.one);
 
-				// If the tile is not passable, treat it as a collision. 
+				// If the tile is not passable, treat it as a collision.
 				// Otherwise, add it to the list of overlapping tiles to consider.
 				if (!tileData.passable)
 					possibleCollides.Add(new CollideResult(bb, tile));
@@ -348,7 +349,7 @@ public class Entity : MonoBehaviour
 		// v' and p' denote new versions, while non-prime denotes old.
 
 		// These are found by integrating up from acceleration to velocity. Use derivation
-		// to go from position down to velocity and then down to acceleration to see how 
+		// to go from position down to velocity and then down to acceleration to see how
 		// we can integrate back up.
 		Vector2 delta = accel * 0.5f * Utils.Square(Time.deltaTime) + velocity * Time.deltaTime;
 		velocity = accel * Time.deltaTime + velocity;
@@ -408,7 +409,7 @@ public class Entity : MonoBehaviour
 
 			entityBB = GetBoundingBox();
 
-			// Subtract away the component of the velocity that collides with the tile wall 
+			// Subtract away the component of the velocity that collides with the tile wall
 			// and leave the remaining velocity intact.
 			velocity -= Vector2.Dot(velocity, normal) * normal;
 			delta -= Vector2.Dot(delta, normal) * normal;

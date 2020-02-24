@@ -20,13 +20,14 @@ public class Player : Entity
 {
 	public float jumpVelocity;
 	public float gravity;
+	public float maxHealth = 20;
 
 	public bool flying;
 	public int jumps;
 
 	public int[] collectables = new int[3];
 
-	private void Start() 
+	private void Start()
 	{
 		damage = 5;
 		jumps = 0;
@@ -129,6 +130,7 @@ public class Player : Entity
 
 	protected override void OnKill()
 	{
+		SceneManager.LoadScene("Lose Menu");
 		rend.enabled = false;
 		enabled = false;
 		GetComponent<PlayerAttack>().enabled = false;

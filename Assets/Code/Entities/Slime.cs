@@ -33,7 +33,7 @@ public class Slime : Entity
 		if (Math.Abs(PlayerX - Position.x) <= 8 && Math.Abs(PlayerY - Position.y) < 8)
 			aggro = true;
 
-		if (Math.Abs(PlayerX - Position.x) >= 15 || Math.Abs(PlayerY - Position.y) >= 15)	
+		if (Math.Abs(PlayerX - Position.x) >= 15 || Math.Abs(PlayerY - Position.y) >= 15)
 			aggro = false;
 
 		if (aggro && (colFlags & CollideFlags.Below) != 0)
@@ -86,12 +86,18 @@ public class Slime : Entity
 				if (diff.y > 0.4f)
 				{
                     Damage(5);
+										GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+										String damage = target.damage.ToString();
+										points.transform.GetChild(0).GetComponent<TextMesh>().text = damage;
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
 				{
 					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
+					GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+					String damage = target.damage.ToString();
+					points.transform.GetChild(0).GetComponent<TextMesh>().text = "3";
 				}
 			}
 		}
