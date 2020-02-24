@@ -80,17 +80,12 @@ public class Bat : Entity
 				if (diff.y > 0.4f)
 				{
 					Damage(5);
-					GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
-					String damage = target.damage.ToString();
-					points.transform.GetChild(0).GetComponent<TextMesh>().text = damage;
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
 				{
 					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
-					GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
-					points.transform.GetChild(0).GetComponent<TextMesh>().text = "3";
 				}
 			}
 		}

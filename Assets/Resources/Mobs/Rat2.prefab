@@ -98,7 +98,7 @@ MonoBehaviour:
   damage: 3
   speed: 126
   defense: 1
-  DamagePopup: {fileID: 2933997695648047346, guid: 030a87cc47a494e40a08d8961000f9c0,
+  DamagePopup: {fileID: 3641448768982729608, guid: 030a87cc47a494e40a08d8961000f9c0,
     type: 3}
   knockbackForce: 10
   size: {x: 0.92, y: 0.5}

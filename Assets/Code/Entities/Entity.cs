@@ -222,6 +222,11 @@ public class Entity : MonoBehaviour
 			StopCoroutine(invincibleRoutine);
 
 		invincibleRoutine = StartCoroutine(InvincibleWait());
+
+		GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
+		String damage = amount.ToString();
+		points.transform.GetChild(0).GetComponent<TextMesh>().text = damage;
+
 	}
 
 	public void Damage(float amount)
