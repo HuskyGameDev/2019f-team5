@@ -50,7 +50,7 @@ public class Entity : MonoBehaviour
 	public float damage;
 	public float speed;
 	public float defense = 1;
-	public GameObject DamagePopup;
+	private static GameObject damagePopup;
 
 	[SerializeField] protected float knockbackForce;
 
@@ -98,6 +98,9 @@ public class Entity : MonoBehaviour
 	{
 		if (world == null)
 			world = GameObject.FindWithTag("Manager").GetComponent<World>();
+
+		if (damagePopup == null)
+			damagePopup = Resources.Load<GameObject>("Prefabs/DamagePopup");
 
 		t = GetComponent<Transform>();
 		rend = GetComponent<SpriteRenderer>();
@@ -201,12 +204,19 @@ public class Entity : MonoBehaviour
 	// If health is 0, the OnKill method is called and can be handled based on the entity.
 	public void Damage(float amount, Vector2 knockback)
 	{
-        if (invincible || health == 0) return;
+        if (invincible) 
+			return;
+
+		GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
+		points.transform.GetComponent<TextMesh>().text = amount.ToString("F1");
+
+		if (health == 0)
+			return;
 
 		if (this is Player)
 			audioManager.Play("Damage");
 
-		amount = amount / defense;
+		amount /= defense;
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);
 
@@ -222,11 +232,6 @@ public class Entity : MonoBehaviour
 			StopCoroutine(invincibleRoutine);
 
 		invincibleRoutine = StartCoroutine(InvincibleWait());
-
-		GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
-		String damage = amount.ToString();
-		points.transform.GetChild(0).GetComponent<TextMesh>().text = damage;
-
 	}
 
 	public void Damage(float amount)

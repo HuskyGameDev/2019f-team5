@@ -101,8 +101,6 @@ public class Rat : Entity
 				{
 					Vector2 force = diff * knockbackForce;
 					target.Damage(3, force);
-					GameObject points = Instantiate(DamagePopup, transform.position, Quaternion.identity) as GameObject;
-					points.transform.GetChild(0).GetComponent<TextMesh>().text = "3";
 				}
 			}
 		}
