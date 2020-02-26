@@ -7,9 +7,13 @@ using System.Collections.Generic;
 
 public class DamageBoost : Entity
 {
+	private static GameObject damagePopup;
+
 	private void Update()
 	{
-		// Move so that it works with the collision system, 
+		if (damagePopup == null)
+			damagePopup = Resources.Load<GameObject>("Prefabs/DamagePopup");
+		// Move so that it works with the collision system,
 		// even though it doesn't actually move.
 		Move(Vector2.zero, 0.0f);
 	}
@@ -24,6 +28,8 @@ public class DamageBoost : Entity
 			if (target != null && target is Player)
 			{
 				target.damage += 1;
+				GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
+				points.transform.GetComponent<TextMesh>().text = "Attack Damage Up";
                 Destroy(gameObject);
 			}
 		}

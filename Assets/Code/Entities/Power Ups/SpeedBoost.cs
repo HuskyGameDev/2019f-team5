@@ -7,8 +7,12 @@ using System.Collections.Generic;
 
 public class SpeedBoost : Entity
 {
+	private static GameObject damagePopup;
+
 	private void Update()
 	{
+		if (damagePopup == null)
+			damagePopup = Resources.Load<GameObject>("Prefabs/DamagePopup");
 		// Move so that it works with the collision system,
 		// even though it doesn't actually move.
 		Move(Vector2.zero, 0.0f);
@@ -24,6 +28,8 @@ public class SpeedBoost : Entity
 			if (target != null && target is Player)
 			{
 				target.speed += 5;
+				GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
+				points.transform.GetComponent<TextMesh>().text = "Speed Up";
                 Destroy(gameObject);
 			}
 		}

@@ -204,11 +204,8 @@ public class Entity : MonoBehaviour
 	// If health is 0, the OnKill method is called and can be handled based on the entity.
 	public void Damage(float amount, Vector2 knockback)
 	{
-        if (invincible) 
+        if (invincible)
 			return;
-
-		GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
-		points.transform.GetComponent<TextMesh>().text = amount.ToString("F1");
 
 		if (health == 0)
 			return;
@@ -219,6 +216,9 @@ public class Entity : MonoBehaviour
 		amount /= defense;
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);
+
+		GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
+		points.transform.GetComponent<TextMesh>().text = amount.ToString("F1");
 
 		if (health == 0)
 		{

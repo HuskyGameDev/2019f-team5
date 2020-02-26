@@ -7,8 +7,12 @@ using System.Collections.Generic;
 
 public class HealthBoost : Entity
 {
+	private static GameObject damagePopup;
+
 	private void Update()
 	{
+		if (damagePopup == null)
+			damagePopup = Resources.Load<GameObject>("Prefabs/DamagePopup");
 		// Move so that it works with the collision system,
 		// even though it doesn't actually move.
 		Move(Vector2.zero, 0.0f);
@@ -25,6 +29,8 @@ public class HealthBoost : Entity
 			{
 				target.health += 2;
 				target.GetComponent<Player>().maxHealth += 2;
+				GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
+				points.transform.GetComponent<TextMesh>().text = "Max Health Up";
                 Destroy(gameObject);
 			}
 		}
