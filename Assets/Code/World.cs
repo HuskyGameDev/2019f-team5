@@ -246,6 +246,9 @@ public class World : MonoBehaviour
 
 	public void Update()
 	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+			SceneManager.LoadScene("Main Menu");
+
 		// Implement some debug features only if we're in debug mode.
 		if (Debug.isDebugBuild)
 		{
@@ -276,8 +279,5 @@ public class World : MonoBehaviour
 				}
 			}
 		}
-
-		if (Input.GetKeyDown(KeyCode.Escape))
-			SceneManager.LoadScene("Game");
 	}
 }

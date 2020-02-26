@@ -124,6 +124,9 @@ public class Player : Entity
 
 				if (data.overlapType == TileOverlapType.Climb)
 					moveState |= MoveState.Climbing;
+
+				if (result.tile == TileType.EndLevelTile)
+					SceneManager.LoadScene("Game");
 			}
 		}
 	}

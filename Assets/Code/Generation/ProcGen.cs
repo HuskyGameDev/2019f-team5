@@ -184,10 +184,49 @@ public class ProcGen
 			mobCap++;
 		}
 
+		AddEndLevelTile(world);
 		AddPowerups(world);
 		AddSolidPerimeter(world);
 
 		return new RectInt(0, 0, Chunk.Size * 4, Chunk.Size * 4);
+	}
+
+	private Vector2Int? RandomSurface(Chunk chunk, int maxTries = 1024)
+	{
+		bool passable, passableBelow;
+		int relX, relY;
+		int tries = 0;
+
+		do
+		{
+			relX = Random.Range(0, Chunk.Size);
+			relY = Random.Range(1, Chunk.Size);
+
+			passable = TileManager.GetData(chunk.GetTile(relX, relY)).passable;
+			passableBelow = TileManager.GetData(chunk.GetTile(relX, relY - 1)).passable;
+
+			if (++tries == maxTries)
+				return null;
+		}
+		while (!passable || passableBelow);
+
+		return new Vector2Int(relX, relY);
+	}
+
+	private void AddEndLevelTile(World world)
+	{
+		PathEntry entry = solutionPath[solutionPath.Count - 1];
+		Chunk chunk = world.GetChunk(entry.x, entry.y);
+
+		Vector2Int? randP = RandomSurface(chunk, 4096);
+
+		if (randP == null)
+			Debug.LogError("Failed to find a passable surface to place the end level tile in!");
+		else
+		{
+			Vector2Int p = randP.Value;
+			chunk.SetTile(p.x, p.y, TileType.EndLevelTile);
+		}
 	}
 
 	// Add 1-2 powerups somewhere along the solution path.
@@ -202,26 +241,14 @@ public class ProcGen
 			PathEntry entry = solutionPath[Random.Range(0, solutionPath.Count)];
 
 			Chunk chunk = world.GetChunk(entry.x, entry.y);
-			bool passable, passableBelow;
+			Vector2Int? randP = RandomSurface(chunk);
 
-			int relX, relY;
-			int tries = 0;
-
-			do
+			if (randP != null)
 			{
-				relX = Random.Range(0, Chunk.Size);
-				relY = Random.Range(1, Chunk.Size);
-
-				passable = TileManager.GetData(chunk.GetTile(relX, relY)).passable;
-				passableBelow = TileManager.GetData(chunk.GetTile(relX, relY - 1)).passable;
-
-				if (++tries == 1024)
-					return;
+				Vector2Int rel = randP.Value;
+				GameObject powerup = powerups[Random.Range(0, powerups.Length)];
+				Object.Instantiate(powerup, new Vector2(entry.x * Chunk.Size + rel.x + 0.5f, entry.y * Chunk.Size + rel.y + 0.25f), Quaternion.identity);
 			}
-			while (!passable || passableBelow);
-
-			GameObject powerup = powerups[Random.Range(0, powerups.Length)];
-			Object.Instantiate(powerup, new Vector2(entry.x * Chunk.Size + relX + 0.5f, entry.y * Chunk.Size + relY + 0.25f), Quaternion.identity);
 		}
 	}
 

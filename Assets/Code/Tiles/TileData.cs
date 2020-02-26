@@ -7,7 +7,8 @@ using UnityEngine;
 public enum TileOverlapType
 {
 	None,
-	Climb
+	Climb,
+	Trigger
 }
 
 public class TileData

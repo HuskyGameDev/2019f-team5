@@ -9,5 +9,6 @@ public class EndLevelTile : TileData
 		name = "EndLevelTile";
 		passable = true;
 		sprite = GameAssets.Instance.sprites.GetSprite("EndLevelTile");
+		overlapType = TileOverlapType.Trigger;
 	}
 }
