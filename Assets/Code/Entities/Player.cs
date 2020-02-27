@@ -26,6 +26,11 @@ public class Player : Entity
 	public int jumps;
 
 	private float savedHealth = -1.0f;
+	private float savedSpeed = -1.0f;
+	private float savedDefense = -1.0f;
+	private float savedDamage = -1.0f;
+	private float savedASpeed = -1.0f;
+	private float savedMaxHealth = -1.0f;
 
 	public int[] collectables = new int[3];
 
@@ -42,6 +47,26 @@ public class Player : Entity
 		{
 			health = PlayerPrefs.GetFloat("Health");
 			savedHealth = health;
+		}
+		if (PlayerPrefs.HasKey("Speed"))
+		{
+			speed = PlayerPrefs.GetFloat("Speed");
+			savedSpeed = speed;
+		}
+		if (PlayerPrefs.HasKey("Defense"))
+		{
+			defense = PlayerPrefs.GetFloat("Defense");
+			savedDefense = defense;
+		}
+		if (PlayerPrefs.HasKey("Damage"))
+		{
+			damage = PlayerPrefs.GetFloat("Damage");
+			savedDamage = damage;
+		}
+		if (PlayerPrefs.HasKey("MaxHealth"))
+		{
+			maxHealth = PlayerPrefs.GetFloat("MaxHealth");
+			savedMaxHealth = maxHealth;
 		}
 	}
 
@@ -126,7 +151,31 @@ public class Player : Entity
 			PlayerPrefs.SetFloat("Health", health);
 			savedHealth = health;
 		}
+		if (!Mathf.Approximately(defense, savedDefense))
+		{
+			PlayerPrefs.SetFloat("Defense", defense);
+			savedDefense = defense;
+		}
+
+		if (!Mathf.Approximately(speed, savedSpeed))
+		{
+			PlayerPrefs.SetFloat("Speed", speed);
+			savedSpeed = speed;
+		}
+
+		if (!Mathf.Approximately(maxHealth, savedMaxHealth))
+		{
+			PlayerPrefs.SetFloat("maxHealth", maxHealth);
+			savedMaxHealth = maxHealth;
+		}
+		if (!Mathf.Approximately(damage, savedDamage))
+		{
+			PlayerPrefs.SetFloat("Damage", damage);
+			savedDamage = damage;
+		}
 	}
+
+
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
