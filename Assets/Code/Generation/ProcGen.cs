@@ -190,6 +190,11 @@ public class ProcGen
 		return new RectInt(0, 0, Chunk.Size * 4, Chunk.Size * 4);
 	}
 
+	// Returns a random tile that is passable but has a solid surface
+	// directly under it, in the given chunk. It will randomly
+	// sample points up to 'maxTries' number of times, and return
+	// null if it fails to find a location. This is not the most
+	// efficient way to do this, but should work for now.
 	private Vector2Int? RandomSurface(Chunk chunk, int maxTries = 1024)
 	{
 		bool passable, passableBelow;
@@ -212,6 +217,8 @@ public class ProcGen
 		return new Vector2Int(relX, relY);
 	}
 
+	// Add the end level tile randomly in the final
+	// room in the solution path.
 	private void AddEndLevelTile(World world)
 	{
 		PathEntry entry = solutionPath[solutionPath.Count - 1];
@@ -237,6 +244,9 @@ public class ProcGen
 
 		for (int i = 0; i < amt; ++i)
 		{
+			// The solution path stores information about every chunk along it.
+			// We can grab a random path entry and get the chunk from that.
+			// That will be where we generate the powerup.
 			PathEntry entry = solutionPath[Random.Range(0, solutionPath.Count)];
 
 			Chunk chunk = world.GetChunk(entry.x, entry.y);
@@ -282,6 +292,9 @@ public class ProcGen
 
 		int prevIndex = 0;
 
+		// End once we've reached the bottom row of the level.
+		// We use checkedRooms to ensure we don't overwrite 
+		// locations we've already visited.
 		while (roomY > 0)
 		{
 			PathEntry prev = solutionPath[prevIndex];
@@ -302,6 +315,9 @@ public class ProcGen
 			else AddDown();
 
 			solutionPath[prevIndex++] = prev;
+
+			// Local functions for adding a solution path
+			// entry in the given direction.
 
 			void AddLeft()
 			{
