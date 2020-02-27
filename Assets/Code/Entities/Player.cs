@@ -152,6 +152,7 @@ public class Player : Entity
 		rend.enabled = false;
 		enabled = false;
 		GetComponent<PlayerAttack>().enabled = false;
+		chunk.RemoveEntity(this);
 		StartCoroutine(LoadGameOver());
 	}
 

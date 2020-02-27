@@ -30,7 +30,8 @@ public class DefenseBoost : Entity
 				target.defense += 0.1f;
 				GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
 				points.transform.GetComponent<TextMesh>().text = "Defense Up";
-                Destroy(gameObject);
+				audioManager.Play("Magic");
+				Destroy(gameObject);
 			}
 		}
 	}

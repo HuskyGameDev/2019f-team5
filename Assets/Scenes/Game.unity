@@ -308,8 +308,6 @@ MonoBehaviour:
   damage: 0
   speed: 100
   defense: 1
-  DamagePopup: {fileID: 2933997695648047346, guid: 030a87cc47a494e40a08d8961000f9c0,
-    type: 3}
   knockbackForce: 0
   size: {x: 0.95, y: 0.95}
   useCenterPivot: 0
@@ -469,11 +467,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7960529196252392675, guid: c9dd4431b03b46f44b156ec5b1e3c1c4,
-        type: 3}
-      propertyPath: m_Name
-      value: BackgroundBat
-      objectReference: {fileID: 0}
     - target: {fileID: 6159144365777975609, guid: c9dd4431b03b46f44b156ec5b1e3c1c4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -528,6 +521,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7960529196252392675, guid: c9dd4431b03b46f44b156ec5b1e3c1c4,
+        type: 3}
+      propertyPath: m_Name
+      value: BackgroundBat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9dd4431b03b46f44b156ec5b1e3c1c4, type: 3}
@@ -831,6 +829,12 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Spider Cry
     clip: {fileID: 8300000, guid: 91d94771fe613254db532ed7db9dc746, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Magic
+    clip: {fileID: 8300000, guid: cc847325660482e43b5c10da76f41ca3, type: 3}
     volume: 1
     pitch: 1
     loop: 0

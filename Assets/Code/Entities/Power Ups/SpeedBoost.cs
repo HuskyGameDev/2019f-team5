@@ -30,7 +30,8 @@ public class SpeedBoost : Entity
 				target.speed += 5;
 				GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
 				points.transform.GetComponent<TextMesh>().text = "Speed Up";
-                Destroy(gameObject);
+				audioManager.Play("Magic");
+				Destroy(gameObject);
 			}
 		}
 	}

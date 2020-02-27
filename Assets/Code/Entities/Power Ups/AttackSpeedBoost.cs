@@ -30,6 +30,7 @@ public class AttackSpeedBoost : Entity
 				target.GetComponent<PlayerAttack>().swingRate -= 0.05f;
 				GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
 				points.transform.GetComponent<TextMesh>().text = "Attack Speed Up";
+				audioManager.Play("Magic");
                 Destroy(gameObject);
 			}
 		}

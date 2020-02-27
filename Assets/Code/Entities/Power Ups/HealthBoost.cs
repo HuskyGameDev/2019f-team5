@@ -31,7 +31,8 @@ public class HealthBoost : Entity
 				target.GetComponent<Player>().maxHealth += 2;
 				GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
 				points.transform.GetComponent<TextMesh>().text = "Max Health Up";
-                Destroy(gameObject);
+				audioManager.Play("Magic");
+				Destroy(gameObject);
 			}
 		}
 	}

@@ -30,7 +30,8 @@ public class DamageBoost : Entity
 				target.damage += 1;
 				GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
 				points.transform.GetComponent<TextMesh>().text = "Attack Damage Up";
-                Destroy(gameObject);
+				audioManager.Play("Magic");
+				Destroy(gameObject);
 			}
 		}
 	}

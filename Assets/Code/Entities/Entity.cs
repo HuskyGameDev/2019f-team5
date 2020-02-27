@@ -210,8 +210,7 @@ public class Entity : MonoBehaviour
 		if (health == 0)
 			return;
 
-		if (this is Player)
-			audioManager.Play("Damage");
+		audioManager.Play("Damage");
 
 		amount /= defense;
 		health = Mathf.Max(health - amount, 0);
