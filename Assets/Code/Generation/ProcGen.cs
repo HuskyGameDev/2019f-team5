@@ -81,7 +81,6 @@ public class ProcGen
 			seed = Random.Range(int.MinValue, int.MaxValue);
 
 		Random.InitState(seed);
-		Debug.Log("Seed: " + seed);
 
 		Vector2Int startRoom = MakeSolutionPath();
 		SetSolutionPathRooms();

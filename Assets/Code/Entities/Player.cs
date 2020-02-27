@@ -25,6 +25,8 @@ public class Player : Entity
 	public bool flying;
 	public int jumps;
 
+	private float savedHealth = -1.0f;
+
 	public int[] collectables = new int[3];
 
 	private void Start()
@@ -35,6 +37,12 @@ public class Player : Entity
 
 		for(int i = 0; i < collectables.Length; i++)
 			collectables[i] = 0;
+
+		if (PlayerPrefs.HasKey("Health"))
+		{
+			health = PlayerPrefs.GetFloat("Health");
+			savedHealth = health;
+		}
 	}
 
 	private Vector2 SetNormal()
@@ -110,6 +118,14 @@ public class Player : Entity
             audioManager.Play("Walk");
             PlayAnimation("Static animation");
 		}
+
+		// If health doesn't match saved health, write the health
+		// to disk. Any time health changes, this will run.
+		if (!Mathf.Approximately(health, savedHealth))
+		{
+			PlayerPrefs.SetFloat("Health", health);
+			savedHealth = health;
+		}
 	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
@@ -133,16 +149,15 @@ public class Player : Entity
 
 	protected override void OnKill()
 	{
-		SceneManager.LoadScene("Lose Menu");
 		rend.enabled = false;
 		enabled = false;
 		GetComponent<PlayerAttack>().enabled = false;
-		StartCoroutine(Restart());
+		StartCoroutine(LoadGameOver());
 	}
 
-	private IEnumerator Restart()
+	private IEnumerator LoadGameOver()
 	{
 		yield return new WaitForSeconds(3.0f);
-		SceneManager.LoadScene("Game");
+		SceneManager.LoadScene("Lose Menu");
 	}
 }
