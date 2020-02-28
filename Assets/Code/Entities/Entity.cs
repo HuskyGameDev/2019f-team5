@@ -335,10 +335,37 @@ public class Entity : MonoBehaviour
 		}
 	}
 
+	private void ClearIntersectingTiles()
+	{
+		AABB bb = GetBoundingBox();
+
+		bb.Shrink(new Vector2(0.05f, 0.05f));
+
+		Vector2Int min = Utils.TilePos(bb.BottomLeft);
+		Vector2Int max = Utils.TilePos(bb.TopRight);
+
+		for (int y = min.y; y <= max.y; ++y)
+		{
+			for (int x = min.x; x <= max.x; ++x)
+			{
+				Tile tile = world.GetTile(x, y);
+				TileData tileData = TileManager.GetData(tile);
+
+				if (!tileData.passable)
+				{
+					Chunk chunk = world.SetTile(x, y, TileType.CaveWall);
+					chunk.SetModified();
+				}
+			}
+		}
+	}
+
 	public void Move(Vector2 accel, float gravity)
 	{
 		if (disabled)
 			return;
+
+		ClearIntersectingTiles();
 
 		moveState = MoveState.Normal;
 

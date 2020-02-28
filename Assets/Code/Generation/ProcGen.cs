@@ -14,7 +14,7 @@ public class ProcGen
 	{
 		public int x, y;
 		public bool[] dirs;
-		
+
 		public PathEntry(int x, int y)
 		{
 			this.x = x;
@@ -22,6 +22,8 @@ public class ProcGen
 			dirs = new bool[4];
 		}
 	}
+
+	private List<(int, Vector2)> enemiesToSpawn = new List<(int, Vector2)>();
 
 	private const int Left = 0, Right = 1, Down = 2, Up = 3;
 
@@ -121,7 +123,7 @@ public class ProcGen
 					{
 						if (IsSpawnable(chunk, playerX, playerY))
 						{
-							player.transform.position = new Vector2(16 * roomX + playerX + 0.5f, 16 * roomY + playerY + 0.05f);
+							player.transform.position = new Vector2(Chunk.Size * roomX + playerX + 0.5f, Chunk.Size * roomY + playerY + 0.05f);
 							pSpawned = true;
 							EventManager.Instance.SignalEvent(GameEvent.PlayerSpawned, null);
 						}
@@ -135,13 +137,16 @@ public class ProcGen
 								case 2: playerY--; break;
 								case 3: playerX--; break;
 							}
+
 							cDist++;
+
 							if (cDist == mDist)
 							{
 								cDist = 0;
 								//turn "left"
 								direct = (direct + 1) % 4;
 								turns++;
+
 								if (turns == 2)
 								{
 									turns = 0;
@@ -172,7 +177,14 @@ public class ProcGen
 						if (IsSpawnable(chunk, tileX, tileY) && mobTot <= mobCap && willSpawn < 5)
 						{
 							int randMob = Random.Range(0, mobs.GetLength(0));
-							SpawnEntity(randMob, roomX, roomY, tileX, tileY);
+
+							// Room position * Chunk.Size gets the world position of the room's corner. The tile position 
+							// determines the offset into the room. yOffset prevents clipping into walls on spawn.
+							Vector2 spawnP = new Vector2(roomX * Chunk.Size + tileX, roomY * Chunk.Size + tileY);
+
+							// Don't spawn enemies yet until the entire level is generaated.
+							// Instead, add them to a list to be spawned in at the end.
+							enemiesToSpawn.Add((randMob, spawnP));
 							mobTot++;
 
 						}
@@ -186,9 +198,15 @@ public class ProcGen
 		AddEndLevelTile(world);
 		AddPowerups(world);
 		AddSolidPerimeter(world);
-        AddItems(world);
+		AddItems(world);
 
-		return new RectInt(0, 0, Chunk.Size * 4, Chunk.Size * 4);
+		for (int i = 0; i < enemiesToSpawn.Count; ++i)
+		{
+			(int, Vector2) toSpawn = enemiesToSpawn[i];
+			SpawnEntity(toSpawn.Item1, toSpawn.Item2);
+		}
+
+		return new RectInt(0, 0, Chunk.Size * levelWidth, Chunk.Size * levelHeight);
 	}
 
 	// Returns a random tile that is passable but has a solid surface
@@ -236,9 +254,8 @@ public class ProcGen
 		}
 	}
 
-    // Add 1-2 powerups somewhere along the solution path.
-
-    private void AddPowerups(World world)
+	// Add 1-2 powerups somewhere along the solution path.
+	private void AddPowerups(World world)
 	{
 		GameObject[] powerups = Resources.LoadAll<GameObject>("Power Ups");
 
@@ -262,54 +279,55 @@ public class ProcGen
 			}
 		}
 	}
-    private void AddItems(World world)
-    {
-        GameObject[] items = Resources.LoadAll<GameObject>("Items");
 
-        int amt = Random.Range(0, 6);
+	private void AddItems(World world)
+	{
+		GameObject[] items = Resources.LoadAll<GameObject>("Items");
 
-        for (int i = 0; i < amt; ++i)
-        {
-            PathEntry entry = solutionPath[Random.Range(0, solutionPath.Count)];
+		int amt = Random.Range(0, 6);
 
-            Chunk chunk = world.GetChunk(entry.x, entry.y);
-            bool passable, passableBelow;
+		for (int i = 0; i < amt; ++i)
+		{
+			PathEntry entry = solutionPath[Random.Range(0, solutionPath.Count)];
 
-            int relX, relY;
-            int tries = 0;
+			Chunk chunk = world.GetChunk(entry.x, entry.y);
+			bool passable, passableBelow;
 
-            do
-            {
-                relX = Random.Range(0, Chunk.Size);
-                relY = Random.Range(1, Chunk.Size);
+			int relX, relY;
+			int tries = 0;
 
-                passable = TileManager.GetData(chunk.GetTile(relX, relY)).passable;
-                passableBelow = TileManager.GetData(chunk.GetTile(relX, relY - 1)).passable;
+			do
+			{
+				relX = Random.Range(0, Chunk.Size);
+				relY = Random.Range(1, Chunk.Size);
 
-                if (++tries == 1024)
-                    return;
-            }
-            while (!passable || passableBelow);
+				passable = TileManager.GetData(chunk.GetTile(relX, relY)).passable;
+				passableBelow = TileManager.GetData(chunk.GetTile(relX, relY - 1)).passable;
 
-            GameObject item = items[Random.Range(0, items.Length)];
-            Object.Instantiate(item, new Vector2(entry.x * Chunk.Size + relX + 0.5f, entry.y * Chunk.Size + relY + 0.25f), Quaternion.identity);
-        }
-    }
+				if (++tries == 1024)
+					return;
+			}
+			while (!passable || passableBelow);
 
-    private int GetRoomType(int roomX, int roomY)
+			GameObject item = items[Random.Range(0, items.Length)];
+			Object.Instantiate(item, new Vector2(entry.x * Chunk.Size + relX + 0.5f, entry.y * Chunk.Size + relY + 0.25f), Quaternion.identity);
+		}
+	}
+
+	private int GetRoomType(int roomX, int roomY)
 	{
 		if (roomX >= 0 && roomX < levelWidth && roomY >= 0 && roomY < levelWidth)
 			return level[roomY * levelWidth + roomX];
 
 		return -1;
 	}
-	
+
 	private void SetRoomType(int roomX, int roomY, int type)
 	{
 		if (roomX >= 0 && roomX < levelWidth && roomY >= 0 && roomY < levelWidth)
 			level[roomY * levelWidth + roomX] = type;
 	}
-	
+
 	// Fills the solutionPath list with a path through the level.
 	// It is guaranteed this path will be traversable. Other paths
 	// could also generate off the main path by chance.
@@ -441,18 +459,19 @@ public class ProcGen
 			if (passable && !passableBelow)
 				return true;
 		}
-		
+
 		return false;
 	}
 
-	private void SpawnEntity(int num, int roomX, int row, int tileX, int tileY)
+	private void SpawnEntity(int num, Vector2 spawnP)
 	{
 		Entity entity = Object.Instantiate(mobs[num]).GetComponent<Entity>();
 		float yOffset = entity.useCenterPivot ? 0.55f : 0.05f;
 
-		// Room position * Chunk.Size gets the world position of the room's corner. The tile position 
-		// determines the offset into the room. yOffset prevents clipping into walls on spawn.
-		Object.Instantiate(mobs[num], new Vector2(roomX * Chunk.Size + tileX + 0.5f, row * 16 + tileY + yOffset), Quaternion.identity);
+		spawnP.x += 0.5f;
+		spawnP.y += yOffset;
+
+		Object.Instantiate(mobs[num], spawnP, Quaternion.identity);
 	}
 
 	// Adds a solid-filled room around the outside of the map.
@@ -479,3 +498,4 @@ public class ProcGen
 		}
 	}
 }
+
