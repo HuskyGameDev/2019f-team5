@@ -25,14 +25,9 @@ public class Player : Entity
 	public bool flying;
 	public int jumps;
 
-	private float savedHealth = -1.0f;
-	private float savedSpeed = -1.0f;
-	private float savedDefense = -1.0f;
-	private float savedDamage = -1.0f;
-	private float savedASpeed = -1.0f;
-	private float savedMaxHealth = -1.0f;
-
 	public int[] collectables = new int[3];
+
+	private PlayerAttack attack;
 
 	private void Start()
 	{
@@ -40,33 +35,19 @@ public class Player : Entity
 		jumps = 0;
 		invincibleWait = new WaitForSeconds(0.5f);
 
+		attack = GetComponent<PlayerAttack>();
+
 		for(int i = 0; i < collectables.Length; i++)
 			collectables[i] = 0;
 
-		if (PlayerPrefs.HasKey("Health"))
+		if (PlayerPrefs.HasKey("PlayerData"))
 		{
 			health = PlayerPrefs.GetFloat("Health");
-			savedHealth = health;
-		}
-		if (PlayerPrefs.HasKey("Speed"))
-		{
 			speed = PlayerPrefs.GetFloat("Speed");
-			savedSpeed = speed;
-		}
-		if (PlayerPrefs.HasKey("Defense"))
-		{
 			defense = PlayerPrefs.GetFloat("Defense");
-			savedDefense = defense;
-		}
-		if (PlayerPrefs.HasKey("Damage"))
-		{
 			damage = PlayerPrefs.GetFloat("Damage");
-			savedDamage = damage;
-		}
-		if (PlayerPrefs.HasKey("Max Health"))
-		{
 			maxHealth = PlayerPrefs.GetFloat("Max Health");
-			savedMaxHealth = maxHealth;
+			attack.swingRate = PlayerPrefs.GetFloat("Swing Rate");
 		}
 	}
 
@@ -143,39 +124,18 @@ public class Player : Entity
             audioManager.Play("Walk");
             PlayAnimation("Static animation");
 		}
-
-		// If health doesn't match saved health, write the health
-		// to disk. Any time health changes, this will run.
-		if (!Mathf.Approximately(health, savedHealth))
-		{
-			PlayerPrefs.SetFloat("Health", health);
-			savedHealth = health;
-		}
-		if (!Mathf.Approximately(defense, savedDefense))
-		{
-			PlayerPrefs.SetFloat("Defense", defense);
-			savedDefense = defense;
-		}
-
-		if (!Mathf.Approximately(speed, savedSpeed))
-		{
-			PlayerPrefs.SetFloat("Speed", speed);
-			savedSpeed = speed;
-		}
-
-		if (!Mathf.Approximately(maxHealth, savedMaxHealth))
-		{
-			PlayerPrefs.SetFloat("Max Health", maxHealth);
-			savedMaxHealth = maxHealth;
-		}
-		if (!Mathf.Approximately(damage, savedDamage))
-		{
-			PlayerPrefs.SetFloat("Damage", damage);
-			savedDamage = damage;
-		}
 	}
 
-
+	private void SaveData()
+	{
+		PlayerPrefs.SetFloat("Health", health);
+		PlayerPrefs.SetFloat("Defense", defense);
+		PlayerPrefs.SetFloat("Speed", speed);
+		PlayerPrefs.SetFloat("Max Health", maxHealth);
+		PlayerPrefs.SetFloat("Damage", damage);
+		PlayerPrefs.SetFloat("Swing Rate", attack.swingRate);
+		PlayerPrefs.SetInt("PlayerData", 1);
+	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
@@ -191,7 +151,10 @@ public class Player : Entity
 					moveState |= MoveState.Climbing;
 
 				if (result.tile == TileType.EndLevelTile)
+				{
+					SaveData();
 					SceneManager.LoadScene("Game");
+				}
 			}
 		}
 	}

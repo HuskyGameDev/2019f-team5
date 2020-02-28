@@ -5,13 +5,7 @@ public class LoseMenu : MonoBehaviour
 {
     void Start()
     {
-        // We lost, health shouldn't be saved anymore.
-        PlayerPrefs.DeleteKey("Health");
-        PlayerPrefs.DeleteKey("Defense");
-        PlayerPrefs.DeleteKey("Max Health");
-        PlayerPrefs.DeleteKey("Speed");
-        PlayerPrefs.DeleteKey("Damage");
-
+		PlayerPrefs.DeleteAll();
     }
 
     public void StartOver()
