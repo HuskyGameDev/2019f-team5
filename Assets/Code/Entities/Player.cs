@@ -63,9 +63,9 @@ public class Player : Entity
 			damage = PlayerPrefs.GetFloat("Damage");
 			savedDamage = damage;
 		}
-		if (PlayerPrefs.HasKey("MaxHealth"))
+		if (PlayerPrefs.HasKey("Max Health"))
 		{
-			maxHealth = PlayerPrefs.GetFloat("MaxHealth");
+			maxHealth = PlayerPrefs.GetFloat("Max Health");
 			savedMaxHealth = maxHealth;
 		}
 	}
@@ -165,7 +165,7 @@ public class Player : Entity
 
 		if (!Mathf.Approximately(maxHealth, savedMaxHealth))
 		{
-			PlayerPrefs.SetFloat("maxHealth", maxHealth);
+			PlayerPrefs.SetFloat("Max Health", maxHealth);
 			savedMaxHealth = maxHealth;
 		}
 		if (!Mathf.Approximately(damage, savedDamage))

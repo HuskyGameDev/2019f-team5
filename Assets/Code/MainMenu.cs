@@ -11,6 +11,10 @@ public class MainMenu : MonoBehaviour
     {
         // Ensure we delete the saved health when starting a new game.
         PlayerPrefs.DeleteKey("Health");
+        PlayerPrefs.DeleteKey("Defense");
+        PlayerPrefs.DeleteKey("Max Health");
+        PlayerPrefs.DeleteKey("Speed");
+        PlayerPrefs.DeleteKey("Damage");
 
         SceneManager.LoadScene("Game");
     }
