@@ -186,6 +186,7 @@ public class ProcGen
 		AddEndLevelTile(world);
 		AddPowerups(world);
 		AddSolidPerimeter(world);
+        AddItems(world);
 
 		return new RectInt(0, 0, Chunk.Size * 4, Chunk.Size * 4);
 	}
@@ -235,8 +236,9 @@ public class ProcGen
 		}
 	}
 
-	// Add 1-2 powerups somewhere along the solution path.
-	private void AddPowerups(World world)
+    // Add 1-2 powerups somewhere along the solution path.
+
+    private void AddPowerups(World world)
 	{
 		GameObject[] powerups = Resources.LoadAll<GameObject>("Power Ups");
 
@@ -260,8 +262,41 @@ public class ProcGen
 			}
 		}
 	}
+    private void AddItems(World world)
+    {
+        GameObject[] items = Resources.LoadAll<GameObject>("Items");
 
-	private int GetRoomType(int roomX, int roomY)
+        int amt = Random.Range(0, 6);
+
+        for (int i = 0; i < amt; ++i)
+        {
+            PathEntry entry = solutionPath[Random.Range(0, solutionPath.Count)];
+
+            Chunk chunk = world.GetChunk(entry.x, entry.y);
+            bool passable, passableBelow;
+
+            int relX, relY;
+            int tries = 0;
+
+            do
+            {
+                relX = Random.Range(0, Chunk.Size);
+                relY = Random.Range(1, Chunk.Size);
+
+                passable = TileManager.GetData(chunk.GetTile(relX, relY)).passable;
+                passableBelow = TileManager.GetData(chunk.GetTile(relX, relY - 1)).passable;
+
+                if (++tries == 1024)
+                    return;
+            }
+            while (!passable || passableBelow);
+
+            GameObject item = items[Random.Range(0, items.Length)];
+            Object.Instantiate(item, new Vector2(entry.x * Chunk.Size + relX + 0.5f, entry.y * Chunk.Size + relY + 0.25f), Quaternion.identity);
+        }
+    }
+
+    private int GetRoomType(int roomX, int roomY)
 	{
 		if (roomX >= 0 && roomX < levelWidth && roomY >= 0 && roomY < levelWidth)
 			return level[roomY * levelWidth + roomX];
