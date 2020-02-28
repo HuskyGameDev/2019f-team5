@@ -28,14 +28,17 @@ public class ProcGen
 	private const int Left = 0, Right = 1, Down = 2, Up = 3;
 
 	private GameObject player;
+
 	private GameObject[] mobs;
+	private GameObject[] bosses;
+
 	private int mobCap = 2;
 
 	private const int numTypes = 5;
 
 	// Width and height of the level in rooms.
-	private readonly int levelWidth = 4;
-	private readonly int levelHeight = 4;
+	private int levelWidth = 4;
+	private int levelHeight = 4;
 
 	// A flattened 2D array representing the room types at each location.
 	private int[] level;
@@ -56,9 +59,9 @@ public class ProcGen
 	public ProcGen()
 	{
 		mobs = Resources.LoadAll<GameObject>("Mobs");
-		player = GameObject.FindWithTag("Player");
+		bosses = Resources.LoadAll<GameObject>("Boss");
 
-		level = new int[levelWidth * levelHeight];
+		player = GameObject.FindWithTag("Player");
 
 		roomOptions[Left] = new HashSet<int>() { 1, 2, 3, 4 };
 		roomOptions[Right] = new HashSet<int>() { 1, 2, 3, 4 };
@@ -77,17 +80,78 @@ public class ProcGen
 		return obstacles[r];
 	}
 
+	private void SpawnPlayer(Chunk chunk, int roomX, int roomY)
+	{
+		int playerX = 8, playerY = 8;
+
+		int direct = 0;
+		int turns = 0;
+		int cDist = 0, mDist = 1;
+
+		bool pSpawned = false;
+
+		while (!pSpawned)
+		{
+			if (IsSpawnable(chunk, playerX, playerY))
+			{
+				player.transform.position = new Vector2(Chunk.Size * roomX + playerX + 0.5f, Chunk.Size * roomY + playerY + 0.05f);
+				pSpawned = true;
+				EventManager.Instance.SignalEvent(GameEvent.PlayerSpawned, null);
+			}
+			else
+			{
+				//move outward in spiral pattern to find a spawnpoint close to the center
+				switch (direct)
+				{
+					case 0: playerY++; break;
+					case 1: playerX++; break;
+					case 2: playerY--; break;
+					case 3: playerX--; break;
+				}
+
+				cDist++;
+
+				if (cDist == mDist)
+				{
+					cDist = 0;
+					//turn "left"
+					direct = (direct + 1) % 4;
+					turns++;
+
+					if (turns == 2)
+					{
+						turns = 0;
+						mDist++;
+					}
+				}
+			}
+		}
+	}
+
 	public RectInt Generate(World world, int seed = -1)
 	{
+		int levelID = PlayerPrefs.HasKey("Level") ? PlayerPrefs.GetInt("Level") : 0;
+
 		if (seed == -1)
 			seed = Random.Range(int.MinValue, int.MaxValue);
 
 		Random.InitState(seed);
 
+		// For now, boss is level 3. We need to figure out how to 
+		if (levelID == 2)
+			return GenerateBossRoom(world);
+		else return GenerateCave(world);
+	}
+
+	private RectInt GenerateCave(World world)
+	{
+		levelWidth = 4;
+		levelHeight = 4;
+
+		level = new int[levelWidth * levelHeight];
+
 		Vector2Int startRoom = MakeSolutionPath();
 		SetSolutionPathRooms();
-
-		bool pSpawned = false;
 
 		TextAsset[][] roomData = new TextAsset[numTypes][];
 
@@ -112,50 +176,8 @@ public class ProcGen
 				world.SetChunk(roomX, roomY, chunk);
 
 				//spawn the player in a safe space if it's the starting room
-				if (roomX == startRoom.x && pSpawned == false)
-				{
-					int playerX = 8, playerY = 8;
-
-					int direct = 0;
-					int turns = 0;
-					int cDist = 0, mDist = 1;
-					while (!pSpawned)
-					{
-						if (IsSpawnable(chunk, playerX, playerY))
-						{
-							player.transform.position = new Vector2(Chunk.Size * roomX + playerX + 0.5f, Chunk.Size * roomY + playerY + 0.05f);
-							pSpawned = true;
-							EventManager.Instance.SignalEvent(GameEvent.PlayerSpawned, null);
-						}
-						else
-						{
-							//move outward in spiral pattern to find a spawnpoint close to the center
-							switch (direct)
-							{
-								case 0: playerY++; break;
-								case 1: playerX++; break;
-								case 2: playerY--; break;
-								case 3: playerX--; break;
-							}
-
-							cDist++;
-
-							if (cDist == mDist)
-							{
-								cDist = 0;
-								//turn "left"
-								direct = (direct + 1) % 4;
-								turns++;
-
-								if (turns == 2)
-								{
-									turns = 0;
-									mDist++;
-								}
-							}
-						}
-					}
-				}
+				if (roomX == startRoom.x && roomY == levelHeight - 1)
+					SpawnPlayer(chunk, roomX, roomY);
 
 				if (roomX == startRoom.x && roomY == startRoom.y)
 					continue;
@@ -205,6 +227,37 @@ public class ProcGen
 			(int, Vector2) toSpawn = enemiesToSpawn[i];
 			SpawnEntity(toSpawn.Item1, toSpawn.Item2);
 		}
+
+		return new RectInt(0, 0, Chunk.Size * levelWidth, Chunk.Size * levelHeight);
+	}
+
+	private RectInt GenerateBossRoom(World world)
+	{
+		TextAsset[] roomData = Resources.LoadAll<TextAsset>("RoomData/boss");
+
+		levelWidth = 2;
+		levelHeight = 2;
+
+		level = new int[levelWidth * levelHeight];
+
+		for (int roomY = 0; roomY < levelHeight; ++roomY)
+		{
+			for (int roomX = 0; roomX < levelHeight; ++roomX)
+			{
+				int choice = Random.Range(0, roomData.Length);
+
+				Chunk chunk = new Chunk(roomX, roomY, roomData[choice].text);
+				world.SetChunk(roomX, roomY, chunk);
+
+				if (roomX == 0 && roomY == 0)
+					SpawnPlayer(chunk, roomX, roomY);
+			}
+		}
+
+		AddSolidPerimeter(world);
+
+		int boss = Random.Range(0, bosses.Length);
+		Object.Instantiate(bosses[boss], new Vector3(levelWidth * Chunk.Size - 8.0f, 3.0f), Quaternion.identity);
 
 		return new RectInt(0, 0, Chunk.Size * levelWidth, Chunk.Size * levelHeight);
 	}
@@ -471,7 +524,7 @@ public class ProcGen
 		spawnP.x += 0.5f;
 		spawnP.y += yOffset;
 
-		Object.Instantiate(mobs[num], spawnP, Quaternion.identity);
+		entity.transform.position = spawnP;
 	}
 
 	// Adds a solid-filled room around the outside of the map.

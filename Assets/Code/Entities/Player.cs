@@ -153,7 +153,7 @@ public class Player : Entity
 				if (result.tile == TileType.EndLevelTile)
 				{
 					SaveData();
-					SceneManager.LoadScene("Game");
+					world.NextLevel();
 				}
 			}
 		}

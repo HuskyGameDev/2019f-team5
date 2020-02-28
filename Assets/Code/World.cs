@@ -244,6 +244,15 @@ public class World : MonoBehaviour
 		return false;
 	}
 
+	public void NextLevel()
+	{
+		int level = PlayerPrefs.HasKey("Level") ? PlayerPrefs.GetInt("Level") : 0;
+		++level;
+		PlayerPrefs.SetInt("Level", level);
+
+		SceneManager.LoadScene("Game");
+	}
+
 	public void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Escape))
@@ -279,5 +288,10 @@ public class World : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	private void OnApplicationQuit()
+	{
+		PlayerPrefs.DeleteAll();
 	}
 }
