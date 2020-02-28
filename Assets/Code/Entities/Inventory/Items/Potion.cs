@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Potion : MonoBehaviour
 {
+    
+    private void Update()
+    {
+       // if (Input.GetKeyDown(KeyCode.) == true)
+    }
 
-	public void Use()
+    public void Use()
 	{
 		//Entity target = Player;
 		//target.health = target.GetComponent<Player>().maxHealth;

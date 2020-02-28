@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Pickup : Entity
 {
+    private static GameObject rewardPopup;
     private Inventory inventory;
     public GameObject itemButton;
 
@@ -13,6 +14,8 @@ public class Pickup : Entity
     }
     private void Update()
     {
+        if (rewardPopup == null)
+            rewardPopup = Resources.Load<GameObject>("Prefabs/RewardPopup");
         // Move so that it works with the collision system,
         // even though it doesn't actually move.
         Move(Vector2.zero, 0.0f);
@@ -30,6 +33,8 @@ public class Pickup : Entity
                 {
                     if (inventory.full[j] == false)
                     {
+                        GameObject points = Instantiate(rewardPopup, transform.position, Quaternion.identity);
+                        points.transform.GetComponent<TextMesh>().text = "Potion Picked Up!";
                         inventory.full[j] = true;
                         Instantiate(itemButton, inventory.slot[j].transform, false);
                         Destroy(gameObject);
