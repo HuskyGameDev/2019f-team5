@@ -5,6 +5,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class BackgroundBat : Entity
 {
@@ -12,8 +13,6 @@ public class BackgroundBat : Entity
 	public float gravity;
 	public bool aggro;
 
-	public GameObject player;
-    
 	private int i = 0;
 	private Stack <Vector2> path = new Stack<Vector2>();
 	private Vector2 NextPos;
@@ -21,19 +20,11 @@ public class BackgroundBat : Entity
 	protected override void Awake()
 	{
 		base.Awake();
-
-		player = GameObject.Find("Player");
 		EventManager.Instance.Subscribe(GameEvent.LevelGenerated, InvokePath);
 	}
 
     private void Update()
 	{
-		float PlayerY = player.transform.position.y;
-		float PlayerX = player.transform.position.x;
-
-		if(Math.Abs(PlayerX - transform.position.x) <= 8 && Math.Abs(PlayerY - transform.position.y) < 50)
-			aggro = true;
-
 		Position = Vector3.MoveTowards(transform.position, NextPos, Time.deltaTime * speed);
 
 		if (Position == NextPos && path.Count > 0)
@@ -52,7 +43,13 @@ public class BackgroundBat : Entity
 
 	private void FindPath() 
 	{
-		world.FindPath(Utils.TilePos(transform.position), Utils.TilePos(player.transform.position), path);
+		RectInt bounds = world.GetBounds();
+
+		int destX = Random.Range(bounds.xMin, bounds.xMax);
+		int destY = Random.Range(bounds.yMin, bounds.yMax);
+
+		Vector2Int target = new Vector2Int(destX, destY);
+		world.FindPath(Utils.TilePos(transform.position), target, path);
 
 		if(path.Count > 0)
 			NextPos = path.Pop();
