@@ -28,6 +28,7 @@ public class Player : Entity
 	public int[] collectables = new int[3];
 
 	private PlayerAttack attack;
+	private Coroutine loadRoutine;
 
 	private void Start()
 	{
@@ -48,6 +49,20 @@ public class Player : Entity
 			damage = PlayerPrefs.GetFloat("Damage");
 			maxHealth = PlayerPrefs.GetFloat("Max Health");
 			attack.swingRate = PlayerPrefs.GetFloat("Swing Rate");
+		}
+
+		if (PlayerPrefs.HasKey("Level"))
+		{
+			int level = PlayerPrefs.GetInt("Level");
+
+			if (level != 0)
+			{
+				Disable();
+				invincible = true;
+
+				t.localScale = Vector3.zero;
+				StartCoroutine(LoadIn());
+			}
 		}
 	}
 
@@ -152,19 +167,64 @@ public class Player : Entity
 
 				if (result.tile == TileType.EndLevelTile)
 				{
-					SaveData();
-					world.NextLevel();
+					if (loadRoutine == null)
+						loadRoutine = StartCoroutine(LoadNextLevel());
 				}
 			}
 		}
 	}
 
+	private IEnumerator LoadNextLevel()
+	{
+		Disable();
+		invincible = true;
+
+		float timeLeft = 1.0f;
+		Vector3 start = t.localScale;
+		Vector3 end = Vector3.zero;
+
+		while (timeLeft >= 0.0f)
+		{
+			t.localScale = Vector3.Lerp(end, start, timeLeft);
+			timeLeft -= Time.deltaTime;
+			yield return null;
+		}
+
+		SaveData();
+		world.NextLevel();
+	}
+
+	private IEnumerator LoadIn()
+	{
+		float timeLeft = 1.0f;
+		Vector3 start = t.localScale;
+		Vector3 end = new Vector3(1.0f, 1.0f);
+
+		while (timeLeft >= 0.0f)
+		{
+			t.localScale = Vector3.Lerp(end, start, timeLeft);
+			timeLeft -= Time.deltaTime;
+			yield return null;
+		}
+
+		enabled = true;
+		GetComponent<PlayerAttack>().enabled = true;
+		invincible = false;
+	}
+
+	private void Disable()
+	{
+		enabled = false;
+		GetComponent<PlayerAttack>().enabled = false;
+
+		if (chunk != null)
+			chunk.RemoveEntity(this);
+	}
+
 	protected override void OnKill()
 	{
 		rend.enabled = false;
-		enabled = false;
-		GetComponent<PlayerAttack>().enabled = false;
-		chunk.RemoveEntity(this);
+		Disable();
 		StartCoroutine(LoadGameOver());
 	}
 

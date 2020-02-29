@@ -68,7 +68,7 @@ public class Entity : MonoBehaviour
 
 	private Animator anim;
 	protected SpriteRenderer rend;
-	private Transform t;
+	protected Transform t;
 
 	private bool disabled = false;
 
