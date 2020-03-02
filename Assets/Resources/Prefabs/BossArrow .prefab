@@ -95,7 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 10
   damage: 6
-  speed: 20
+  speed: 50
   defense: 1
   knockbackForce: 10
   size: {x: 0.1, y: 0.1}

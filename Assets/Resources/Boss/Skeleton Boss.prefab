@@ -52,7 +52,7 @@ MonoBehaviour:
   size: {x: 2, y: 2}
   useCenterPivot: 0
   Arrow: {fileID: 5547222984940325992, guid: 73791f11f03925042805253e24c01e85, type: 3}
-  jumpVelocity: 8
+  jumpVelocity: 12
   gravity: -30
   aggro: 0
   player: {fileID: 0}

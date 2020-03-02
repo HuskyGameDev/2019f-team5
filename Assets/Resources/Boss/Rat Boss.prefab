@@ -49,7 +49,7 @@ MonoBehaviour:
   speed: 125
   defense: 1
   knockbackForce: 100
-  size: {x: 0, y: 0}
+  size: {x: 2, y: 2}
   useCenterPivot: 0
   jumpVelocity: 0
   gravity: -30

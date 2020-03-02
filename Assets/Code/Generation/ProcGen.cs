@@ -6,7 +6,7 @@ using System.Collections.Generic;
 // 1 = exits to the left and right.
 // 2 = exits to the left, right, and down.
 // 3 = exits to the left, right, and up.
-// 4 = exits in all four directions. 
+// 4 = exits in all four directions.
 
 public class ProcGen
 {
@@ -137,7 +137,7 @@ public class ProcGen
 
 		Random.InitState(seed);
 
-		// For now, boss is level 3. We need to figure out how to 
+		// For now, boss is level 3. We need to figure out how to
 		if (levelID == 2)
 			return GenerateBossRoom(world);
 		else return GenerateCave(world);
@@ -200,7 +200,7 @@ public class ProcGen
 						{
 							int randMob = Random.Range(0, mobs.GetLength(0));
 
-							// Room position * Chunk.Size gets the world position of the room's corner. The tile position 
+							// Room position * Chunk.Size gets the world position of the room's corner. The tile position
 							// determines the offset into the room. yOffset prevents clipping into walls on spawn.
 							Vector2 spawnP = new Vector2(roomX * Chunk.Size + tileX, roomY * Chunk.Size + tileY);
 
@@ -399,7 +399,7 @@ public class ProcGen
 		int prevIndex = 0;
 
 		// End once we've reached the bottom row of the level.
-		// We use checkedRooms to ensure we don't overwrite 
+		// We use checkedRooms to ensure we don't overwrite
 		// locations we've already visited.
 		while (roomY > 0)
 		{
@@ -468,7 +468,7 @@ public class ProcGen
 	// Given a filled solution path, sets the room types
 	// along the path randomly according to what is possible.
 	// This method is not very efficient, though it won't matter
-	// for our purposes currently. If it later does, we can optimize 
+	// for our purposes currently. If it later does, we can optimize
 	// it then.
 	private void SetSolutionPathRooms()
 	{
@@ -551,4 +551,3 @@ public class ProcGen
 		}
 	}
 }
-

@@ -20,7 +20,7 @@ public class SkeletonBoss : Entity
     private void Start()
     {
         player = GameObject.Find("Player");
-        fireRate = 0f;
+        fireRate = 1.0f;
         nextFire = Time.time;
     }
 
@@ -113,6 +113,7 @@ public class SkeletonBoss : Entity
             nextFire = Time.time + fireRate;
         }
     }
+
 
 	protected override void OnCollide(CollideResult col)
 	{
