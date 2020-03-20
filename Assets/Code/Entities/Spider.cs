@@ -114,7 +114,7 @@ public class Spider : Entity
 
 				if (diff.y > 0.4f)
 				{
-					Damage(4);
+					Damage(3);
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else

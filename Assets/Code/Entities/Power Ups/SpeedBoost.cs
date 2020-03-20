@@ -25,9 +25,15 @@ public class SpeedBoost : Entity
 			CollideResult result = overlaps[i];
 			Entity target = result.entity;
 
-			if (target != null && target is Player)
+			if (target != null && target is Player && target.speed < 125)
 			{
 				target.speed += 5;
+				GameObject points = Instantiate(rewardPopup, transform.position, Quaternion.identity);
+				points.transform.GetComponent<TextMesh>().text = "Speed Up";
+				audioManager.Play("Magic");
+				Destroy(gameObject);
+			} else if(target != null && target is Player && target.speed == 125) {
+				target.speed += 1;
 				GameObject points = Instantiate(rewardPopup, transform.position, Quaternion.identity);
 				points.transform.GetComponent<TextMesh>().text = "Speed Up";
 				audioManager.Play("Magic");

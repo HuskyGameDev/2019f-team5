@@ -62,6 +62,13 @@ public class BatBoss : Entity
 		}
 	}
 
+	protected override void OnKill()
+	{
+		world.NextLevel();
+
+		base.OnKill();
+	}
+
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
 		for (int i = 0; i < overlaps.Count; ++i)
@@ -75,6 +82,8 @@ public class BatBoss : Entity
 
 				if (diff.y > 0.4f)
 				{
+					Vector2 force = diff * knockbackForce;
+					target.Damage(3, force);
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else

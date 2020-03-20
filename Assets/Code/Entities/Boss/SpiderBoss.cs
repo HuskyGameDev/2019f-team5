@@ -87,10 +87,7 @@ public class SpiderBoss : Entity
 
 	protected override void OnKill()
 	{
-		int revive = Random.Range(1, 26);
-
-		if (revive == 13)
-			Instantiate(BabySpider, transform.position, Quaternion.identity);
+		world.NextLevel();
 
 		base.OnKill();
 	}
@@ -108,6 +105,8 @@ public class SpiderBoss : Entity
 
 				if (diff.y > 0.4f)
 				{
+					Vector2 force = diff * knockbackForce;
+					target.Damage(3, force);
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else

@@ -67,6 +67,12 @@ public class SlimeBoss : Entity
 		Move(accel, gravity);
 	}
 
+protected override void OnKill()
+	{
+		world.NextLevel();
+
+		base.OnKill();
+	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
@@ -81,7 +87,9 @@ public class SlimeBoss : Entity
 
 				if (diff.y > 0.4f)
 				{
-					target.ApplyKnockback(0.0f, 7.5f);
+					Vector2 force = diff * knockbackForce;
+					Damage(3, force);
+					target.ApplyKnockback(0.0f, 12f);
 				}
 				else
 				{

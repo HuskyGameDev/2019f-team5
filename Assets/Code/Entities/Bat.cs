@@ -79,7 +79,7 @@ public class Bat : Entity
 
 				if (diff.y > 0.4f)
 				{
-					Damage(5);
+					Damage(3);
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
