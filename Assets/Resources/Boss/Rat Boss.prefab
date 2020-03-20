@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4024285483541587162}
   - component: {fileID: 4024285483541587161}
   - component: {fileID: 4024285483541587163}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rat Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}

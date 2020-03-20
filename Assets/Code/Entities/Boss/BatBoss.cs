@@ -5,6 +5,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class BatBoss : Entity
 {
@@ -81,9 +82,11 @@ public class BatBoss : Entity
 
 				if (diff.y > 0.4f)
 				{
-					Vector2 force = diff * knockbackForce;
-					target.Damage(3, force);
-					target.ApplyKnockback(0.0f, 7.5f);
+					float direction = 15f;
+					float PosoNeg = Random.Range(0,2)*2-1;
+					direction = direction * PosoNeg;
+					target.Damage(3);
+					target.ApplyKnockback( direction, 8f);
 				}
 				else
 				{

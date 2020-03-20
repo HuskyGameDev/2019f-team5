@@ -5,6 +5,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class Slime : Entity
 {
@@ -85,8 +86,11 @@ public class Slime : Entity
 
 				if (diff.y > 0.4f)
 				{
-                    Damage(1);
-					target.ApplyKnockback(0.0f, 7.5f);
+                    float direction = 15f;
+					float PosoNeg = Random.Range(0,2)*2-1;
+					direction = direction * PosoNeg;
+					Damage(3);
+					target.ApplyKnockback( direction, 8f);
 				}
 				else
 				{

@@ -104,9 +104,11 @@ public class SpiderBoss : Entity
 
 				if (diff.y > 0.4f)
 				{
-					Vector2 force = diff * knockbackForce;
-					target.Damage(3, force);
-					target.ApplyKnockback(0.0f, 7.5f);
+					float direction = 120f;
+					float PosoNeg = Random.Range(0,2)*2-1;
+					direction = direction * PosoNeg;
+					Damage(3);
+					target.ApplyKnockback( direction, 20f);
 				}
 				else
 				{
