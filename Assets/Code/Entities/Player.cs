@@ -55,7 +55,15 @@ public class Player : Entity
 		{
 			int level = PlayerPrefs.GetInt("Level");
 
-			if (level != 0)
+			bool skipAnim = false;
+
+			if (PlayerPrefs.HasKey("SkipAnimation"))
+			{
+				int skipVal = PlayerPrefs.GetInt("SkipAnimation");
+				skipAnim = skipVal == 1;
+			}
+
+			if (level != 0 && !skipAnim)
 			{
 				Disable();
 				invincible = true;
@@ -145,7 +153,7 @@ public class Player : Entity
 			if (Input.GetKeyDown(KeyCode.N))
 			{
 				SaveData();
-				world.NextLevel();
+				world.NextLevel(true);
 			}
 		}
 	}
@@ -175,15 +183,18 @@ public class Player : Entity
 					moveState |= MoveState.Climbing;
 
 				if (result.tile == TileType.EndLevelTile)
-				{
-					if (loadRoutine == null)
-						loadRoutine = StartCoroutine(LoadNextLevel());
-				}
+					LoadNextLevel();
 			}
 		}
 	}
 
-	private IEnumerator LoadNextLevel()
+	public void LoadNextLevel()
+	{
+		if (loadRoutine == null)
+			loadRoutine = StartCoroutine(LoadNextLevelRoutine());
+	}
+
+	private IEnumerator LoadNextLevelRoutine()
 	{
 		Disable();
 		invincible = true;
@@ -242,4 +253,7 @@ public class Player : Entity
 		yield return new WaitForSeconds(3.0f);
 		SceneManager.LoadScene("Lose Menu");
 	}
+
+	private void OnApplicationQuit()
+		=> PlayerPrefs.DeleteAll();
 }

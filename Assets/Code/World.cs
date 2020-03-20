@@ -244,12 +244,13 @@ public class World : MonoBehaviour
 		return false;
 	}
 
-	public void NextLevel()
+	public void NextLevel(bool skipAnimation = false)
 	{
 		int level = PlayerPrefs.HasKey("Level") ? PlayerPrefs.GetInt("Level") : 0;
 		++level;
 		PlayerPrefs.SetInt("Level", level);
 
+		PlayerPrefs.SetInt("SkipAnimation", skipAnimation ? 1 : 0);
 		SceneManager.LoadScene("Game");
 	}
 

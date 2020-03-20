@@ -87,8 +87,7 @@ public class SpiderBoss : Entity
 
 	protected override void OnKill()
 	{
-		world.NextLevel();
-
+		player.GetComponent<Player>().LoadNextLevel();
 		base.OnKill();
 	}
 

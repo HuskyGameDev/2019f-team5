@@ -9,7 +9,6 @@ using System.Collections;
 
 public class RatBoss : Entity
 {
-
 	public float jumpVelocity;
 	public float gravity;
 	public bool aggro;
@@ -82,8 +81,7 @@ public class RatBoss : Entity
 
     protected override void OnKill()
 	{
-		world.NextLevel();
-
+		player.GetComponent<Player>().LoadNextLevel();
 		base.OnKill();
 	}
 

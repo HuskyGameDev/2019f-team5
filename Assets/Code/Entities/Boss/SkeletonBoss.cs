@@ -123,8 +123,7 @@ public class SkeletonBoss : Entity
 
     protected override void OnKill()
 	{
-		world.NextLevel();
-
+		player.GetComponent<Player>().LoadNextLevel();
 		base.OnKill();
 	}
 

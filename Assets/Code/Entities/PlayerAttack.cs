@@ -11,7 +11,7 @@ public class PlayerAttack : MonoBehaviour
 	float nextSwing = 0;
 	[SerializeField]
 	float knockbackAmount = 30;
-	SpriteRenderer spr;
+
 	Player play;
 
 	private Audiomanager audioManager;
@@ -21,7 +21,6 @@ public class PlayerAttack : MonoBehaviour
 		world = GameObject.FindWithTag("Manager").GetComponent<World>();
 		ent = GetComponent<Entity>();
 		play = GetComponent<Player>();
-		spr = GetComponent<SpriteRenderer>();
 
 		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
 	}
