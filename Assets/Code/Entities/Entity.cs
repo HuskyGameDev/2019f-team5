@@ -216,8 +216,11 @@ public class Entity : MonoBehaviour
 		health = Mathf.Max(health - amount, 0);
 		ApplyKnockback(knockback);
 
-		GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
-		points.transform.GetComponent<TextMesh>().text = amount.ToString("F1");
+		if (!(this is Player))
+		{
+			GameObject points = Instantiate(damagePopup, transform.position, Quaternion.identity);
+			points.transform.GetComponent<TextMesh>().text = Mathf.Max(Mathf.RoundToInt(amount), 1).ToString();
+		}
 
 		if (health == 0)
 		{

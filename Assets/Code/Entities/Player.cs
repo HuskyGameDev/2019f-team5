@@ -139,6 +139,15 @@ public class Player : Entity
             audioManager.Play("Walk");
             PlayAnimation("Static animation");
 		}
+
+		if (Debug.isDebugBuild)
+		{
+			if (Input.GetKeyDown(KeyCode.N))
+			{
+				SaveData();
+				world.NextLevel();
+			}
+		}
 	}
 
 	private void SaveData()

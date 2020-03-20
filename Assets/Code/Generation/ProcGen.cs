@@ -90,13 +90,12 @@ public class ProcGen
 
 		bool pSpawned = false;
 
-		while (!pSpawned)
+		for (int i = 0; i < Chunk.Size * Chunk.Size; ++i)
 		{
 			if (IsSpawnable(chunk, playerX, playerY))
 			{
-				player.transform.position = new Vector2(Chunk.Size * roomX + playerX + 0.5f, Chunk.Size * roomY + playerY + 0.05f);
 				pSpawned = true;
-				EventManager.Instance.SignalEvent(GameEvent.PlayerSpawned, null);
+				break;
 			}
 			else
 			{
@@ -126,6 +125,15 @@ public class ProcGen
 				}
 			}
 		}
+
+		if (!pSpawned)
+		{
+			playerX = 8;
+			playerY = 8;
+		}
+
+		player.transform.position = new Vector2(Chunk.Size * roomX + playerX + 0.5f, Chunk.Size * roomY + playerY + 0.05f);
+		EventManager.Instance.SignalEvent(GameEvent.PlayerSpawned, null);
 	}
 
 	public RectInt Generate(World world, int seed = -1)

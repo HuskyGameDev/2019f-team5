@@ -569,7 +569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swingRate: 0.75
-  knockbackAmount: 10
+  knockbackAmount: 8
 --- !u!114 &480360552
 MonoBehaviour:
   m_ObjectHideFlags: 0
