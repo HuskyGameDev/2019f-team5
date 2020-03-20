@@ -82,7 +82,7 @@ protected override void OnKill()
 
 			if (target != null && target is Player)
 			{
-                Vector2 diff = (target.Position - Position).normalized;
+				Vector2 diff = PositionDifference(target);
 
 				if (diff.y > 0.4f)
 				{

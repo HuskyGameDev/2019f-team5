@@ -145,8 +145,8 @@ public class ProcGen
 
 		Random.InitState(seed);
 
-		// For now, boss is level 3. We need to figure out how to
-		if (levelID == 2)
+		// Every third level, generate a boss.
+		if ((levelID + 1) % 3 == 0)
 			return GenerateBossRoom(world);
 		else return GenerateCave(world);
 	}

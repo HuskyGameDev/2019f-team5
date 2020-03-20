@@ -239,6 +239,14 @@ public class Entity : MonoBehaviour
 	public void Damage(float amount)
 		=> Damage(amount, Vector2.zero);
 
+	public Vector2 PositionDifference(Entity target)
+	{
+		AABB targetBB = target.GetBoundingBox();
+		AABB myBB = GetBoundingBox();
+
+		return (targetBB.center - myBB.center).normalized;
+	}
+
 	private IEnumerator InvincibleWait()
 	{
 		rend.color = Color.red;
