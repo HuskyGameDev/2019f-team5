@@ -75,7 +75,6 @@ public class BatBoss : Entity
 
 				if (diff.y > 0.4f)
 				{
-					Damage(5);
 					target.ApplyKnockback(0.0f, 7.5f);
 				}
 				else
