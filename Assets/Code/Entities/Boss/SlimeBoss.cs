@@ -5,6 +5,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class SlimeBoss : Entity
 {
@@ -86,9 +87,10 @@ protected override void OnKill()
 
 				if (diff.y > 0.4f)
 				{
-					Vector2 force = diff * knockbackForce;
-					Damage(3, force);
-					target.ApplyKnockback(0.0f, 12f);
+					float direction = -75f;
+					direction = direction * Random.Range(0,2)*2-1;
+					Damage(3);
+					target.ApplyKnockback( direction, 20f);
 				}
 				else
 				{
