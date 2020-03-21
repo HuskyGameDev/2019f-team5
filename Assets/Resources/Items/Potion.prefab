@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8346673207192460242}
   - component: {fileID: 6858390327953575312}
-  - component: {fileID: 2652962632239976933}
   - component: {fileID: 3698642819577887386}
   m_Layer: 12
   m_Name: Potion
@@ -82,18 +81,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2652962632239976933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2803889226820169815}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17c3745f1e3751441940a98a663f8146, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3698642819577887386
 MonoBehaviour:
   m_ObjectHideFlags: 0

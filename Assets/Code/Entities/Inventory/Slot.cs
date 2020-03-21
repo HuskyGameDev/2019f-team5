@@ -13,16 +13,21 @@ public class Slot : MonoBehaviour
 
     private void Update()
     {
-        if (transform.childCount <= 0)
-        {
-            inventory.full[j] = false;
-        }
+        inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
+
     }
+    //Destroys the item after it's been used/dropped. It's in it's own script becuase of the way the pickup script is set up.
     public void DropItem()
     {
-        foreach(Transform child in transform)
+        foreach (Transform child in transform)
         {
-            GameObject.Destroy(child.gameObject); 
+            for (int j = 0; j < inventory.slot.Length; j++)
+            {
+                if (inventory.full[j])
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
         }
     }
 }

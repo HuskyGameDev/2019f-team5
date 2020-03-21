@@ -8,6 +8,11 @@ TagManager:
   - Manager
   - Enemy
   - Audio
+  - Item
+  - Slot1
+  - Slot0
+  - Slot2
+  - Slot3
   layers:
   - Default
   - TransparentFX

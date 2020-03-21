@@ -19,7 +19,9 @@ public class Pickup : Entity
         // Move so that it works with the collision system,
         // even though it doesn't actually move.
         Move(Vector2.zero, 0.0f);
+        inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
     }
+    //Picks up item found on ground
     protected override void HandleOverlaps(List<CollideResult> overlaps)
     {
         for (int i = 0; i < overlaps.Count; ++i)
@@ -38,7 +40,6 @@ public class Pickup : Entity
                         inventory.full[j] = true;
                         Instantiate(itemButton, inventory.slot[j].transform, false);
                         Destroy(gameObject);
-                      
                         break;
                     }
                    
