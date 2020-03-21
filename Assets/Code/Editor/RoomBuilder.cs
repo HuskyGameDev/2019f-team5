@@ -46,7 +46,7 @@ public class RoomBuilder : EditorWindow
 
 		for (int i = 0; i < textures.Length; ++i)
 		{
-			textures[i] = (Texture)AssetDatabase.LoadAssetAtPath("Assets/Sprites/" + names[i] + ".png", typeof(Texture));
+			textures[i] = (Texture)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Tiles/" + names[i] + ".png", typeof(Texture));
 
 			if (textures[i] == null)
 			{

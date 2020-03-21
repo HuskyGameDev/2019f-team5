@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 // Notes on room types:
 // 0 = arbitrary
@@ -6,6 +7,8 @@
 // 2 = exits to the left, right, and down.
 // 3 = exits to the left, right, and up.
 // 4 = exits in all four directions.
+// 5 - Spawn room (guaranteed to exit right).
+// 6 - End level room (guaranteed to left/right/up).
 
 [System.Serializable]
 public class LevelTemplate
@@ -28,9 +31,21 @@ public class LevelTemplate
 public sealed class TemplateGenerator
 {
 	private GameObject player;
+	private int mobCap = 2;
+
+	private GameObject[] mobs;
+	private GameObject[] bosses;
+
+	private List<(int, Vector2)> enemiesToSpawn = new List<(int, Vector2)>();
 
 	public RectInt Generate(World world, int seed = -1)
 	{
+		if (mobs == null)
+			mobs = Resources.LoadAll<GameObject>("Mobs");
+
+		if (bosses == null)
+			bosses = Resources.LoadAll<GameObject>("Boss");
+
 		player = GameObject.FindWithTag("Player");
 		int levelID = PlayerPrefs.HasKey("Level") ? PlayerPrefs.GetInt("Level") : 0;
 
@@ -45,16 +60,42 @@ public sealed class TemplateGenerator
 		else return GenerateCave(world);
 	}
 
-	private void GenerateRoom(World world, int roomX, int roomY, string data)
+	private void GenerateRoom(World world, int roomX, int roomY, string data, bool spawnEnemies)
 	{
 		Chunk chunk = new Chunk(roomX, roomY, data);
 		world.SetChunk(roomX, roomY, chunk);
 
-		for (int tileY = 0; tileY < Chunk.Size; tileY++)
+		// Spawn enemies.
+		if (spawnEnemies)
 		{
-			for (int tileX = 0; tileX < Chunk.Size; tileX++)
+			int mobTot = 0;
+
+			for (int tileY = 0; tileY < Chunk.Size; tileY++)
 			{
-				// TODO: Spawning things.
+				for (int tileX = 0; tileX < Chunk.Size; tileX++)
+				{
+					//stop spawning mobs if the cap is reached
+					if (mobTot >= mobCap)
+						break;
+
+					//probability a mob spawns in a given space
+					int willSpawn = Random.Range(0, 100);
+
+					if (IsSpawnable(chunk, tileX, tileY) && mobTot <= mobCap && willSpawn < 5)
+					{
+						int randMob = Random.Range(0, mobs.GetLength(0));
+
+						// Room position * Chunk.Size gets the world position of the room's corner. The tile position
+						// determines the offset into the room. yOffset prevents clipping into walls on spawn.
+						Vector2 spawnP = new Vector2(roomX * Chunk.Size + tileX, roomY * Chunk.Size + tileY);
+
+						// Don't spawn enemies yet until the entire level is generaated.
+						// Instead, add them to a list to be spawned in at the end.
+						enemiesToSpawn.Add((randMob, spawnP));
+						mobTot++;
+
+					}
+				}
 			}
 		}
 	}
@@ -79,19 +120,62 @@ public sealed class TemplateGenerator
 			{
 				int type = template.GetRoomType(x, y);
 				string data = roomData[type][Random.Range(0, roomData[type].Length)].text;
-				GenerateRoom(world, x, y, data);
+				bool spawnEnemies = new Vector2Int(x, y) != template.spawn;
+				GenerateRoom(world, x, y, data, spawnEnemies);
 			}
 		}
 
 		SpawnPlayer(world.GetChunk(template.spawn), template.spawn.x, template.spawn.y);
-		AddSolidPerimeter(world, template);
+
+		for (int i = 0; i < enemiesToSpawn.Count; ++i)
+		{
+			(int, Vector2) toSpawn = enemiesToSpawn[i];
+			SpawnEntity(toSpawn.Item1, toSpawn.Item2);
+		}
+
+		AddSolidPerimeter(world, template.width, template.height);
 
 		return new RectInt(0, 0, Chunk.Size * template.width, Chunk.Size * template.height);
 	}
 
 	private RectInt GenerateBossRoom(World world)
 	{
-		return new RectInt(0, 0, 0, 0);
+		TextAsset[] roomData = Resources.LoadAll<TextAsset>("RoomData/boss");
+
+		int levelWidth = 2;
+		int levelHeight = 2;
+
+		for (int roomY = 0; roomY < levelHeight; ++roomY)
+		{
+			for (int roomX = 0; roomX < levelHeight; ++roomX)
+			{
+				int choice = Random.Range(0, roomData.Length);
+
+				Chunk chunk = new Chunk(roomX, roomY, roomData[choice].text);
+				world.SetChunk(roomX, roomY, chunk);
+
+				if (roomX == 0 && roomY == 0)
+					SpawnPlayer(chunk, roomX, roomY);
+			}
+		}
+
+		AddSolidPerimeter(world, levelWidth, levelHeight);
+
+		int boss = Random.Range(0, bosses.Length);
+		Object.Instantiate(bosses[boss], new Vector3(levelWidth * Chunk.Size - 8.0f, 3.0f), Quaternion.identity);
+
+		return new RectInt(0, 0, Chunk.Size * levelWidth, Chunk.Size * levelHeight);
+	}
+
+	private void SpawnEntity(int num, Vector2 spawnP)
+	{
+		Entity entity = Object.Instantiate(mobs[num]).GetComponent<Entity>();
+		float yOffset = entity.useCenterPivot ? 0.55f : 0.05f;
+
+		spawnP.x += 0.5f;
+		spawnP.y += yOffset;
+
+		entity.transform.position = spawnP;
 	}
 
 	private bool IsSpawnable(Chunk chunk, int tileX, int tileY)
@@ -114,81 +198,99 @@ public sealed class TemplateGenerator
 	// TODO: Use a tile for this.
 	private void SpawnPlayer(Chunk chunk, int roomX, int roomY)
 	{
-		int playerX = 8, playerY = 8;
+		bool spawned = false;
+		Vector2Int spawnP = new Vector2Int(8, 8);
 
-		int direct = 0;
-		int turns = 0;
-		int cDist = 0, mDist = 1;
-
-		bool pSpawned = false;
-
-		for (int i = 0; i < Chunk.Size * Chunk.Size; ++i)
+		// Try to find the spawn tile in here. If multiple are found,
+		// pick one randomly (TODO).
+		for (int y = 0; y < Chunk.Size; ++y)
 		{
-			if (IsSpawnable(chunk, playerX, playerY))
+			for (int x = 0; x < Chunk.Size; ++x)
 			{
-				pSpawned = true;
-				break;
-			}
-			else
-			{
-				//move outward in spiral pattern to find a spawnpoint close to the center
-				switch (direct)
+				if (chunk.GetTile(x, y) == TileType.Spawn)
 				{
-					case 0: playerY++; break;
-					case 1: playerX++; break;
-					case 2: playerY--; break;
-					case 3: playerX--; break;
+					spawnP = new Vector2Int(x, y);
+					spawned = true;
+					chunk.SetTile(x, y, TileType.CaveWall);
+					break;
 				}
+			}
+		}
 
-				cDist++;
+		// We did not find a spawn tile, so spawn at the first surface
+		// found, beginning the search at the center.
+		if (!spawned)
+		{
+			int playerX = 8, playerY = 8;
 
-				if (cDist == mDist)
+			int direct = 0;
+			int turns = 0;
+			int cDist = 0, mDist = 1;
+
+			for (int i = 0; i < Chunk.Size * Chunk.Size; ++i)
+			{
+				if (IsSpawnable(chunk, playerX, playerY))
 				{
-					cDist = 0;
-					//turn "left"
-					direct = (direct + 1) % 4;
-					turns++;
-
-					if (turns == 2)
+					spawnP = new Vector2Int(playerX, playerY);
+					break;
+				}
+				else
+				{
+					//move outward in spiral pattern to find a spawnpoint close to the center
+					switch (direct)
 					{
-						turns = 0;
-						mDist++;
+						case 0: playerY++; break;
+						case 1: playerX++; break;
+						case 2: playerY--; break;
+						case 3: playerX--; break;
+					}
+
+					cDist++;
+
+					if (cDist == mDist)
+					{
+						cDist = 0;
+						direct = (direct + 1) % 4;
+						turns++;
+
+						if (turns == 2)
+						{
+							turns = 0;
+							mDist++;
+						}
 					}
 				}
 			}
 		}
 
-		if (!pSpawned)
-		{
-			playerX = 8;
-			playerY = 8;
-		}
+		// If spawned is false, then we found no surface to spawn on, 
+		// so we'll just throw the player into the center and hope for the best.
 
-		player.transform.position = new Vector2(Chunk.Size * roomX + playerX + 0.5f, Chunk.Size * roomY + playerY + 0.05f);
+		player.transform.position = new Vector2(Chunk.Size * roomX + spawnP.x + 0.5f, Chunk.Size * roomY + spawnP.y + 0.05f);
 		EventManager.Instance.SignalEvent(GameEvent.PlayerSpawned, null);
 	}
 
 	// Adds a solid-filled room around the outside of the map.
-	private void AddSolidPerimeter(World world, LevelTemplate template)
+	private void AddSolidPerimeter(World world, int width, int height)
 	{
 		TextAsset data = Resources.Load<TextAsset>("RoomData/Solid");
 
-		for (int y = -1; y < template.height + 1; ++y)
+		for (int y = -1; y < height + 1; ++y)
 		{
 			Chunk left = new Chunk(-1, y, data.text);
-			Chunk right = new Chunk(template.width, y, data.text);
+			Chunk right = new Chunk(width, y, data.text);
 
 			world.SetChunk(-1, y, left);
-			world.SetChunk(template.width, y, right);
+			world.SetChunk(width, y, right);
 		}
 
-		for (int x = 0; x < template.width; ++x)
+		for (int x = 0; x < width; ++x)
 		{
 			Chunk bottom = new Chunk(x, -1, data.text);
-			Chunk top = new Chunk(x, template.height, data.text);
+			Chunk top = new Chunk(x, height, data.text);
 
 			world.SetChunk(x, -1, bottom);
-			world.SetChunk(x, template.height, top);
+			world.SetChunk(x, height, top);
 		}
 	}
 }
