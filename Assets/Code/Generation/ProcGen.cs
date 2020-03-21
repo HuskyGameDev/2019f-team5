@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-// Notes on room types:
-// 0 = arbitrary
-// 1 = exits to the left and right.
-// 2 = exits to the left, right, and down.
-// 3 = exits to the left, right, and up.
-// 4 = exits in all four directions.
+// NOTE:
+// We now use TemplateGenerator as our generator.
+// This was the previous generator. This is left
+// for reference reasons only.
 
 public class ProcGen
 {

@@ -20,7 +20,7 @@ public class World : MonoBehaviour
 
 	private void Start()
 	{
-		ProcGen generator = new ProcGen();
+		TemplateGenerator generator = new TemplateGenerator();
 		levelBounds = generator.Generate(this);
 
 		EventManager.Instance.SignalEvent(GameEvent.LevelGenerated, this);
