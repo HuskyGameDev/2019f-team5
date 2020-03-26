@@ -6,6 +6,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class Rat : Entity
 {
@@ -95,8 +96,11 @@ public class Rat : Entity
 
 				if (diff.y > 0.4f)
 				{
+					float direction = 15f;
+					float PosoNeg = Random.Range(0,2)*2-1;
+					direction = direction * PosoNeg;
 					Damage(3);
-					target.ApplyKnockback(0.0f, 7.5f);
+					target.ApplyKnockback( direction, 8f);
 				}
 				else
 				{

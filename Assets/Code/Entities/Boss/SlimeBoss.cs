@@ -87,7 +87,7 @@ protected override void OnKill()
 
 				if (diff.y > 0.4f)
 				{
-					float direction = 120f;
+					float direction = 20f;
 					float PosoNeg = Random.Range(0,2)*2-1;
 					direction = direction * PosoNeg;
 					Damage(3);

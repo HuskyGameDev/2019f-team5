@@ -49,7 +49,7 @@ MonoBehaviour:
   speed: 30
   defense: 1.5
   knockbackForce: 0
-  size: {x: 2, y: 2}
+  size: {x: 1.8, y: 1.8}
   useCenterPivot: 0
   Arrow: {fileID: 5547222984940325992, guid: 73791f11f03925042805253e24c01e85, type: 3}
   jumpVelocity: 12

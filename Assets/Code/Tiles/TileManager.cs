@@ -18,10 +18,11 @@ public enum TileType
 	EndLevelTile,
 	Spawn,
 	Powerup,
+	Item,
 	Count
 }
 
-// Stores tile data as a lookup table. Tiles are represented 
+// Stores tile data as a lookup table. Tiles are represented
 // by an index. Associated data can be found for a given tile
 // type by getting it from here.
 public static class TileManager
@@ -39,7 +40,8 @@ public static class TileManager
 		new LadderTile(),
 		new EndLevelTile(),
 		new SpawnTile(),
-		new PowerupTile()
+		new PowerupTile(),
+		new ItemTile()
 	};
 
 	public static TileData GetData(TileType type)
