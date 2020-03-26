@@ -4,6 +4,7 @@ using System.IO;
 
 public class TemplateEditor : EditorWindow
 {
+    // Maximum rooms along the x and y axes that can be set.
     private const int MaxWidth = 16;
     private const int MaxHeight = 12;
 
@@ -15,6 +16,8 @@ public class TemplateEditor : EditorWindow
     public static void Open()
         => GetWindow(typeof(TemplateEditor), false, "Template Editor");
 
+    // When the user changes the level size, we must resize the
+    // array of data accordingly.
     private void ResizeTypes()
     {
         if (template.width == 0 || template.height == 0)
@@ -27,6 +30,7 @@ public class TemplateEditor : EditorWindow
     private bool ValidFileName()
         => templateName.Length > 0 && templateName.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
 
+    // Save the template into a text asset file that can be loaded into the game.
     private void SaveTemplate()
     {
         if (!ValidFileName())
@@ -45,6 +49,7 @@ public class TemplateEditor : EditorWindow
         }
     }
 
+    // Load the template from the given path (usually from drag and drop).
     private void LoadTemplate(string path)
     {
         string json = File.ReadAllText(path);
@@ -68,6 +73,8 @@ public class TemplateEditor : EditorWindow
         if (template == null)
             template = new LevelTemplate();
 
+        // Make sure our data is in sync. Things can get messed up
+        // in Unity's editor.
         if (template.types != null)
         {
             if (template.types.Length != template.width * template.height)
@@ -81,12 +88,15 @@ public class TemplateEditor : EditorWindow
 
         EventType e = Event.current.type;
 
+        // User dropped a file in our window. Try to load it.
         if (e == EventType.DragExited)
         {
             if (DragAndDrop.paths.Length == 1)
                 LoadTemplate(DragAndDrop.paths[0]);
         }
 
+        // This rect will specify where each UI element should go.
+        // We adjust its values for each element.
         Rect rect = new Rect(startX, 10.0f, 70.0f, 22.0f);
 
         EditorGUI.LabelField(rect, "Level Size: ");
@@ -97,6 +107,7 @@ public class TemplateEditor : EditorWindow
         EditorGUI.BeginChangeCheck();
         template.width = EditorGUI.IntField(rect, template.width);
 
+        // If the width field was modified, resize the types array.
         if (EditorGUI.EndChangeCheck())
         {
             template.width = Mathf.Clamp(template.width, 0, MaxWidth);
@@ -108,6 +119,7 @@ public class TemplateEditor : EditorWindow
         EditorGUI.BeginChangeCheck();
         template.height = EditorGUI.IntField(rect, template.height);
 
+        // If the height field was modified, resize the types array.
         if (EditorGUI.EndChangeCheck())
         {
             template.height = Mathf.Clamp(template.height, 0, MaxHeight);
@@ -156,6 +168,9 @@ public class TemplateEditor : EditorWindow
         rect.width = 30.0f;
         rect.height = 30.0f;
 
+        // Assuming we have a template that can be drawn,
+        // draw out the grid with fields for numbers to
+        // be typed into.
         if (template.Valid())
         {
             // Draw starting at the top first. UI elements are drawn

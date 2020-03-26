@@ -118,8 +118,10 @@ public sealed class TemplateGenerator
 		{
 			for (int x = 0; x < template.width; ++x)
 			{
+				// Pick a random room from the available types as specified by the template.
 				int type = template.GetRoomType(x, y);
 				string data = roomData[type][Random.Range(0, roomData[type].Length)].text;
+
 				bool spawnEnemies = new Vector2Int(x, y) != template.spawn;
 				GenerateRoom(world, x, y, data, spawnEnemies);
 			}
@@ -195,7 +197,6 @@ public sealed class TemplateGenerator
 		return false;
 	}
 
-	// TODO: Use a tile for this.
 	private void SpawnPlayer(Chunk chunk, int roomX, int roomY)
 	{
 		bool spawned = false;
