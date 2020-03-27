@@ -49,6 +49,7 @@ public class Player : Entity
 			damage = PlayerPrefs.GetFloat("Damage");
 			maxHealth = PlayerPrefs.GetFloat("Max Health");
 			attack.swingRate = PlayerPrefs.GetFloat("Swing Rate");
+			jumpVelocity = PlayerPrefs.GetFloat("Jump Velocity");
 		}
 
 		if (PlayerPrefs.HasKey("Level"))
@@ -167,6 +168,7 @@ public class Player : Entity
 		PlayerPrefs.SetFloat("Max Health", maxHealth);
 		PlayerPrefs.SetFloat("Damage", damage);
 		PlayerPrefs.SetFloat("Swing Rate", attack.swingRate);
+		PlayerPrefs.SetFloat("Jump Velocity", jumpVelocity);
 		PlayerPrefs.SetInt("PlayerData", 1);
 	}
 
