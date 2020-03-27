@@ -72,6 +72,7 @@ public class Entity : MonoBehaviour
 
 	private bool disabled = false;
 
+	private float facingLockTime;
 	private bool setFacingFromVelocity = true;
 
 	// Possible collisions and overlaps can be shared between all entities since only one entity will
@@ -139,26 +140,41 @@ public class Entity : MonoBehaviour
 	public void PlayAnimation(string name)
 	{
 		AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-
+	
 		if (info.loop)
 			anim.Play(name);
 	}
 
-	private void SetFacingDirection()
+	protected void SetFacingFromVelocity()
 	{
-		if (setFacingFromVelocity)
+		if (velocity.x < -Mathf.Epsilon)
+			rend.flipX = true;
+		else if (velocity.x > Mathf.Epsilon)
+			rend.flipX = false;
+	}
+
+	protected void SetFacingFromAccel(Vector2 accel)
+	{
+		if (facingLockTime <= 0.0f)
 		{
-			if (velocity.x < -Mathf.Epsilon)
+			if (accel.x < -0.5f)
 				rend.flipX = true;
-			else if (velocity.x > Mathf.Epsilon)
+			else if (accel.x > 0.5f)
 				rend.flipX = false;
 		}
 	}
 
-	public void SetFacingDirection(bool left)
+	private void SetFacingDirection()
+	{
+		if (setFacingFromVelocity && facingLockTime <= 0.0f)
+			SetFacingFromVelocity();
+	}
+
+	public void SetFacingDirection(bool left, float duration = 0.0f)
 	{
 		rend.flipX = left;
 		setFacingFromVelocity = false;
+		facingLockTime = duration;
 	}
 
 	public void MoveTo(float x, float y)
@@ -376,6 +392,7 @@ public class Entity : MonoBehaviour
 		if (disabled)
 			return;
 
+		facingLockTime -= Time.deltaTime;
 		ClearIntersectingTiles();
 
 		moveState = MoveState.Normal;

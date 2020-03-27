@@ -5,14 +5,12 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 using System.Collections.Generic;
-using System;
 
 public sealed class Pathfinder
 {
 	private PathCellInfo[,] grid;
 
 	private Vector2Int start;
-	private Vector2Int target;
 	private Stack<Vector2> path;
 
 	private World world;
@@ -70,7 +68,6 @@ public sealed class Pathfinder
 		Clear();
 
 		this.start = start;
-		this.target = target;
 		this.path = path;
 
 		openList.Add(start, GetNode(start));

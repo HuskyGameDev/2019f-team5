@@ -22,9 +22,8 @@ public class TemplateEditor : EditorWindow
     {
         if (template.width == 0 || template.height == 0)
             return;
-
-        if (template.types != null)
-            System.Array.Resize(ref template.types, template.width * template.height);
+         
+        System.Array.Resize(ref template.types, template.width * template.height);
     }
 
     private bool ValidFileName()

@@ -38,21 +38,24 @@ public class BackgroundBat : Entity
     }
 
 	private void InvokePath(object Obj) {
-		InvokeRepeating("FindPath", 0, 0.5f);
+		InvokeRepeating("FindPath", 0, 5.0f);
 	}
 
 	private void FindPath() 
 	{
-		RectInt bounds = world.GetBounds();
+		if (path.Count == 0)
+		{
+			RectInt bounds = world.GetBounds();
 
-		int destX = Random.Range(bounds.xMin, bounds.xMax);
-		int destY = Random.Range(bounds.yMin, bounds.yMax);
+			int destX = Random.Range(bounds.xMin, bounds.xMax);
+			int destY = Random.Range(bounds.yMin, bounds.yMax);
 
-		Vector2Int target = new Vector2Int(destX, destY);
-		world.FindPath(Utils.TilePos(transform.position), target, path);
+			Vector2Int target = new Vector2Int(destX, destY);
+			world.FindPath(Utils.TilePos(transform.position), target, path);
 
-		if(path.Count > 0)
-			NextPos = path.Pop();
+			if (path.Count > 0)
+				NextPos = path.Pop();
+		}
 	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)

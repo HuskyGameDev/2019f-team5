@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
@@ -11,6 +10,8 @@ public class PlayerAttack : MonoBehaviour
 	float nextSwing = 0;
 	[SerializeField]
 	float knockbackAmount = 30;
+
+	private float animDuration = 0.5f;
 
 	Player play;
 
@@ -25,7 +26,6 @@ public class PlayerAttack : MonoBehaviour
 		audioManager = GameObject.FindWithTag("Audio").GetComponent<Audiomanager>();
 	}
 
-	// Update is called once per frame
 	void Update()
 	{
 		if (Input.GetMouseButtonDown(0) && Time.time > nextSwing)
@@ -33,7 +33,6 @@ public class PlayerAttack : MonoBehaviour
 			audioManager.Play("PlayerAttack");
 			nextSwing = Time.time + swingRate;
 			Swing();
-			ent.PlayAnimation("Attack Animation");
 		}
 	}
 
@@ -41,7 +40,7 @@ public class PlayerAttack : MonoBehaviour
 	{
 		Vector2 cursor = ((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - play.transform.position)).normalized;
 		Vector2 hitloc = (play.Position + cursor) + (Vector2.up / 2);
-		AABB box = AABB.FromCenter(hitloc, new Vector2(0.8f, 0.8f));
+		AABB box = AABB.FromCenter(hitloc, new Vector2(0.6f, 0.6f));
 		List<Entity> entities = world.GetOverlappingEntities(box);
 		box.Draw(Color.red, 0.5f);
 
@@ -54,9 +53,11 @@ public class PlayerAttack : MonoBehaviour
 				{
 					entities[i].Damage(play.damage);
 					entities[i].ApplyKnockback(knockbackdir);
-
 				}
 			}
 		}
+
+		ent.PlayAnimation("Attack Animation");
+		ent.SetFacingDirection(cursor.x < 0.0f, animDuration);
 	}
 }

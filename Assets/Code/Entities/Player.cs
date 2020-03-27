@@ -139,6 +139,7 @@ public class Player : Entity
 		}
 
 		Move(accel, currentGravity);
+		SetFacingFromAccel(accel);
 
 		if(accel != Vector2.zero)
             PlayAnimation("Walking animation");
