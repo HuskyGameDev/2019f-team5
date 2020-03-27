@@ -144,7 +144,7 @@ public class Potion : MonoBehaviour
         {
             if (inventory.full[j])
             {
-                if(PlayerHealth.maxHealth <= PlayerHealth.health + 10)
+                if(PlayerHealth.maxHealth <= PlayerHealth.health + 5)
                 {
                     PlayerHealth.health = PlayerHealth.maxHealth;
                 }

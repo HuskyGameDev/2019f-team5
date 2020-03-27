@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90146f48515b9b04595216f0020b67e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 50
+  health: 20
   damage: 5
   speed: 125
-  defense: 1
+  defense: 1.5
   knockbackForce: 100
   size: {x: 1.8, y: 1.8}
   useCenterPivot: 0
