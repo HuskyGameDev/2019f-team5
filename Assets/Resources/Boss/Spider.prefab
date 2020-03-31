@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1102525105697019589}
   - component: {fileID: 6532665882265193767}
   m_Layer: 10
-  m_Name: Spider Boss
+  m_Name: Spider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119,7 +119,7 @@ Animator:
   m_GameObject: {fileID: 1102525105697019586}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ee4092604f9acb2459ea7efc4392f83c, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

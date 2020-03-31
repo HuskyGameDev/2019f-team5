@@ -11,6 +11,8 @@ public class TemplateEditor : EditorWindow
     private LevelTemplate template;
 
     private string templateName;
+    private string editMode = "Level";
+    private string bossName;
 
     [MenuItem("Extra/Template Editor")]
     public static void Open()
@@ -38,10 +40,20 @@ public class TemplateEditor : EditorWindow
         {
             string json = JsonUtility.ToJson(template);
 
-            if (!AssetDatabase.IsValidFolder("Assets/Resources/Templates"))
-                AssetDatabase.CreateFolder("Assets/Resources", "Templates");
+            if (editMode == "Level")
+            {
+                if (!AssetDatabase.IsValidFolder("Assets/Resources/Templates"))
+                    AssetDatabase.CreateFolder("Assets/Resources", "Templates");
 
-            File.WriteAllText(Application.dataPath + "/Resources/Templates/" + templateName + ".txt", json);
+                File.WriteAllText(Application.dataPath + "/Resources/Templates/" + templateName + ".txt", json);
+            }
+            else
+            {
+                if (!AssetDatabase.IsValidFolder("Assets/Resources/BossTemplates/" + bossName))
+                    AssetDatabase.CreateFolder("Assets/Resources/BossTemplates", bossName);
+
+                File.WriteAllText(Application.dataPath + "/Resources/BossTemplates/" + bossName + "/" + templateName + ".txt", json);
+            }
 
             AssetDatabase.Refresh();
             titleContent = new GUIContent(templateName);
@@ -159,7 +171,24 @@ public class TemplateEditor : EditorWindow
 
         rect.x += rect.width + 5.0f;
 
-        if (GUI.Button(rect, "Save Template"))
+        if (editMode == "Boss")
+        {
+            rect.width = 65.0f;
+            EditorGUI.LabelField(rect, "Boss Name");
+            rect.x += rect.width + 5.0f;
+            bossName = EditorGUI.TextField(rect, bossName);
+            rect.x += rect.width + 5.0f;
+        }
+
+        rect.width = 90.0f;
+
+        if (GUI.Button(rect, "Mode: " + editMode))
+            editMode = editMode == "Level" ? "Boss" : "Level";
+
+        rect.x += rect.width + 5.0f;
+        rect.width = 50.0f;
+
+        if (GUI.Button(rect, "Save"))
             SaveTemplate();
 
         rect.x = startX;

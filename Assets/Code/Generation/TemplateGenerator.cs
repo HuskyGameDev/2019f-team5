@@ -53,6 +53,7 @@ public sealed class TemplateGenerator
 			seed = Random.Range(int.MinValue, int.MaxValue);
 
 		Random.InitState(seed);
+		Debug.Log("Seed: " + seed);
 
 		// Every third level, generate a boss.
 		if ((levelID + 1) % 3 == 0)
@@ -142,31 +143,39 @@ public sealed class TemplateGenerator
 
 	private RectInt GenerateBossRoom(World world)
 	{
-		TextAsset[] roomData = Resources.LoadAll<TextAsset>("RoomData/boss");
+		int boss = Random.Range(0, bosses.Length);
+		string name = bosses[boss].name.ToLower();
 
-		int levelWidth = 2;
-		int levelHeight = 2;
+		TextAsset[] templateList = Resources.LoadAll<TextAsset>("BossTemplates/" + name);
 
-		for (int roomY = 0; roomY < levelHeight; ++roomY)
+		int templateNum = Random.Range(0, templateList.Length);
+
+		LevelTemplate template = JsonUtility.FromJson<LevelTemplate>(templateList[templateNum].text);
+
+		Object.Instantiate(bosses[boss], new Vector3(template.width * Chunk.Size - 8.0f, 3.0f), Quaternion.identity);
+
+		TextAsset[][] roomData = new TextAsset[template.roomTypes][];
+
+		// Load room data.
+		for (int i = 0; i < template.roomTypes; i++)
+			roomData[i] = Resources.LoadAll<TextAsset>("RoomData/boss/type" + i);
+
+		for (int y = 0; y < template.height; ++y)
 		{
-			for (int roomX = 0; roomX < levelHeight; ++roomX)
+			for (int x = 0; x < template.width; ++x)
 			{
-				int choice = Random.Range(0, roomData.Length);
+				// Pick a random room from the available types as specified by the template.
+				int type = template.GetRoomType(x, y);
+				string data = roomData[type][Random.Range(0, roomData[type].Length)].text;
 
-				Chunk chunk = new Chunk(roomX, roomY, roomData[choice].text);
-				world.SetChunk(roomX, roomY, chunk);
-
-				if (roomX == 0 && roomY == 0)
-					SpawnPlayer(chunk, roomX, roomY);
+				GenerateRoom(world, x, y, data, false);
 			}
 		}
 
-		AddSolidPerimeter(world, levelWidth, levelHeight);
+		SpawnPlayer(world.GetChunk(template.spawn), template.spawn.x, template.spawn.y);
+		AddSolidPerimeter(world, template.width, template.height);
 
-		int boss = Random.Range(0, bosses.Length);
-		Object.Instantiate(bosses[boss], new Vector3(levelWidth * Chunk.Size - 8.0f, 3.0f), Quaternion.identity);
-
-		return new RectInt(0, 0, Chunk.Size * levelWidth, Chunk.Size * levelHeight);
+		return new RectInt(0, 0, Chunk.Size * template.width, Chunk.Size * template.height);
 	}
 
 	private void SpawnEntity(int num, Vector2 spawnP)
