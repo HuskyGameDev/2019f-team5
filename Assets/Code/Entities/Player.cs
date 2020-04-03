@@ -28,6 +28,7 @@ public class Player : Entity
 	public int[] collectables = new int[3];
 
 	private PlayerAttack attack;
+	 private Inventory inventory;
 	private Coroutine loadRoutine;
 
 	private void Start()

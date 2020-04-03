@@ -107,7 +107,7 @@ public class SpiderBoss : Entity
 					float direction = 20f;
 					float PosoNeg = Random.Range(0,2)*2-1;
 					direction = direction * PosoNeg;
-					Damage(3);
+					target.Damage(3);
 					target.ApplyKnockback( direction, 20f);
 				}
 				else

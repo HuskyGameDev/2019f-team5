@@ -48,8 +48,9 @@ MonoBehaviour:
   health: 8
   damage: 4
   speed: 75
+  defense: 1
   knockbackForce: 8
-  size: {x: 0.85, y: 0.85}
+  size: {x: 0.67, y: 0.67}
   useCenterPivot: 1
   BabySpider: {fileID: 0}
   jumpVelocity: 7.81

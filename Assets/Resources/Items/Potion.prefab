@@ -96,7 +96,7 @@ MonoBehaviour:
   health: 0
   damage: 0
   speed: 0
-  defense: 1
+  defense: 0
   knockbackForce: 0
   size: {x: 0, y: 0}
   useCenterPivot: 0
