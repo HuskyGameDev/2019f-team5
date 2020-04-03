@@ -61,7 +61,7 @@ public sealed class TemplateGenerator
 		else return GenerateCave(world);
 	}
 
-	private void GenerateRoom(World world, int roomX, int roomY, string data, bool spawnEnemies)
+	private Chunk GenerateRoom(World world, int roomX, int roomY, string data, bool spawnEnemies)
 	{
 		Chunk chunk = new Chunk(roomX, roomY, data);
 		world.SetChunk(roomX, roomY, chunk);
@@ -99,6 +99,8 @@ public sealed class TemplateGenerator
 				}
 			}
 		}
+
+		return chunk;
 	}
 
 	private RectInt GenerateCave(World world)
@@ -152,7 +154,7 @@ public sealed class TemplateGenerator
 
 		LevelTemplate template = JsonUtility.FromJson<LevelTemplate>(templateList[templateNum].text);
 
-		Object.Instantiate(bosses[boss], new Vector3(template.width * Chunk.Size - 8.0f, 3.0f), Quaternion.identity);
+		GameObject bossObj = Object.Instantiate(bosses[boss], new Vector3(template.width * Chunk.Size - 8.0f, 3.0f), Quaternion.identity);
 
 		TextAsset[][] roomData = new TextAsset[template.roomTypes][];
 
@@ -168,7 +170,10 @@ public sealed class TemplateGenerator
 				int type = template.GetRoomType(x, y);
 				string data = roomData[type][Random.Range(0, roomData[type].Length)].text;
 
-				GenerateRoom(world, x, y, data, false);
+				Chunk chunk = GenerateRoom(world, x, y, data, false);
+
+				if (x == template.width - 1 && y == 0)
+					SpawnBoss(chunk, x, y, bossObj);
 			}
 		}
 
@@ -204,6 +209,41 @@ public sealed class TemplateGenerator
 		}
 
 		return false;
+	}
+
+	private void SpawnBoss(Chunk chunk, int roomX, int roomY, GameObject bossObj)
+	{
+		bool spawned = false;
+		Vector2Int spawnP = new Vector2Int(8, 8);
+
+		for (int y = 0; y < Chunk.Size; ++y)
+		{
+			for (int x = 0; x < Chunk.Size; ++x)
+			{
+				if (chunk.GetTile(x, y) == TileType.BossSpawn)
+				{
+					spawnP = new Vector2Int(x, y);
+					spawned = true;
+					chunk.SetTile(x, y, TileType.CaveWall);
+					break;
+				}
+			}
+		}
+
+		if (!spawned)
+		{
+			for (int tileY = 0; tileY < Chunk.Size; tileY++)
+			{
+				for (int tileX = 0; tileX < Chunk.Size; tileX++)
+				{
+					if (IsSpawnable(chunk, tileX, tileY))
+						spawnP = new Vector2Int(tileX, tileY);
+				}
+			}
+		}
+
+		Vector2 spawn = new Vector2(Chunk.Size * roomX + spawnP.x + 0.5f, Chunk.Size * roomY + spawnP.y + 0.05f);
+		bossObj.transform.position = spawn;
 	}
 
 	private void SpawnPlayer(Chunk chunk, int roomX, int roomY)

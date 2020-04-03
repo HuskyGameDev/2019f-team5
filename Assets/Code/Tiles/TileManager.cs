@@ -19,6 +19,7 @@ public enum TileType
 	Spawn,
 	Powerup,
 	Item,
+	BossSpawn,
 	Count
 }
 
@@ -41,7 +42,8 @@ public static class TileManager
 		new EndLevelTile(),
 		new SpawnTile(),
 		new PowerupTile(),
-		new ItemTile()
+		new ItemTile(),
+		new BossSpawn()
 	};
 
 	public static TileData GetData(TileType type)

@@ -237,6 +237,8 @@ public class ProcGen
 		return new RectInt(0, 0, Chunk.Size * levelWidth, Chunk.Size * levelHeight);
 	}
 
+	
+
 	private RectInt GenerateBossRoom(World world)
 	{
 		TextAsset[] roomData = Resources.LoadAll<TextAsset>("RoomData/boss");
@@ -261,9 +263,6 @@ public class ProcGen
 		}
 
 		AddSolidPerimeter(world);
-
-		int boss = Random.Range(0, bosses.Length);
-		Object.Instantiate(bosses[boss], new Vector3(levelWidth * Chunk.Size - 8.0f, 3.0f), Quaternion.identity);
 
 		return new RectInt(0, 0, Chunk.Size * levelWidth, Chunk.Size * levelHeight);
 	}
