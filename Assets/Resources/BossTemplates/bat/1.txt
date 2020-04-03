@@ -1,1 +1,1 @@
-{"width":4,"height":2,"roomTypes":4,"spawn":{"x":0,"y":0},"types":[3,2,3,2,2,3,2,3]}
+{"width":3,"height":3,"roomTypes":5,"spawn":{"x":0,"y":0},"types":[2,3,4,3,2,3,2,3,2]}
