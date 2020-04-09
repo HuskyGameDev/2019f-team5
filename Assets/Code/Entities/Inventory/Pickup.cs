@@ -36,7 +36,7 @@ public class Pickup : Entity
                     if (inventory.full[j] == false)
                     {
                         GameObject points = Instantiate(rewardPopup, transform.position, Quaternion.identity);
-                        points.transform.GetComponent<TextMesh>().text = "Potion Picked Up!";
+                        points.transform.GetComponent<TextMesh>().text = "Item Picked Up!";
                         inventory.full[j] = true;
                         Instantiate(itemButton, inventory.slot[j].transform, false);
                         Destroy(gameObject);

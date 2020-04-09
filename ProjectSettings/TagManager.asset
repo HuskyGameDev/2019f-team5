@@ -13,6 +13,7 @@ TagManager:
   - Slot0
   - Slot2
   - Slot3
+  - Tile
   layers:
   - Default
   - TransparentFX
