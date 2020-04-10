@@ -9,15 +9,20 @@ public class PowerupTile : TileData
 
 	public override void OnSet(Chunk chunk, int x, int y)
 	{
-		if (powerups == null)
-			powerups = Resources.LoadAll<GameObject>("Power Ups");
-
-		if (Random.value <= 0.5f)
+		if (TemplateGenerator.BossActive)
+			TemplateGenerator.AddPendingTile(chunk, x, y, TileType.Powerup);
+		else
 		{
-			Vector2Int wP = chunk.wPos;
+			if (powerups == null)
+				powerups = Resources.LoadAll<GameObject>("Power Ups");
 
-			GameObject powerup = powerups[Random.Range(0, powerups.Length)];
-			Object.Instantiate(powerup, new Vector2(wP.x + x + 0.5f, wP.y + y + 0.25f), Quaternion.identity);
+			if (Random.value <= 0.5f)
+			{
+				Vector2Int wP = chunk.wPos;
+
+				GameObject powerup = powerups[Random.Range(0, powerups.Length)];
+				Object.Instantiate(powerup, new Vector2(wP.x + x + 0.5f, wP.y + y + 0.25f), Quaternion.identity);
+			}
 		}
 
 		chunk.SetTile(x, y, TileType.CaveWall);

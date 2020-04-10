@@ -22,6 +22,7 @@ public class BatBoss : Entity
 	{
 		base.Awake();
 
+		isBoss = true;
 		player = GameObject.Find("Player");
 		EventManager.Instance.Subscribe(GameEvent.LevelGenerated, InvokePath);
 	}
@@ -65,7 +66,7 @@ public class BatBoss : Entity
 
 	protected override void OnKill()
 	{
-		player.GetComponent<Player>().LoadNextLevel();
+		EventManager.Instance.SignalEvent(GameEvent.BossKilled, null);
 		base.OnKill();
 	}
 

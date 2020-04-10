@@ -10,6 +10,7 @@ public enum GameEvent
 {
 	PlayerSpawned,
 	LevelGenerated,
+	BossKilled,
 	Count
 }
 

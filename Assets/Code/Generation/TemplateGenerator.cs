@@ -38,6 +38,10 @@ public sealed class TemplateGenerator
 
 	private List<(int, Vector2)> enemiesToSpawn = new List<(int, Vector2)>();
 
+	public static bool BossActive { get; private set; }
+
+	private static List<(Chunk, int, int, TileType)> pendingTiles = new List<(Chunk, int, int, TileType)>();
+
 	public RectInt Generate(World world, int seed = -1)
 	{
 		if (mobs == null)
@@ -143,9 +147,25 @@ public sealed class TemplateGenerator
 		return new RectInt(0, 0, Chunk.Size * template.width, Chunk.Size * template.height);
 	}
 
+	public static void AddPendingTile(Chunk chunk, int x, int y, TileType type)
+		=> pendingTiles.Add((chunk, x, y, type));
+
 	private RectInt GenerateBossRoom(World world)
 	{
+		BossActive = true;
+		EventManager.Instance.Subscribe(GameEvent.BossKilled, OnBossKilled);
+
 		int boss = Random.Range(0, bosses.Length);
+
+		for (int i = 0; i < bosses.Length; ++i)
+		{
+			if (bosses[i].name.Equals("Slime"))
+			{
+				boss = i;
+				break;
+			}
+		}
+
 		string name = bosses[boss].name.ToLower();
 
 		TextAsset[] templateList = Resources.LoadAll<TextAsset>("BossTemplates/" + name);
@@ -181,6 +201,18 @@ public sealed class TemplateGenerator
 		AddSolidPerimeter(world, template.width, template.height);
 
 		return new RectInt(0, 0, Chunk.Size * template.width, Chunk.Size * template.height);
+	}
+
+	private void OnBossKilled(object data)
+	{
+		BossActive = false;
+
+		for (int i = 0; i < pendingTiles.Count; ++i)
+		{
+			var pending = pendingTiles[i];
+			pending.Item1.SetTile(pending.Item2, pending.Item3, pending.Item4);
+			pending.Item1.SetModified();
+		}
 	}
 
 	private void SpawnEntity(int num, Vector2 spawnP)

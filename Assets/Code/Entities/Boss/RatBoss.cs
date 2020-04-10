@@ -22,8 +22,11 @@ public class RatBoss : Entity
 
     private int i = 0;
 
-    private void Start()
-		=> player = GameObject.Find("Player");
+	private void Start()
+	{
+		isBoss = true;
+		player = GameObject.Find("Player");
+	}
 
     private void Update()
 	{
@@ -82,7 +85,7 @@ public class RatBoss : Entity
 
     protected override void OnKill()
 	{
-		player.GetComponent<Player>().LoadNextLevel();
+		EventManager.Instance.SignalEvent(GameEvent.BossKilled, null);
 		base.OnKill();
 	}
 

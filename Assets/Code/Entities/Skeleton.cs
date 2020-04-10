@@ -112,7 +112,8 @@ public class Skeleton : Entity
 				Vector2 arrowS ;
 				arrowS = transform.position;
 				arrowS.y += .25f;
-				if(Facing) {
+				
+				if(IsFlipped()) {
 					arrowS.x -= .5f;
 				} else {
 					arrowS.x += .5f;

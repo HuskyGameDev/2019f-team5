@@ -52,6 +52,8 @@ public class Entity : MonoBehaviour
 	public float defense = 1;
 	private static GameObject damagePopup;
 
+	protected bool isBoss;
+
 	[SerializeField] protected float knockbackForce;
 
 	protected bool invincible;
@@ -169,6 +171,9 @@ public class Entity : MonoBehaviour
 		if (setFacingFromVelocity && facingLockTime <= 0.0f)
 			SetFacingFromVelocity();
 	}
+
+	public bool IsFlipped()
+		=> rend.flipX;
 
 	public void SetFacingDirection(bool left, float duration = 0.0f)
 	{
@@ -362,7 +367,7 @@ public class Entity : MonoBehaviour
 		}
 	}
 
-	private void ClearIntersectingTiles()
+	private bool KillOnOverlap()
 	{
 		AABB bb = GetBoundingBox();
 
@@ -378,13 +383,15 @@ public class Entity : MonoBehaviour
 				Tile tile = world.GetTile(x, y);
 				TileData tileData = TileManager.GetData(tile);
 
-				if (!tileData.passable)
+				if (!tileData.passable && !isBoss)
 				{
-					Chunk chunk = world.SetTile(x, y, TileType.CaveWall);
-					chunk.SetModified();
+					OnKill();
+					return true;
 				}
 			}
 		}
+
+		return false;
 	}
 
 	public void Move(Vector2 accel, float gravity)
@@ -393,7 +400,7 @@ public class Entity : MonoBehaviour
 			return;
 
 		facingLockTime -= Time.deltaTime;
-		ClearIntersectingTiles();
+		KillOnOverlap();
 
 		moveState = MoveState.Normal;
 

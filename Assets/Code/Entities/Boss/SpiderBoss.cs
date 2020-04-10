@@ -16,7 +16,10 @@ public class SpiderBoss : Entity
     private float rotation;
 
 	private void Start()
-		=> player = GameObject.FindWithTag("Player");
+	{
+		isBoss = true;
+		player = GameObject.FindWithTag("Player");
+	}
 
     private void Update()
     {
@@ -26,7 +29,6 @@ public class SpiderBoss : Entity
 		rotation = 0.0f;
 
         aggro = true;
-
 
 		Vector2 accel = Vector2.zero;
 
@@ -87,7 +89,7 @@ public class SpiderBoss : Entity
 
 	protected override void OnKill()
 	{
-		player.GetComponent<Player>().LoadNextLevel();
+		EventManager.Instance.SignalEvent(GameEvent.BossKilled, null);
 		base.OnKill();
 	}
 

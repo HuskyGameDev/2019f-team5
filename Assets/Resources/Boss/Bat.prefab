@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5719373218361530361}
   - component: {fileID: 6840934652005290258}
   m_Layer: 10
-  m_Name: Bat Boss
+  m_Name: Bat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ MonoBehaviour:
   speed: 70
   defense: 1.5
   knockbackForce: 15
-  size: {x: 1.8, y: 1.8}
+  size: {x: 0.95, y: 0.95}
   useCenterPivot: 0
   jumpVelocity: 0
   gravity: 0

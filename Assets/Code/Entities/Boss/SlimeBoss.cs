@@ -22,13 +22,13 @@ public class SlimeBoss : Entity
 	{
 		player = GameObject.Find("Player");
 		accel = Vector2.zero;
+		isBoss = true;
 	}
 
 	private void Update()
 	{
 		jumpTime -= Time.deltaTime;
 
-		float PlayerY = player.transform.position.y;
 		float PlayerX = player.transform.position.x;
 
 		aggro = true;
@@ -68,9 +68,9 @@ public class SlimeBoss : Entity
 		Move(accel, gravity);
 	}
 
-protected override void OnKill()
+	protected override void OnKill()
 	{
-		player.GetComponent<Player>().LoadNextLevel();
+		EventManager.Instance.SignalEvent(GameEvent.BossKilled, null);
 		base.OnKill();
 	}
 

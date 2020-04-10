@@ -23,7 +23,8 @@ public class SkeletonBoss : Entity
         player = GameObject.Find("Player");
         fireRate = 1.0f;
         nextFire = Time.time;
-    }
+		isBoss = true;
+	}
 
     // Update is called once per frame
     private void Update()
@@ -124,7 +125,7 @@ public class SkeletonBoss : Entity
 
     protected override void OnKill()
 	{
-		player.GetComponent<Player>().LoadNextLevel();
+		EventManager.Instance.SignalEvent(GameEvent.BossKilled, null);
 		base.OnKill();
 	}
 
