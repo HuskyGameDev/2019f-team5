@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 618607378673914222}
   - component: {fileID: 5719373218361530361}
   - component: {fileID: 6840934652005290258}
+  - component: {fileID: 1751126504694997956}
   m_Layer: 10
   m_Name: Bat
   m_TagString: Untagged
@@ -54,7 +55,7 @@ MonoBehaviour:
   speed: 70
   defense: 1.5
   knockbackForce: 15
-  size: {x: 0.95, y: 0.95}
+  size: {x: 1.8, y: 1.8}
   useCenterPivot: 0
   jumpVelocity: 0
   gravity: 0
@@ -98,7 +99,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 2ec6f6c27a58ad142b2c026639c8db9c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ecac923457e93254ea2da46033b42a40, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -109,3 +110,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1751126504694997956
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618607378673914216}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fa114cf48b5b4ff45a6b51af3c00e5c1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
