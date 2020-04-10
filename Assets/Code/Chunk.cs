@@ -85,13 +85,13 @@ public sealed class Chunk
 	public static int TileIndex(int x, int y)
 		=> y * Size + x;
 
-	public void SetTile(int rX, int rY, Tile tile)
+	public void SetTile(int rX, int rY, Tile tile, bool bossRoom = false)
 	{
 		if (rX >= 0 && rX < Size && rY >= 0 && rY < Size)
 		{
 			int index = TileIndex(rX, rY);
 			tiles[index] = tile;
-			TileManager.GetData(tiles[index]).OnSet(this, rX, rY);
+			TileManager.GetData(tiles[index]).OnSet(this, rX, rY, bossRoom);
 		}
 	}
 

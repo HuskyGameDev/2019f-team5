@@ -156,16 +156,6 @@ public sealed class TemplateGenerator
 		EventManager.Instance.Subscribe(GameEvent.BossKilled, OnBossKilled);
 
 		int boss = Random.Range(0, bosses.Length);
-
-		for (int i = 0; i < bosses.Length; ++i)
-		{
-			if (bosses[i].name.Equals("Slime"))
-			{
-				boss = i;
-				break;
-			}
-		}
-
 		string name = bosses[boss].name.ToLower();
 
 		TextAsset[] templateList = Resources.LoadAll<TextAsset>("BossTemplates/" + name);
@@ -210,7 +200,7 @@ public sealed class TemplateGenerator
 		for (int i = 0; i < pendingTiles.Count; ++i)
 		{
 			var pending = pendingTiles[i];
-			pending.Item1.SetTile(pending.Item2, pending.Item3, pending.Item4);
+			pending.Item1.SetTile(pending.Item2, pending.Item3, pending.Item4, true);
 			pending.Item1.SetModified();
 		}
 	}

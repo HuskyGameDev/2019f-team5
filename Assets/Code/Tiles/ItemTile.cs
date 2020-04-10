@@ -7,7 +7,7 @@ public class ItemTile : TileData
 	public ItemTile()
 		=> name = "Items";
 
-	public override void OnSet(Chunk chunk, int x, int y)
+	public override void OnSet(Chunk chunk, int x, int y, bool bossRoom = false)
 	{
 		if (TemplateGenerator.BossActive)
 			TemplateGenerator.AddPendingTile(chunk, x, y, TileType.Item);
@@ -16,7 +16,7 @@ public class ItemTile : TileData
 			if (items == null)
 				items = Resources.LoadAll<GameObject>("Items");
 
-			if (Random.value <= 0.5f)
+			if (Random.value <= 0.5f || bossRoom)
 			{
 				Vector2Int wP = chunk.wPos;
 

@@ -7,7 +7,7 @@ public class PowerupTile : TileData
 	public PowerupTile()
 		=> name = "Powerup";
 
-	public override void OnSet(Chunk chunk, int x, int y)
+	public override void OnSet(Chunk chunk, int x, int y, bool bossRoom = false)
 	{
 		if (TemplateGenerator.BossActive)
 			TemplateGenerator.AddPendingTile(chunk, x, y, TileType.Powerup);
@@ -16,7 +16,7 @@ public class PowerupTile : TileData
 			if (powerups == null)
 				powerups = Resources.LoadAll<GameObject>("Power Ups");
 
-			if (Random.value <= 0.5f)
+			if (Random.value <= 0.5f || bossRoom)
 			{
 				Vector2Int wP = chunk.wPos;
 

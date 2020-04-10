@@ -23,5 +23,5 @@ public class TileData
 
 	// Called whenever a tile is set into the world. Allows per-tile
 	// functionality in this regard.
-	public virtual void OnSet(Chunk chunk, int x, int y) { }
+	public virtual void OnSet(Chunk chunk, int x, int y, bool bossRoom = false) { }
 }

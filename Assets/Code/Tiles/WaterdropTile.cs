@@ -7,7 +7,7 @@ public class WaterdropTile : TileData
 	public WaterdropTile()
 		=> name = "Waterdrop";
 
-	public override void OnSet(Chunk chunk, int x, int y)
+	public override void OnSet(Chunk chunk, int x, int y, bool bossRoom = false)
 	{
 		if (Waterdrop == null)
 			Waterdrop = Resources.LoadAll<GameObject>("Enviorment Particles");
