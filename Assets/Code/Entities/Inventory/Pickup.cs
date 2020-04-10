@@ -18,7 +18,7 @@ public class Pickup : Entity
             rewardPopup = Resources.Load<GameObject>("Prefabs/RewardPopup");
         // Move so that it works with the collision system,
         // even though it doesn't actually move.
-        Move(Vector2.zero, 0.0f);
+        Move(Vector2.zero, -30f);
         inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
     }
     //Picks up item found on ground
@@ -42,7 +42,7 @@ public class Pickup : Entity
                         Destroy(gameObject);
                         break;
                     }
-                   
+
                 }
             }
         }

@@ -45,7 +45,7 @@ public static class TileManager
 		new PowerupTile(),
 		new ItemTile(),
 		new BossSpawn(),
-		new WaterdropTile()
+		new WaterdropTile(),
 	};
 
 	public static TileData GetData(TileType type)
