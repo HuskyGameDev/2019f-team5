@@ -21,6 +21,7 @@ public class Player : Entity
 	public float jumpVelocity;
 	public float gravity;
 	public float maxHealth = 20;
+	public float enemiesKilled = 0;
 
 	public bool flying;
 	public int jumps;
@@ -30,6 +31,7 @@ public class Player : Entity
 	private PlayerAttack attack;
 	 private Inventory inventory;
 	private Coroutine loadRoutine;
+	private static GameObject damagePopup;
 
 	private void Start()
 	{
@@ -44,6 +46,7 @@ public class Player : Entity
 
 		if (PlayerPrefs.HasKey("PlayerData"))
 		{
+			enemiesKilled = PlayerPrefs.GetFloat("EnemiesKilled");
 			health = PlayerPrefs.GetFloat("Health");
 			speed = PlayerPrefs.GetFloat("Speed");
 			defense = PlayerPrefs.GetFloat("Defense");
@@ -170,6 +173,7 @@ public class Player : Entity
 		PlayerPrefs.SetFloat("Damage", damage);
 		PlayerPrefs.SetFloat("Swing Rate", attack.swingRate);
 		PlayerPrefs.SetFloat("Jump Velocity", jumpVelocity);
+		PlayerPrefs.SetFloat("EnemiesKilled", enemiesKilled);
 		PlayerPrefs.SetInt("PlayerData", 1);
 	}
 

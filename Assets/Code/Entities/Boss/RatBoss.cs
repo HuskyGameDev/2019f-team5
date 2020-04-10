@@ -86,6 +86,7 @@ public class RatBoss : Entity
     protected override void OnKill()
 	{
 		EventManager.Instance.SignalEvent(GameEvent.BossKilled, null);
+		player.GetComponent<Player>().enemiesKilled += 3;
 		base.OnKill();
 	}
 

@@ -112,7 +112,7 @@ public class Skeleton : Entity
 				Vector2 arrowS ;
 				arrowS = transform.position;
 				arrowS.y += .25f;
-				
+
 				if(IsFlipped()) {
 					arrowS.x -= .5f;
 				} else {
@@ -126,6 +126,12 @@ public class Skeleton : Entity
         }
     }
 
+
+    protected override void OnKill() {
+			player.GetComponent<Player>().enemiesKilled += 1;
+			base.OnKill();
+		}
+    
 	protected override void OnCollide(CollideResult col)
 	{
 		if (CollidedSides() && CollidedBelow())

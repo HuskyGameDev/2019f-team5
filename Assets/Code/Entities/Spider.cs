@@ -94,7 +94,7 @@ public class Spider : Entity
 	protected override void OnKill()
 	{
 		int revive = Random.Range(1, 26);
-
+		player.GetComponent<Player>().enemiesKilled += 1;
 		if (revive == 13)
 			Instantiate(BabySpider, transform.position, Quaternion.identity);
 

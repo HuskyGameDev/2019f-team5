@@ -73,6 +73,11 @@ public class Slime : Entity
 	}
 
 
+	protected override void OnKill() {
+		player.GetComponent<Player>().enemiesKilled += 1;
+		base.OnKill();
+	}
+
 	protected override void HandleOverlaps(List<CollideResult> overlaps)
 	{
 		for (int i = 0; i < overlaps.Count; ++i)
