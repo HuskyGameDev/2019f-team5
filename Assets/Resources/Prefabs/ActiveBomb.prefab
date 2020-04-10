@@ -99,6 +99,9 @@ MonoBehaviour:
   world: {fileID: 0}
   Manager: {fileID: 0}
   PlayerHealth: {fileID: 0}
+  entity: {fileID: 0}
+  sr: {fileID: 0}
+  gravity: 1
 --- !u!58 &770572452533908133
 CircleCollider2D:
   m_ObjectHideFlags: 0

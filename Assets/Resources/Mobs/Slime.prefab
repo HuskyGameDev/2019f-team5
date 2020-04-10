@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2604508277722332119}
   - component: {fileID: 2604508277722332104}
   - component: {fileID: 2604508277722332105}
+  - component: {fileID: 38519693738597896}
+  - component: {fileID: 1614272218103643634}
   m_Layer: 10
   m_Name: Slime
   m_TagString: Enemy
@@ -97,8 +99,6 @@ MonoBehaviour:
   damage: 3
   speed: 60
   defense: 2
-  DamagePopup: {fileID: 3641448768982729608, guid: 030a87cc47a494e40a08d8961000f9c0,
-    type: 3}
   knockbackForce: 15
   size: {x: 0.9, y: 0.9}
   useCenterPivot: 0
@@ -108,3 +108,40 @@ MonoBehaviour:
   jumpTime: 1.5
   player: {fileID: 0}
   isJumping: 0
+--- !u!50 &38519693738597896
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2604508277722332106}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!58 &1614272218103643634
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2604508277722332106}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 9.375}
+  serializedVersion: 2
+  m_Radius: 9.375
