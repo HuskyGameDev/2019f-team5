@@ -7,7 +7,6 @@ public class ActiveBomb : Entity
     public float delay = 5f;
     float countdown;
     bool hasExploded = false;
-    public World world;
     public GameObject Manager;
     public Player PlayerHealth;
     public Entity entity;

@@ -64,7 +64,9 @@ public class Entity : MonoBehaviour
 	public bool useCenterPivot;
 
 	protected Vector2 velocity;
-	private float friction = -16.0f;
+	protected float friction = -16.0f;
+
+	protected bool swimming;
 
 	protected CollideFlags colFlags;
 
@@ -83,6 +85,9 @@ public class Entity : MonoBehaviour
 	private static List<CollideResult> overlaps = new List<CollideResult>();
 
 	private Comparison<CollideResult> collideCompare;
+
+	// Active over time damage on this entity.
+	private List<OverTimeDamage> otDamage = new List<OverTimeDamage>();
 
 	public Chunk chunk;
 
@@ -235,7 +240,9 @@ public class Entity : MonoBehaviour
 
 		amount /= defense;
 		health = Mathf.Max(health - amount, 0);
-		ApplyKnockback(knockback);
+
+		if (knockback != Vector2.zero)
+			ApplyKnockback(knockback);
 
 		if (!(this is Player))
 		{
@@ -259,6 +266,56 @@ public class Entity : MonoBehaviour
 
 	public void Damage(float amount)
 		=> Damage(amount, Vector2.zero);
+
+	// Applies the given over time damage to this entity.
+	public void AddOverTimeDamage(OverTimeDamage ot)
+	{
+		bool doApply = true;
+
+		int cur = otDamage.IndexOf(ot);
+
+		if (cur != -1)
+		{
+			otDamage[cur].active = true;
+			doApply = false;
+		}
+
+		if (doApply)
+		{
+			ot.active = true;
+
+			// Must make a new instance, otherwise entities will share a
+			// single instance in the tile data and clash with each other.
+			otDamage.Add(new OverTimeDamage(ot.type, ot.interval, ot.damage));
+		}
+	}
+
+	// Applies damage to the entity based on the active 
+	// over time damage.
+	public void ApplyOverTimeDamage()
+	{
+		for (int i = otDamage.Count - 1; i >= 0; --i)
+		{
+			OverTimeDamage ot = otDamage[i];
+			ot.timeLeft -= Time.deltaTime;
+
+			if (ot.timeLeft <= 0.0f)
+			{
+				if (!ot.active)
+				{
+					otDamage.RemoveAt(i);
+					continue;
+				}
+
+				Damage(ot.damage);
+				ot.timeLeft = ot.interval;
+			}
+
+			// Set to inactive so that next time it runs out of time,
+			// it will go away unless it was set to active before that.
+			ot.active = false;
+		}
+	}
 
 	public Vector2 PositionDifference(Entity target)
 	{
@@ -423,7 +480,10 @@ public class Entity : MonoBehaviour
 		// to go from position down to velocity and then down to acceleration to see how
 		// we can integrate back up.
 		Vector2 delta = accel * 0.5f * Utils.Square(Time.deltaTime) + velocity * Time.deltaTime;
-		velocity = accel * Time.deltaTime + velocity;
+
+		if (swimming)
+			velocity = (accel * 0.35f) * Time.deltaTime + velocity;
+		else velocity = accel * Time.deltaTime + velocity;
 
 		Vector2 target = Position + delta;
 		AABB entityBB = GetBoundingBox();
@@ -497,8 +557,8 @@ public class Entity : MonoBehaviour
 		overlaps.Clear();
 
 		SetFacingDirection();
-
 		Rebase(world);
+		ApplyOverTimeDamage();
 
 		if (DebugServices.Instance.ShowDebug)
 			GetBoundingBox().Draw(Color.green);

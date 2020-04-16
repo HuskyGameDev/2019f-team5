@@ -21,6 +21,7 @@ public enum TileType
 	Item,
 	BossSpawn,
 	Waterdrop,
+	Lava,
 	Count
 }
 
@@ -46,6 +47,7 @@ public static class TileManager
 		new ItemTile(),
 		new BossSpawn(),
 		new WaterdropTile(),
+		new LavaTile()
 	};
 
 	public static TileData GetData(TileType type)

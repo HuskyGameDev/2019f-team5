@@ -270,10 +270,19 @@ public class World : MonoBehaviour
 
 				Tile tile = GetTile(cursorP.x, cursorP.y);
 
-				if (tile != TileType.Air && tile != TileType.CaveWall)
+				// Shift + Click = Lava, Click = delete.
+				if (Input.GetKey(KeyCode.LeftShift))
 				{
-					Chunk chunk = SetTile(cursorP.x, cursorP.y, TileType.CaveWall);
+					Chunk chunk = SetTile(cursorP.x, cursorP.y, TileType.Lava);
 					chunk.SetModified();
+				}
+				else
+				{
+					if (tile != TileType.Air && tile != TileType.CaveWall)
+					{
+						Chunk chunk = SetTile(cursorP.x, cursorP.y, TileType.CaveWall);
+						chunk.SetModified();
+					}
 				}
 			}
 

@@ -11,9 +11,10 @@ using UnityEngine.SceneManagement;
 [Flags]
 public enum MoveState
 {
-	Normal,
-	Flying,
-	Climbing
+	Normal = 0,
+	Flying = 1,
+	Climbing = 2,
+	Swimming = 4
 }
 
 public class Player : Entity
@@ -120,10 +121,28 @@ public class Player : Entity
 		return accel;
 	}
 
+	private Vector2 SetSwimming()
+	{
+		Vector2 accel = new Vector2(Input.GetAxisRaw("Horiz"), Input.GetAxisRaw("Vert")) * 0.6f;
+
+		if (accel != Vector2.zero)
+			accel = accel.normalized;
+
+		if (Input.GetButtonDown("jump"))
+			velocity.y = jumpVelocity * 0.75f;
+
+		friction = -10.0f;
+		swimming = true;
+
+		return accel;
+	}
+
 	private void Update()
 	{
 		Vector2 accel;
 		float currentGravity = gravity;
+		friction = -16.0f;
+		swimming = false;
 
 		if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.Tab))
 			flying = !flying;
@@ -138,6 +157,11 @@ public class Player : Entity
 			if ((moveState & MoveState.Climbing) != 0)
 			{
                 accel = SetClimbing();
+				currentGravity = 0.0f;
+			}
+			else if ((moveState & MoveState.Swimming) != 0)
+			{
+				accel = SetSwimming();
 				currentGravity = 0.0f;
 			}
 			else accel = SetNormal();
@@ -189,6 +213,11 @@ public class Player : Entity
 
 				if (data.overlapType == TileOverlapType.Climb)
 					moveState |= MoveState.Climbing;
+				else if (data.overlapType == TileOverlapType.Swim)
+					moveState |= MoveState.Swimming;
+
+				if (result.tile == TileType.Lava)
+					AddOverTimeDamage(data.otDamage);
 
 				if (result.tile == TileType.EndLevelTile)
 					LoadNextLevel();

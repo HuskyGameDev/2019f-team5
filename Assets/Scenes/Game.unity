@@ -335,6 +335,7 @@ MonoBehaviour:
   jumpVelocity: 8.5
   gravity: -30
   maxHealth: 20
+  enemiesKilled: 0
   flying: 0
   jumps: 0
   collectables: 000000000000000000000000
@@ -1300,7 +1301,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b790e5865db2c3246ae84a188d04a886, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -90,6 +90,10 @@ public sealed class Chunk
 		if (rX >= 0 && rX < Size && rY >= 0 && rY < Size)
 		{
 			int index = TileIndex(rX, rY);
+
+			// Call OnDelete on the previous tile here, set the new tile, then
+			// call OnSet on the new one.
+			TileManager.GetData(tiles[index]).OnDelete(this, rX, rY);
 			tiles[index] = tile;
 			TileManager.GetData(tiles[index]).OnSet(this, rX, rY, bossRoom);
 		}
