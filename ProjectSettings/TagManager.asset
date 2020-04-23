@@ -14,6 +14,8 @@ TagManager:
   - Slot2
   - Slot3
   - Tile
+  - PotionCounter
+  - BombCounter
   layers:
   - Default
   - TransparentFX

@@ -23,6 +23,10 @@ public class Player : Entity
 	public float gravity;
 	public float maxHealth = 20;
 	public float enemiesKilled = 0;
+	public PotionCounter counter;
+	int potions;
+	public BombCounter counter2;
+	int bombs;
 
 	public bool flying;
 	public int jumps;
@@ -36,6 +40,8 @@ public class Player : Entity
 
 	private void Start()
 	{
+		counter = GameObject.FindGameObjectWithTag("PotionCounter").GetComponent<PotionCounter>();
+		counter2 = GameObject.FindGameObjectWithTag("BombCounter").GetComponent<BombCounter>();
 		damage = 5;
 		jumps = 0;
 		invincibleWait = new WaitForSeconds(0.5f);
@@ -55,8 +61,12 @@ public class Player : Entity
 			maxHealth = PlayerPrefs.GetFloat("Max Health");
 			attack.swingRate = PlayerPrefs.GetFloat("Swing Rate");
 			jumpVelocity = PlayerPrefs.GetFloat("Jump Velocity");
-		}
+			potions = PlayerPrefs.GetInt("Potions");
+			bombs = PlayerPrefs.GetInt("Bombs");
 
+		}
+		counter.potionCount = potions;
+		counter2.bombCount = bombs;
 		if (PlayerPrefs.HasKey("Level"))
 		{
 			int level = PlayerPrefs.GetInt("Level");
@@ -186,6 +196,8 @@ public class Player : Entity
 				world.NextLevel(true);
 			}
 		}
+		potions = counter.potionCount;
+		bombs = counter2.bombCount;
 	}
 
 	private void SaveData()
@@ -199,6 +211,8 @@ public class Player : Entity
 		PlayerPrefs.SetFloat("Jump Velocity", jumpVelocity);
 		PlayerPrefs.SetFloat("EnemiesKilled", enemiesKilled);
 		PlayerPrefs.SetInt("PlayerData", 1);
+		PlayerPrefs.SetInt("Potions", potions);
+		PlayerPrefs.SetInt("Bombs", bombs);
 	}
 
 	protected override void HandleOverlaps(List<CollideResult> overlaps)

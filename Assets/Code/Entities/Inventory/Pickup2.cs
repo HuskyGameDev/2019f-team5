@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pickup : Entity
+public class Pickup2 : Entity
 {
     private static GameObject rewardPopup;
     private Inventory inventory;
     public GameObject itemButton;
-    public  PotionCounter counter;
+    public BombCounter counter;
 
     private void Start()
     {
-        counter = GameObject.FindGameObjectWithTag("PotionCounter").GetComponent<PotionCounter>();
+        counter = GameObject.FindGameObjectWithTag("BombCounter").GetComponent<BombCounter>();
         inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
     }
     private void Update()
@@ -33,12 +33,12 @@ public class Pickup : Entity
 
             if (target != null && target is Player)
             {
-                        counter.potionCount++;
-                        GameObject points = Instantiate(rewardPopup, transform.position, Quaternion.identity);
-                        points.transform.GetComponent<TextMesh>().text = "Potion Picked Up!";
-                        Destroy(gameObject);
-                        break;
-                 
+                counter.bombCount++;
+                GameObject points = Instantiate(rewardPopup, transform.position, Quaternion.identity);
+                points.transform.GetComponent<TextMesh>().text = " Bomb Picked Up!";
+                Destroy(gameObject);
+                break;
+
             }
         }
     }

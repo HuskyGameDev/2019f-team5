@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8666355055492034037}
   - component: {fileID: 5357046792800427519}
-  - component: {fileID: 771874351786330052}
+  - component: {fileID: 6399705572767040855}
   m_Layer: 12
   m_Name: Bomb
   m_TagString: Untagged
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &771874351786330052
+--- !u!114 &6399705572767040855
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -90,15 +90,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3907158046901490330}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2e74a4904258f440b2dd451883fd3bb, type: 3}
+  m_Script: {fileID: 11500000, guid: a60b3c2ca2759014b8790de4932d34fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
   damage: 0
   speed: 0
-  defense: 1
+  defense: 0
   knockbackForce: 0
   size: {x: 0, y: 0}
   useCenterPivot: 0
   itemButton: {fileID: 6385363078103236195, guid: 26006c1b7ff79ab4fbc0bbe88f5487bf,
     type: 3}
+  counter: {fileID: 0}
